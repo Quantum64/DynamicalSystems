@@ -1,7 +1,7 @@
 plugins {
 	id 'fabric-loom' version '0.2.2-SNAPSHOT'
 	id 'com.github.johnrengelman.shadow' version '4.0.4'
-	id "net.ltgt.apt" version "0.10"
+	id "net.ltgt.apt" version "0.21"
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -27,8 +27,9 @@ dependencies {
     modCompile 'javax.inject:javax.inject:1'
     modCompile 'com.google.auto.factory:auto-factory:1.0-beta6'
     
-    apt 'com.google.dagger:dagger-compiler:2.22.1'
-	apt 'com.google.auto.factory:auto-factory:1.0-beta6'
+	annotationProcessor group: 'com.google.guava', name: 'failureaccess', version: '1.0.1'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.22.1'
+	annotationProcessor 'com.google.auto.factory:auto-factory:1.0-beta6'
 }
 
 processResources {

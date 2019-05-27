@@ -1,14 +1,14 @@
 package co.q64.dynamicalsystems;
 
+import co.q64.dynamicalsystems.inject.DaggerDynamicalComponent;
+import co.q64.dynamicalsystems.inject.DynamicalComponent;
 import net.fabricmc.api.ModInitializer;
 
 public class DynamicalSystems implements ModInitializer {
+
 	@Override
 	public void onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
-
-		System.out.println("Hello Fabric world!");
+		DynamicalComponent component = DaggerDynamicalComponent.create();
+		component.getLoader().getClass();
 	}
 }
