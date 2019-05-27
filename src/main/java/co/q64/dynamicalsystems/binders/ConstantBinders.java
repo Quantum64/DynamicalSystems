@@ -1,4 +1,4 @@
-package co.q64.dynamicalsystems.inject;
+package co.q64.dynamicalsystems.binders;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 

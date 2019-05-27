@@ -20,6 +20,9 @@
   "entrypoints": {
     "main": [
       "co.q64.dynamicalsystems.DynamicalSystems"
+    ],
+    "client": [
+      "co.q64.dynamicalsystems.client.DynamicalSystemsClient"
     ]
   },
   "mixins": [

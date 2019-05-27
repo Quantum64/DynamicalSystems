@@ -15,7 +15,7 @@ import co.q64.dynamicalsystems.util.Logger;
 public class MaterialRegistry {
 	protected @Inject Logger logger;
 
-	private Map<Class<? extends Material>, List<? extends Material>> types = new HashMap<>();
+	private Map<Class<? extends Material>, List<Material>> types = new HashMap<>();
 	private boolean frozen = false;
 
 	protected @Inject MaterialRegistry() {}
@@ -35,7 +35,7 @@ public class MaterialRegistry {
 				result.add((T) material);
 			}
 		}
-		types.put(type, result);
+		types.put(type, (List<Material>) result);
 		return result;
 	}
 
@@ -45,5 +45,16 @@ public class MaterialRegistry {
 
 	public <T extends Material> List<T> getMaterialsOfType(Class<T> type) {
 		return getList(type);
+	}
+
+	public void register(Material material, List<Class<? extends Material>> materialTypes) {
+		for (Class<? extends Material> type : materialTypes) {
+			List<Material> materials = types.get(type);
+			if (materials == null) {
+				materials = new ArrayList<>();
+				types.put(type, materials);
+			}
+			materials.add(material);
+		}
 	}
 }

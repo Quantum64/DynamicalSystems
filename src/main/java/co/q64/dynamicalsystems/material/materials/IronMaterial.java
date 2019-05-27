@@ -10,6 +10,6 @@ public class IronMaterial extends MaterialMetal {
 
 	@Inject
 	protected IronMaterial() {
-		super();
+		name = "Iron";
 	}
 }

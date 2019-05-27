@@ -1,16 +1,16 @@
 package co.q64.dynamicalsystems;
 
-import co.q64.dynamicalsystems.inject.ConstantBinders.Author;
-import co.q64.dynamicalsystems.inject.ConstantBinders.ModId;
-import co.q64.dynamicalsystems.inject.ConstantBinders.Name;
-import co.q64.dynamicalsystems.inject.ConstantBinders.Version;
+import co.q64.dynamicalsystems.binders.ConstantBinders.Author;
+import co.q64.dynamicalsystems.binders.ConstantBinders.ModId;
+import co.q64.dynamicalsystems.binders.ConstantBinders.Name;
+import co.q64.dynamicalsystems.binders.ConstantBinders.Version;
 import dagger.Module;
 import dagger.Provides;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 
 @Module
-public interface DynamicalModule {
+public interface CommonModule {
 	// @formatter:off
 	
 	static @Provides FabricLoader provideFabricLoader() { return FabricLoader.getInstance(); }

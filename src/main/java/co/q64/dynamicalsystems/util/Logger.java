@@ -5,7 +5,7 @@ import javax.inject.Singleton;
 
 import org.apache.logging.log4j.LogManager;
 
-import co.q64.dynamicalsystems.inject.ConstantBinders.Name;
+import co.q64.dynamicalsystems.binders.ConstantBinders.Name;
 
 @Singleton
 public class Logger {
