@@ -1,14 +1,15 @@
 plugins {
 	id 'fabric-loom' version '0.2.2-SNAPSHOT'
-	id 'maven-publish'
+	id 'com.github.johnrengelman.shadow' version '4.0.4'
+	id "net.ltgt.apt" version "0.10"
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-archivesBaseName = dynamicalsystems
-version = 1.0
-group = co.q64.dynamicalsystems
+archivesBaseName = project.archives_base_name
+version = project.mod_version
+group = project.maven_group
 
 minecraft {
 }
@@ -21,9 +22,13 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
-	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
-	// You may need to force-disable transitiveness on them.
+	
+	modCompile 'com.google.dagger:dagger:2.22.1'
+    modCompile 'javax.inject:javax.inject:1'
+    modCompile 'com.google.auto.factory:auto-factory:1.0-beta6'
+    
+    apt 'com.google.dagger:dagger-compiler:2.22.1'
+	apt 'com.google.auto.factory:auto-factory:1.0-beta6'
 }
 
 processResources {
@@ -54,6 +59,19 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 	from sourceSets.main.allSource
 }
 
+shadowJar {
+	archiveName = "${archivesBaseName}-${version}.jar"
+	
+	dependencies {
+        include dependency('javax.inject:javax.inject')
+        include dependency('com.google.dagger:dagger')
+    }
+
+    relocate('javax.inject', 'co.q64.library.javax.inject')
+    relocate('dagger', 'co.q64.library.dagger')
+}
+
+jar.dependsOn 'shadowJar'
 jar {
-	from "LICENSE"
+	actions = []
 }

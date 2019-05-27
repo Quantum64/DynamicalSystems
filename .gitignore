@@ -23,3 +23,9 @@ bin/
 # fabric
 
 run/
+/.apt_generated/
+
+# eclipse
+Minecraft_Client.launch
+Minecraft_Server.launch
+.factorypath

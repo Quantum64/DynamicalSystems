@@ -1,4 +1,4 @@
-package net.fabricmc.example.mixin;
+package co.q64.dynamicalsystems.mixin;
 
 import net.minecraft.client.MinecraftClient;
 import org.spongepowered.asm.mixin.Mixin;
