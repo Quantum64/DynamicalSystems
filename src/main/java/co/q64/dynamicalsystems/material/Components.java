@@ -3,6 +3,7 @@ package co.q64.dynamicalsystems.material;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import co.q64.dynamicalsystems.material.components.BlockComponent;
 import co.q64.dynamicalsystems.material.components.CentrifugedCrushedComponent;
 import co.q64.dynamicalsystems.material.components.CentrifugedTinyCrushedComponent;
 import co.q64.dynamicalsystems.material.components.ChainComponent;
@@ -48,6 +49,7 @@ import co.q64.dynamicalsystems.material.components.TripleIngotComponent;
 
 @Singleton
 public class Components {
+	public @Inject BlockComponent block;
 	public @Inject CentrifugedCrushedComponent centrifugedCrushed;
 	public @Inject CentrifugedTinyCrushedComponent centrifugedTinyCrushed;
 	public @Inject ChainComponent chain;

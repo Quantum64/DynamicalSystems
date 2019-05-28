@@ -2,6 +2,7 @@ package co.q64.dynamicalsystems.item;
 
 import lombok.Getter;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -11,14 +12,17 @@ public abstract class BaseItem extends Item {
 	private String name, id;
 
 	public BaseItem(String name) {
-		super(new Settings());
-		this.name = name;
-		this.id = name.replace(" ", "_").toLowerCase();
+		this(name, new Settings());
+	}
+
+	public BaseItem(String name, ItemGroup group) {
+		this(name, new Settings().itemGroup(group));
 	}
 
 	public BaseItem(String name, Settings settings) {
 		super(settings);
 		this.name = name;
+		this.id = name.replace(" ", "_").toLowerCase();
 	}
 
 	@Override

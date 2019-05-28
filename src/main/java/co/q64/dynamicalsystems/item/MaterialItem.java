@@ -1,20 +1,41 @@
 package co.q64.dynamicalsystems.item;
 
-import com.google.auto.factory.AutoFactory;
-
+import co.q64.dynamicalsystems.block.MaterialBlock;
+import co.q64.dynamicalsystems.block.item.MaterialBlockItem;
 import co.q64.dynamicalsystems.material.base.Component;
 import co.q64.dynamicalsystems.material.base.Material;
-import lombok.Getter;
+import net.minecraft.item.Item;
 
-@Getter
-@AutoFactory
-public class MaterialItem extends BaseItem {
-	private Material material;
-	private Component component;
+public interface MaterialItem {
+	public Component getComponent();
 
-	public MaterialItem(Component component, Material material) {
-		super(component.getPrefix() + (component.getPrefix().isEmpty() ? "" : " ") + material.getName() + (component.getName().isEmpty() ? "" : " ") + component.getName());
-		this.material = material;
-		this.component = component;
+	public Material getMaterial();
+
+	public String getName();
+
+	public String getId();
+
+	public default boolean isBlock() {
+		return this instanceof MaterialBlockItem;
+	}
+	
+	public default boolean isItem() {
+		return this instanceof SimpleMaterialItem;
+	}
+
+	public default Item getItem() {
+		return (Item) this;
+	}
+
+	public default SimpleMaterialItem getMaterialItem() {
+		return (SimpleMaterialItem) this;
+	}
+
+	public default MaterialBlockItem getBlockItem() {
+		return (MaterialBlockItem) this;
+	}
+
+	public default MaterialBlock getBlock() {
+		return ((MaterialBlockItem) this).getBlock();
 	}
 }

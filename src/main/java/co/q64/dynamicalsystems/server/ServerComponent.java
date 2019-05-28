@@ -3,7 +3,7 @@ package co.q64.dynamicalsystems.server;
 import javax.inject.Singleton;
 
 import co.q64.dynamicalsystems.CommonModule;
-import co.q64.dynamicalsystems.CommonLoader;
+import co.q64.dynamicalsystems.loader.CommonLoader;
 import dagger.Component;
 
 @Singleton

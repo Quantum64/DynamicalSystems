@@ -6,7 +6,8 @@ public interface ModInformation {
 	ID = "dynamicalsystems",
 	NAME = "Dynamical Systems",
 	AUTHOR = "Quantum64",
-	VERSION = "1.0"
+	VERSION = "1.0",
+	SHARED_NAMESPACE = "dynamicalshared";
 	// @formatter:on
 	;
 }

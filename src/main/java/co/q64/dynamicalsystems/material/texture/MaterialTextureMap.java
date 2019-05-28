@@ -12,7 +12,6 @@ import co.q64.dynamicalsystems.material.base.Material;
 
 @Singleton
 public class MaterialTextureMap {
-	private static final String prefix = "items/material/";
 
 	protected @Inject MaterialTextureMap() {}
 
@@ -24,9 +23,10 @@ public class MaterialTextureMap {
 		if (material.getTextureOverrides().contains(component)) {
 			suffix = material.getTextureOverrideFamily();
 		}
-		result.add(prefix + component.getTextureName() + "/" + suffix);
+		String prefix = item.isBlock() ? "blocks" : "items";
+		result.add(prefix + "/material/" + component.getTextureName() + "/" + suffix);
 		if (component.isHasTextureOverlay()) {
-			result.add(prefix + component.getTextureName() + "/" + suffix + "_overlay");
+			result.add(prefix + "/material/" + component.getTextureName() + "/" + suffix + "_overlay");
 		}
 		return result;
 	}

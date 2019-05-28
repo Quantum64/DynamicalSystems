@@ -13,6 +13,9 @@ public interface ConstantBinders {
 	@Qualifier @Retention(RUNTIME) public static @interface Name {}
 	@Qualifier @Retention(RUNTIME) public static @interface Author {}
 	@Qualifier @Retention(RUNTIME) public static @interface Version {}
+	@Qualifier @Retention(RUNTIME) public static @interface SharedNamespace {}
+	
+	@Qualifier @Retention(RUNTIME) public static @interface MaterialsItemGroup {}
 	
 	// @formatter:on
 }

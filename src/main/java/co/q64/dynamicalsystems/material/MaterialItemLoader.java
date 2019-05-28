@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import co.q64.dynamicalsystems.item.MaterialItem;
-import co.q64.dynamicalsystems.item.MaterialItemFactory;
+import co.q64.dynamicalsystems.item.SimpleMaterialItemFactory;
 import co.q64.dynamicalsystems.material.base.Component;
 import co.q64.dynamicalsystems.material.base.Material;
 import co.q64.dynamicalsystems.util.ItemIdentifierUtil;
@@ -23,7 +24,7 @@ public class MaterialItemLoader {
 	protected @Inject Components components;
 	protected @Inject MaterialRegistry materialRegistry;
 	protected @Inject ComponentRegistry componentRegistry;
-	protected @Inject MaterialItemFactory materialItemFactory;
+	protected @Inject SimpleMaterialItemFactory materialItemFactory;
 	protected @Inject ItemRegistrationUtil itemRegistrationUtil;
 	protected @Inject ItemIdentifierUtil identifierUtil;
 
@@ -37,7 +38,7 @@ public class MaterialItemLoader {
 		for (Component component : componentRegistry.getComponents()) {
 			for (Material material : materialRegistry.getMaterials()) {
 				if (component.getGenerate().test(material)) {
-					MaterialItem item = materialItemFactory.create(component, material);
+					MaterialItem item = component.getFactory().orElse(m -> materialItemFactory.create(component, m)).apply(material);
 					items.add(item);
 					Map<Material, MaterialItem> materialMap = itemMap.get(component);
 					if (materialMap == null) {
@@ -46,9 +47,17 @@ public class MaterialItemLoader {
 					}
 					materialMap.put(material, item);
 					identifierCache.put(identifierUtil.getIdentifier(item), item);
-					itemRegistrationUtil.registerItem(item);
+					itemRegistrationUtil.registerMaterial(item);
 				}
 			}
 		}
+	}
+
+	public boolean generated(Component component, Material material) {
+		return itemMap.containsKey(component) && itemMap.get(component).containsKey(material);
+	}
+
+	public Optional<MaterialItem> getItem(Component component, Material material) {
+		return generated(component, material) ? Optional.of(itemMap.get(component).get(material)) : Optional.empty();
 	}
 }
