@@ -12,8 +12,10 @@ import co.q64.dynamicalsystems.item.MaterialItem;
 import co.q64.dynamicalsystems.item.MaterialItemFactory;
 import co.q64.dynamicalsystems.material.base.Component;
 import co.q64.dynamicalsystems.material.base.Material;
+import co.q64.dynamicalsystems.util.ItemIdentifierUtil;
 import co.q64.dynamicalsystems.util.ItemRegistrationUtil;
 import lombok.Getter;
+import net.minecraft.util.Identifier;
 
 @Singleton
 public class MaterialItemLoader {
@@ -23,9 +25,11 @@ public class MaterialItemLoader {
 	protected @Inject ComponentRegistry componentRegistry;
 	protected @Inject MaterialItemFactory materialItemFactory;
 	protected @Inject ItemRegistrationUtil itemRegistrationUtil;
+	protected @Inject ItemIdentifierUtil identifierUtil;
 
 	private @Getter List<MaterialItem> items = new ArrayList<>();
 	private @Getter Map<Component, Map<Material, MaterialItem>> itemMap = new HashMap<>();
+	private @Getter Map<Identifier, MaterialItem> identifierCache = new HashMap<>();
 
 	protected @Inject MaterialItemLoader() {}
 
@@ -41,6 +45,7 @@ public class MaterialItemLoader {
 						itemMap.put(component, materialMap);
 					}
 					materialMap.put(material, item);
+					identifierCache.put(identifierUtil.getIdentifier(item), item);
 					itemRegistrationUtil.registerItem(item);
 				}
 			}

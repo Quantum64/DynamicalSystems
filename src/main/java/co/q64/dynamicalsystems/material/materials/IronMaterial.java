@@ -11,5 +11,6 @@ public class IronMaterial extends MaterialMetal {
 	@Inject
 	protected IronMaterial() {
 		name = "Iron";
+		color = 0xAAAAAA;
 	}
 }

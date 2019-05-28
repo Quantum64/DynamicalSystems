@@ -9,6 +9,8 @@ import co.q64.dynamicalsystems.material.base.Component;
 public class IngotComponent extends Component {
 	protected @Inject IngotComponent() {
 		name = "Ingot";
+		textureName = "ingot";
 		generate = material -> true;
+		hasTextureOverlay = true;
 	}
 }

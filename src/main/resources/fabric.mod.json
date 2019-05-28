@@ -18,8 +18,8 @@
 
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "co.q64.dynamicalsystems.DynamicalSystems"
+    "dedicatedServer": [
+      "co.q64.dynamicalsystems.server.DynamicalSystemsServer"
     ],
     "client": [
       "co.q64.dynamicalsystems.client.DynamicalSystemsClient"
