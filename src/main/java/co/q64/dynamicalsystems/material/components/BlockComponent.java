@@ -11,6 +11,5 @@ public class BlockComponent extends ComponentBlock {
 		generate = material -> true;
 		name = "Block";
 		textureName = "block";
-		hasTextureOverlay = true;
 	}
 }

@@ -19,6 +19,7 @@ public abstract class Component {
 	protected String name = "";
 	protected String prefix = "";
 	protected String textureName = "";
+	protected String model = "";
 	protected boolean hasTextureOverlay = false;
 
 	protected Component() {}

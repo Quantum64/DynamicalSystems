@@ -14,6 +14,8 @@ import co.q64.dynamicalsystems.block.item.MaterialBlockItem;
 import co.q64.dynamicalsystems.item.MaterialItem;
 import co.q64.dynamicalsystems.item.SimpleMaterialItem;
 import co.q64.dynamicalsystems.loader.CommonLoader;
+import co.q64.dynamicalsystems.material.base.Component;
+import co.q64.dynamicalsystems.material.base.ComponentOre;
 import co.q64.dynamicalsystems.material.texture.MaterialTextureMap;
 import co.q64.dynamicalsystems.util.ItemUtil;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
@@ -49,7 +51,7 @@ public class ClientLoader {
 					MaterialItem materialItem = itemUtil.getMaterialItem(identifier).get();
 					if (registry.equals("item")) {
 						if (materialItem.isBlock()) {
-							return new JsonUnbakedModel(new ModelIdentifier(new Identifier(modId, resource), ""), Collections.emptyList(), Collections.emptyMap(), false, false, ModelTransformation.NONE, Collections.emptyList());
+							return new JsonUnbakedModel(new ModelIdentifier(new Identifier(modId, resource), ""), Collections.emptyList(), Collections.emptyMap(), false, true, ModelTransformation.NONE, Collections.emptyList());
 						} else {
 							List<String> layers = materialTextureMap.getTextures(materialItem);
 							Map<String, String> textures = new HashMap<>();
@@ -72,21 +74,29 @@ public class ClientLoader {
 		});
 
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(manager -> (resourceId, context) -> {
-			ModelIdentifier modelId = (ModelIdentifier) resourceId;
-			if (modelId.getNamespace().equals(modId) && modelId.getVariant().equals("")) {
-				Identifier identifier = new Identifier(modId, modelId.getPath());
-				if (itemUtil.getMaterialItem(identifier).isPresent()) {
-					MaterialItem materialItem = itemUtil.getMaterialItem(identifier).get();
-					Map<String, String> textures = new HashMap<>();
-					List<String> textureList = materialTextureMap.getTextures(materialItem);
-					textures.put("all", modId + ":" + textureList.get(0));
-					if (textureList.size() > 1) {
-						textures.put("overlay", modId + ":" + textureList.get(1));
-						System.out.println("loaded overlay");
-						return new JsonUnbakedModel(new Identifier(modId, "block/block_material_overlay"), Collections.emptyList(), textures, false, false, ModelTransformation.NONE, Collections.emptyList());
+			try {
+				ModelIdentifier modelId = (ModelIdentifier) resourceId;
+				if (modelId.getNamespace().equals(modId) && modelId.getVariant().equals("")) {
+					Identifier identifier = new Identifier(modId, modelId.getPath());
+					if (itemUtil.getMaterialItem(identifier).isPresent()) {
+						MaterialItem materialItem = itemUtil.getMaterialItem(identifier).get();
+						Map<String, String> textures = new HashMap<>();
+						List<String> textureList = materialTextureMap.getTextures(materialItem);
+						textures.put("all", modId + ":" + textureList.get(0));
+						Component component = materialItem.getComponent();
+						String modelOverload = component.getModel();
+						if (component instanceof ComponentOre) {
+							textures.put("base", ((ComponentOre) component).getBaseTexture());
+						}
+						if (textureList.size() > 1) {
+							textures.put("overlay", modId + ":" + textureList.get(1));
+							return new JsonUnbakedModel(new Identifier(modId, modelOverload.isEmpty() ? "block/block_material_overlay" : modelOverload), Collections.emptyList(), textures, false, false, ModelTransformation.NONE, Collections.emptyList());
+						}
+						return new JsonUnbakedModel(new Identifier(modId, modelOverload.isEmpty() ? "block/block_material" : modelOverload), Collections.emptyList(), textures, false, false, ModelTransformation.NONE, Collections.emptyList());
 					}
-					return new JsonUnbakedModel(new Identifier(modId, "block/block_material"), Collections.emptyList(), textures, false, false, ModelTransformation.NONE, Collections.emptyList());
 				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			return null;
 		});

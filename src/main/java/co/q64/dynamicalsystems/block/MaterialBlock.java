@@ -3,6 +3,7 @@ package co.q64.dynamicalsystems.block;
 import com.google.auto.factory.AutoFactory;
 
 import co.q64.dynamicalsystems.block.item.MaterialBlockItem;
+import co.q64.dynamicalsystems.material.base.ComponentOre;
 import lombok.Getter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -24,7 +25,7 @@ public class MaterialBlock extends BaseBlock {
 
 	public void setItem(MaterialBlockItem item) {
 		this.item = item;
-		this.renderLayer = item.getComponent().isHasTextureOverlay() ? BlockRenderLayer.TRANSLUCENT : BlockRenderLayer.SOLID;
+		this.renderLayer = (item.getComponent().isHasTextureOverlay() || item.getComponent() instanceof ComponentOre) ? BlockRenderLayer.TRANSLUCENT : BlockRenderLayer.SOLID;
 	}
 
 	@Environment(EnvType.CLIENT)
