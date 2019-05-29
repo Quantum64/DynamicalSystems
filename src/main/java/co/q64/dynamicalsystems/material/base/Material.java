@@ -3,12 +3,14 @@ package co.q64.dynamicalsystems.material.base;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
 import co.q64.dynamicalsystems.material.MaterialRegistry;
+import co.q64.dynamicalsystems.type.Element;
 import lombok.Getter;
 
 @Getter
@@ -21,6 +23,7 @@ public abstract class Material {
 	protected String textureOverrideFamily = "";
 	protected List<Component> textureOverrides = new ArrayList<>();
 	protected int color = 0xFFFFFF;
+	protected Optional<Element> element = Optional.empty();
 
 	public Material(List<Class<? extends Material>> subclassTypes) {
 		this.subclassTypes = subclassTypes;

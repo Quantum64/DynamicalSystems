@@ -11,7 +11,7 @@ import co.q64.dynamicalsystems.binders.ConstantBinders.Version;
 import co.q64.dynamicalsystems.link.LinkInfo;
 import co.q64.dynamicalsystems.link.cottonresources.CottonResourcesLinkInfo;
 import co.q64.dynamicalsystems.material.components.ScrewComponent;
-import co.q64.dynamicalsystems.material.materials.GoldMaterial;
+import co.q64.dynamicalsystems.material.materials.elements.GoldMaterial;
 import co.q64.dynamicalsystems.unification.Unification;
 import dagger.Binds;
 import dagger.Lazy;
