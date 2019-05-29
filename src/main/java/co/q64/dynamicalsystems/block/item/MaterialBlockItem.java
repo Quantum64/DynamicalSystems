@@ -24,7 +24,10 @@ public class MaterialBlockItem extends BaseBlockItem implements MaterialItem {
 
 	public MaterialBlockItem(Material material, Component component, @Provided MaterialBlockFactoryFactory blockFactoryFactory, @Provided MaterialItemNameGenerator generator, @Provided @MaterialsItemGroup ItemGroup group) {
 		super(blockFactoryFactory.getFactory().create(generator.generate(component, material)), new Settings().itemGroup(group));
-		block = (MaterialBlock) super.getBlock();
+		this.block = (MaterialBlock) super.getBlock();
+		this.component = component;
+		this.material = material;
+		this.block.setItem(this);
 	}
 
 	@Override
