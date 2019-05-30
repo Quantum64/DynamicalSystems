@@ -1,4 +1,4 @@
-package co.q64.dynamicalsystems.material.texture;
+package co.q64.dynamicalsystems.client.texture;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ public class MaterialTextureMap {
 		if (material.getTextureOverrides().contains(component)) {
 			suffix = material.getTextureOverrideFamily();
 		}
-		String prefix = item.isBlock() ? "blocks" : "items";
+		String prefix = item.isBlock() ? "block" : "item";
 		result.add(prefix + "/material/" + component.getTextureName() + "/" + suffix);
 		if (component.isHasTextureOverlay()) {
 			result.add(prefix + "/material/" + component.getTextureName() + "/" + suffix + "_overlay");
