@@ -45,7 +45,6 @@ public enum Element {
 	 *            the electron negativity by Pauling
 	 */
 	private Element(String fullName, float atomicMass, float electroNegativity) {
-
 		this.fullName = fullName;
 		this.atomicMass = atomicMass;
 		this.electroNegativity = electroNegativity;
@@ -154,10 +153,11 @@ public enum Element {
 	public static String getSymbolByAtomicNumber(int atomicNumber) {
 
 		Element e = Element.Holder.map_atomicNumber.get(atomicNumber);
-		if (e != null)
+		if (e != null) {
 			return e.getSymbol();
-		else
+		} else {
 			return null;
+		}
 	}
 
 	/**
@@ -172,12 +172,12 @@ public enum Element {
 	 * @see {@link #toCorrectSymbol(String symbol)}
 	 */
 	public static int getAtomicNumberBySymbol(String symbol) {
-
-		Element e = Element.Holder.map_atomicNumber.get(symbol);
-		if (e != null)
+		Element e = Element.Holder.map_symbol.get(symbol);
+		if (e != null) {
 			return e.getAtomicNumber();
-		else
+		} else {
 			return 0;
+		}
 	}
 
 	/**
@@ -193,10 +193,11 @@ public enum Element {
 	 * @see {@link #toCorrectSymbol(String symbol)}
 	 */
 	public static boolean exists(String symbol) {
-		if (null != Element.Holder.map_symbol.get(symbol))
+		if (null != Element.Holder.map_symbol.get(symbol)) {
 			return true;
-		else
+		} else {
 			return false;
+		}
 	}
 
 	/**
@@ -210,10 +211,11 @@ public enum Element {
 	 * @see {@link #exists(String symbol)}
 	 */
 	public static boolean exists(int atomicNumber) {
-		if (null != Element.Holder.map_symbol.get(atomicNumber))
+		if (null != Element.Holder.map_atomicNumber.get(atomicNumber)) {
 			return true;
-		else
+		} else {
 			return false;
+		}
 	}
 
 	/**
@@ -233,19 +235,14 @@ public enum Element {
 	 * @return the correctly spelled symbol
 	 */
 	public static String toCorrectSymbol(String symbol) {
-
 		String correct_symbol = "";
-
 		correct_symbol += Character.toUpperCase(symbol.charAt(0));
-
 		if (2 == symbol.length()) {
 			correct_symbol += Character.toLowerCase(symbol.charAt(1));
-
 		} else if (3 == symbol.length()) {
 			correct_symbol += Character.toLowerCase(symbol.charAt(1));
 			correct_symbol += Character.toLowerCase(symbol.charAt(2));
 		}
-
 		return correct_symbol;
 	}
 }

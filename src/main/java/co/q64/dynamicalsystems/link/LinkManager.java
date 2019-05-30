@@ -14,6 +14,7 @@ import net.fabricmc.loader.api.FabricLoader;
 public class LinkManager {
 	protected @Inject Logger logger;
 	protected @Inject Set<LinkInfo> links;
+	protected @Inject FabricLoader fabricLoader;
 
 	private List<Link> enabledLinks = new ArrayList<>();
 
@@ -21,7 +22,7 @@ public class LinkManager {
 
 	public void initializeLinks() {
 		for (LinkInfo info : links) {
-			if (FabricLoader.getInstance().isModLoaded(info.getModId())) {
+			if (fabricLoader.isModLoaded(info.getModId())) {
 				//TODO check version
 				try {
 					Link link = info.getLink().get();
