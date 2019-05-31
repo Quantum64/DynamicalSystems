@@ -7,6 +7,7 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 
 import co.q64.dynamicalsystems.binders.ConstantBinders.MaterialsItemGroup;
+import co.q64.dynamicalsystems.block.BaseBlock;
 import co.q64.dynamicalsystems.block.MaterialBlock;
 import co.q64.dynamicalsystems.block.MaterialBlockFactory;
 import co.q64.dynamicalsystems.item.MaterialItem;
@@ -22,8 +23,16 @@ public class MaterialBlockItem extends BaseBlockItem implements MaterialItem {
 	private Material material;
 	private MaterialBlock block;
 
-	public MaterialBlockItem(Material material, Component component, @Provided MaterialBlockFactoryFactory blockFactoryFactory, @Provided MaterialItemNameGenerator generator, @Provided @MaterialsItemGroup ItemGroup group) {
+	protected MaterialBlockItem(Material material, Component component, @Provided MaterialBlockFactoryFactory blockFactoryFactory, @Provided MaterialItemNameGenerator generator, @Provided @MaterialsItemGroup ItemGroup group) {
 		super(blockFactoryFactory.getFactory().create(generator.generate(component, material)), new Settings().itemGroup(group));
+		this.block = (MaterialBlock) super.getBlock();
+		this.component = component;
+		this.material = material;
+		this.block.setItem(this);
+	}
+
+	protected MaterialBlockItem(Material material, Component component, BaseBlock block, ItemGroup group) {
+		super(block, new Settings().itemGroup(group));
 		this.block = (MaterialBlock) super.getBlock();
 		this.component = component;
 		this.material = material;

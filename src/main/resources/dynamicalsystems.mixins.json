@@ -1,12 +1,14 @@
 {
   "required": true,
-  "package": "co.q64.dynamicalsystems.client.mixin",
+  "package": "co.q64.dynamicalsystems.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "TagMixin",
+    "RecipeManagerMixin"
   ],
   "client": [
-  	"SpriteMixin",
-    "SpriteAtlasTextureMixin"
+  	"client.SpriteMixin",
+    "client.SpriteAtlasTextureMixin"
   ],
   "injectors": {
     "defaultRequire": 1

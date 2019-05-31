@@ -10,9 +10,12 @@ import co.q64.dynamicalsystems.binders.ConstantBinders.SharedNamespace;
 import co.q64.dynamicalsystems.binders.ConstantBinders.Version;
 import co.q64.dynamicalsystems.link.LinkInfo;
 import co.q64.dynamicalsystems.link.cottonresources.CottonResourcesLinkInfo;
+import co.q64.dynamicalsystems.loader.component.CraftingComponentLoader;
+import co.q64.dynamicalsystems.material.ComponentLoader;
 import co.q64.dynamicalsystems.material.components.ScrewComponent;
 import co.q64.dynamicalsystems.material.materials.elements.GoldMaterial;
 import co.q64.dynamicalsystems.unification.Unification;
+import co.q64.dynamicalsystems.util.identifier.IdentifierUtil;
 import dagger.Binds;
 import dagger.Lazy;
 import dagger.Module;
@@ -22,11 +25,12 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.util.Identifier;
 
 @Module
 public interface CommonModule {
 	// @formatter:off
+	
+	@Binds @IntoSet ComponentLoader bindCraftingComponentLoader(CraftingComponentLoader craftingComponentLoader);
 	
 	@Binds @IntoSet LinkInfo bindCottonResourcesLink(CottonResourcesLinkInfo cottonResourcesLinkInfo);
 	
@@ -39,8 +43,8 @@ public interface CommonModule {
 	static @Provides @Author String provideVersion() { return ModInformation.AUTHOR; }
 	static @Provides @SharedNamespace String provideSharedNamespace() { return ModInformation.SHARED_NAMESPACE; }
 	
-	static @Provides @Singleton @MaterialsItemGroup ItemGroup provideMaterialsItemGroup(@ModId String modId, Lazy<Unification> unification, Lazy<GoldMaterial> gold, Lazy<ScrewComponent> screw) {
-		return FabricItemGroupBuilder.create(new Identifier(modId, "materials")).icon(() -> unification.get().getMaterialStack(screw.get(), gold.get())).build();
+	static @Provides @Singleton @MaterialsItemGroup ItemGroup provideMaterialsItemGroup(IdentifierUtil identifierUtil, Lazy<Unification> unification, Lazy<GoldMaterial> gold, Lazy<ScrewComponent> screw) {
+		return FabricItemGroupBuilder.create(identifierUtil.get("materials")).icon(() -> unification.get().getStack(screw.get(), gold.get()).getItemStack()).build();
 	}
 	// @formatter:on
 }

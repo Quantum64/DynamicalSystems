@@ -13,6 +13,7 @@ import co.q64.dynamicalsystems.item.MaterialItem;
 import co.q64.dynamicalsystems.item.SimpleMaterialItem;
 import co.q64.dynamicalsystems.util.ItemUtil;
 import co.q64.dynamicalsystems.util.Logger;
+import co.q64.dynamicalsystems.util.identifier.IdentifierUtil;
 import net.fabricmc.fabric.api.client.render.ColorProviderRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.minecraft.block.Block;
@@ -26,6 +27,7 @@ public class TextureLoader {
 	protected @Inject AlphaMapSpriteFactory alphaMapSpriteFactory;
 	protected @Inject @ModId String modId;
 	protected @Inject ItemUtil itemUtil;
+	protected @Inject IdentifierUtil identifierUtil;
 
 	protected @Inject TextureLoader() {}
 
@@ -33,7 +35,7 @@ public class TextureLoader {
 		ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEX).register((texture, registry) -> {
 			logger.info("Processing " + alphaMapRequestRegistry.getRequests().size() + " alphamap requests...");
 			for (AlphaMapRequest request : alphaMapRequestRegistry.getRequests()) {
-				registry.register(alphaMapSpriteFactory.create(new Identifier(modId, request.getGeneratedTexture()), new Identifier("textures/" + request.getBaseTexture() + ".png"), new Identifier(modId, "textures/" + request.getOverlayTexture() + ".png")));
+				registry.register(alphaMapSpriteFactory.create(identifierUtil.get(request.getGeneratedTexture()), new Identifier("textures/" + request.getBaseTexture() + ".png"), identifierUtil.get("textures/" + request.getOverlayTexture() + ".png")));
 			}
 		});
 

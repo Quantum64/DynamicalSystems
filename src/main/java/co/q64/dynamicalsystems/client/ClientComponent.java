@@ -7,7 +7,7 @@ import co.q64.dynamicalsystems.client.loader.ClientLoader;
 import dagger.Component;
 
 @Singleton
-@Component(modules = { CommonModule.class })
+@Component(modules = { CommonModule.class, ClientModule.class })
 public interface ClientComponent {
 	public ClientLoader getLoader();
 }

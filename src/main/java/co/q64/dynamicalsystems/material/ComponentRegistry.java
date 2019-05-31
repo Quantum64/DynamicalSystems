@@ -15,6 +15,9 @@ public class ComponentRegistry {
 	protected @Inject ComponentRegistry() {}
 
 	public void register(Component component) {
+		if (components.contains(component)) {
+			throw new IllegalStateException("Component already registered: " + component.getName());
+		}
 		components.add(component);
 	}
 

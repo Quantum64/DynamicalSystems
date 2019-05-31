@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import com.google.auto.factory.AutoFactory;
 
-import co.q64.dynamicalsystems.client.mixin.SpriteMixin;
+import co.q64.dynamicalsystems.mixin.client.SpriteMixin;
 import net.fabricmc.fabric.api.client.texture.CustomSpriteLoader;
 import net.fabricmc.fabric.api.client.texture.DependentSprite;
 import net.fabricmc.fabric.impl.client.texture.FabricSprite;

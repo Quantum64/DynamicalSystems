@@ -25,7 +25,7 @@ public class MaterialBlock extends BaseBlock {
 
 	public void setItem(MaterialBlockItem item) {
 		this.item = item;
-		this.renderLayer = (item.getComponent().isHasTextureOverlay() || item.getComponent() instanceof ComponentOre) ? BlockRenderLayer.CUTOUT_MIPPED : BlockRenderLayer.SOLID;
+		this.renderLayer = (item.getComponent().isHasTextureOverlay() || item.getComponent() instanceof ComponentOre) ? BlockRenderLayer.CUTOUT : BlockRenderLayer.SOLID;
 	}
 
 	@Environment(EnvType.CLIENT)

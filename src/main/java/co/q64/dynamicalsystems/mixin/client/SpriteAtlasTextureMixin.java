@@ -1,4 +1,4 @@
-package co.q64.dynamicalsystems.client.mixin;
+package co.q64.dynamicalsystems.mixin.client;
 
 import java.util.Collection;
 import java.util.Set;
