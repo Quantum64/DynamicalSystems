@@ -53,6 +53,7 @@ public class MaterialItemLoader {
 		}
 	}
 
+	// Generate all items with recipes
 	public boolean generated(Component component, Material material) {
 		return itemMap.containsKey(component) && itemMap.get(component).containsKey(material);
 	}

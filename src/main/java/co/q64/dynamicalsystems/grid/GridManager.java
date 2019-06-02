@@ -2,13 +2,13 @@ package co.q64.dynamicalsystems.grid;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import co.q64.dynamicalsystems.grid.energy.EnergyGridFactory;
 import net.fabricmc.fabric.api.event.server.ServerTickCallback;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.MinecraftServer;
@@ -18,7 +18,7 @@ import net.minecraft.util.math.Direction;
 @Singleton
 public class GridManager implements ServerTickCallback {
 	private static final Direction[] DIRECTIONS = Direction.values(); // Cache to avoid copy
-	protected @Inject GridFactory gridFactory;
+	protected @Inject EnergyGridFactory gridFactory; //TODO fix
 
 	private List<Grid> grids = new ArrayList<>();
 
@@ -74,6 +74,12 @@ public class GridManager implements ServerTickCallback {
 
 		// Finally walk the updated grid
 		primary.flush();
+	}
+
+	@Override
+	public void tick(MinecraftServer server) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

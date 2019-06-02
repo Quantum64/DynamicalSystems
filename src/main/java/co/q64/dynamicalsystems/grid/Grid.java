@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import lombok.Getter;
 import net.minecraft.util.math.BlockPos;
@@ -26,7 +26,7 @@ public abstract class Grid {
 	private @Getter Set<GridTile> tiles = new HashSet<GridTile>();
 	private GridTile master;
 
-	protected Grid(@Provided GridRouteFactory routeFactory, @Provided GridConnectionFactory connectionFactory) {
+	protected Grid(GridRouteFactory routeFactory, GridConnectionFactory connectionFactory) {
 		this.routeFactory = routeFactory;
 		this.connectionFactory = connectionFactory;
 		flush();
@@ -86,5 +86,19 @@ public abstract class Grid {
 				routes.put(provider, routeFactory.create(provider, acceptor, transport)); //TODO fix me
 			}
 		}
+	}
+
+	@Singleton
+	public static class GridRouteFactoryFactory {
+		protected @Inject GridRouteFactoryFactory() {}
+
+		protected @Getter @Inject GridRouteFactory factory;
+	}
+
+	@Singleton
+	public static class GridConnectionFactoryFactory {
+		protected @Inject GridConnectionFactoryFactory() {}
+
+		protected @Getter @Inject GridConnectionFactory factory;
 	}
 }

@@ -3,7 +3,6 @@ package co.q64.dynamicalsystems.material;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import co.q64.dynamicalsystems.material.components.BlockComponent;
 import co.q64.dynamicalsystems.material.components.CableComponent;
 import co.q64.dynamicalsystems.material.components.CentrifugedCrushedComponent;
 import co.q64.dynamicalsystems.material.components.CentrifugedTinyCrushedComponent;
@@ -14,7 +13,6 @@ import co.q64.dynamicalsystems.material.components.CurvedPlateComponent;
 import co.q64.dynamicalsystems.material.components.DensePlateComponent;
 import co.q64.dynamicalsystems.material.components.DoubleIngotComponent;
 import co.q64.dynamicalsystems.material.components.DustComponent;
-import co.q64.dynamicalsystems.material.components.EndOreComponent;
 import co.q64.dynamicalsystems.material.components.ExquisiteGemComponent;
 import co.q64.dynamicalsystems.material.components.FineWireComponent;
 import co.q64.dynamicalsystems.material.components.FlawedGemComponent;
@@ -28,7 +26,6 @@ import co.q64.dynamicalsystems.material.components.IngotComponent;
 import co.q64.dynamicalsystems.material.components.LegendaryGemComponent;
 import co.q64.dynamicalsystems.material.components.LensComponent;
 import co.q64.dynamicalsystems.material.components.LongStickComponent;
-import co.q64.dynamicalsystems.material.components.NetherOreComponent;
 import co.q64.dynamicalsystems.material.components.NuggetComponent;
 import co.q64.dynamicalsystems.material.components.PlateComponent;
 import co.q64.dynamicalsystems.material.components.PureDustComponent;
@@ -46,10 +43,13 @@ import co.q64.dynamicalsystems.material.components.SmallGearComponent;
 import co.q64.dynamicalsystems.material.components.SmallSpringComponent;
 import co.q64.dynamicalsystems.material.components.SpringComponent;
 import co.q64.dynamicalsystems.material.components.StickComponent;
-import co.q64.dynamicalsystems.material.components.StoneOreComponent;
 import co.q64.dynamicalsystems.material.components.TinyCrushedComponent;
 import co.q64.dynamicalsystems.material.components.TinyPlateComponent;
 import co.q64.dynamicalsystems.material.components.TripleIngotComponent;
+import co.q64.dynamicalsystems.material.components.block.BlockComponent;
+import co.q64.dynamicalsystems.material.components.block.EndOreComponent;
+import co.q64.dynamicalsystems.material.components.block.NetherOreComponent;
+import co.q64.dynamicalsystems.material.components.block.StoneOreComponent;
 
 @Singleton
 public class Components {

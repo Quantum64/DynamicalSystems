@@ -1,4 +1,4 @@
-package co.q64.dynamicalsystems.material.components;
+package co.q64.dynamicalsystems.material.components.block;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
