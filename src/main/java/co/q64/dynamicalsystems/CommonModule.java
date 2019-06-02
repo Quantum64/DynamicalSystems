@@ -8,6 +8,15 @@ import co.q64.dynamicalsystems.binders.ConstantBinders.ModId;
 import co.q64.dynamicalsystems.binders.ConstantBinders.Name;
 import co.q64.dynamicalsystems.binders.ConstantBinders.SharedNamespace;
 import co.q64.dynamicalsystems.binders.ConstantBinders.Version;
+import co.q64.dynamicalsystems.binders.PropertyBinders.AlignX;
+import co.q64.dynamicalsystems.binders.PropertyBinders.AlignY;
+import co.q64.dynamicalsystems.binders.PropertyBinders.AlignZ;
+import co.q64.dynamicalsystems.binders.PropertyBinders.Down;
+import co.q64.dynamicalsystems.binders.PropertyBinders.East;
+import co.q64.dynamicalsystems.binders.PropertyBinders.North;
+import co.q64.dynamicalsystems.binders.PropertyBinders.South;
+import co.q64.dynamicalsystems.binders.PropertyBinders.Up;
+import co.q64.dynamicalsystems.binders.PropertyBinders.West;
 import co.q64.dynamicalsystems.link.LinkInfo;
 import co.q64.dynamicalsystems.link.cottonresources.CottonResourcesLinkInfo;
 import co.q64.dynamicalsystems.loader.component.CraftingComponentLoader;
@@ -25,6 +34,7 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.state.property.BooleanProperty;
 
 @Module
 public interface CommonModule {
@@ -46,5 +56,15 @@ public interface CommonModule {
 	static @Provides @Singleton @MaterialsItemGroup ItemGroup provideMaterialsItemGroup(IdentifierUtil identifierUtil, Lazy<Unification> unification, Lazy<GoldMaterial> gold, Lazy<ScrewComponent> screw) {
 		return FabricItemGroupBuilder.create(identifierUtil.get("materials")).icon(() -> unification.get().getStack(screw.get(), gold.get()).getItemStack()).build();
 	}
+	
+	static @Provides @Singleton @Up BooleanProperty provideUp() { return BooleanProperty.create("up"); }
+	static @Provides @Singleton @Down BooleanProperty provideDown() { return BooleanProperty.create("down"); }
+	static @Provides @Singleton @North BooleanProperty provideNorth() { return BooleanProperty.create("north"); }
+	static @Provides @Singleton @South BooleanProperty provideSouth() { return BooleanProperty.create("south"); }
+	static @Provides @Singleton @East BooleanProperty provideEast() { return BooleanProperty.create("east"); }
+	static @Provides @Singleton @West BooleanProperty provideWest() { return BooleanProperty.create("west"); }
+	static @Provides @Singleton @AlignX BooleanProperty provideAlignX() { return BooleanProperty.create("alignx"); }
+	static @Provides @Singleton @AlignY BooleanProperty provideAlignY() { return BooleanProperty.create("aligny"); }
+	static @Provides @Singleton @AlignZ BooleanProperty provideAlignZ() { return BooleanProperty.create("alignz"); }
 	// @formatter:on
 }
