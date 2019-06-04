@@ -16,6 +16,7 @@ public interface ConstantBinders {
 	@Qualifier @Retention(RUNTIME) public static @interface SharedNamespace {}
 	
 	@Qualifier @Retention(RUNTIME) public static @interface MaterialsItemGroup {}
+	@Qualifier @Retention(RUNTIME) public static @interface MachinesItemGroup {}
 	
 	// @formatter:on
 }

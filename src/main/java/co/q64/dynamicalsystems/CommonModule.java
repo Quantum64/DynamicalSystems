@@ -3,6 +3,7 @@ package co.q64.dynamicalsystems;
 import javax.inject.Singleton;
 
 import co.q64.dynamicalsystems.binders.ConstantBinders.Author;
+import co.q64.dynamicalsystems.binders.ConstantBinders.MachinesItemGroup;
 import co.q64.dynamicalsystems.binders.ConstantBinders.MaterialsItemGroup;
 import co.q64.dynamicalsystems.binders.ConstantBinders.ModId;
 import co.q64.dynamicalsystems.binders.ConstantBinders.Name;
@@ -55,6 +56,10 @@ public interface CommonModule {
 	
 	static @Provides @Singleton @MaterialsItemGroup ItemGroup provideMaterialsItemGroup(IdentifierUtil identifierUtil, Lazy<Unification> unification, Lazy<GoldMaterial> gold, Lazy<ScrewComponent> screw) {
 		return FabricItemGroupBuilder.create(identifierUtil.get("materials")).icon(() -> unification.get().getStack(screw.get(), gold.get()).getItemStack()).build();
+	}
+		
+	static @Provides @Singleton @MachinesItemGroup ItemGroup provideMachinesItemGroup(IdentifierUtil identifierUtil, Lazy<Unification> unification, Lazy<GoldMaterial> gold, Lazy<ScrewComponent> screw) {
+		return FabricItemGroupBuilder.create(identifierUtil.get("machines")).icon(() -> unification.get().getStack(screw.get(), gold.get()).getItemStack()).build();
 	}
 	
 	static @Provides @Singleton @Up BooleanProperty provideUp() { return BooleanProperty.create("up"); }
