@@ -10,25 +10,25 @@ import net.minecraft.network.chat.TextComponent;
 
 @Getter
 public class BaseBlockItem extends BlockItem {
-	private String name, id;
+	private String itemName, id;
 
 	public BaseBlockItem(BaseBlock block) {
 		this(block, new Settings());
 	}
 
 	public BaseBlockItem(BaseBlock block, ItemGroup group) {
-		this(block, new Settings().itemGroup(group));
+		this(block, new Settings().group(group));
 	}
 
 	public BaseBlockItem(BaseBlock block, Settings settings) {
 		super(block, settings);
-		this.name = block.getName();
-		this.id = name.replace(" ", "_").toLowerCase();
+		this.itemName = block.getName();
+		this.id = itemName.replace(" ", "_").toLowerCase();
 	}
 
 	@Override
-	public Component getTranslatedNameTrimmed(ItemStack stack) {
-		return new TextComponent(name);
+	public Component getName(ItemStack stack) {
+		return new TextComponent(itemName);
 	}
 	
 }

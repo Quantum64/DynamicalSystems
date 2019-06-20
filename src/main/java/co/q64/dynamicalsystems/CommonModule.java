@@ -62,14 +62,14 @@ public interface CommonModule {
 		return FabricItemGroupBuilder.create(identifierUtil.get("machines")).icon(() -> unification.get().getStack(screw.get(), gold.get()).getItemStack()).build();
 	}
 	
-	static @Provides @Singleton @Up BooleanProperty provideUp() { return BooleanProperty.create("up"); }
-	static @Provides @Singleton @Down BooleanProperty provideDown() { return BooleanProperty.create("down"); }
-	static @Provides @Singleton @North BooleanProperty provideNorth() { return BooleanProperty.create("north"); }
-	static @Provides @Singleton @South BooleanProperty provideSouth() { return BooleanProperty.create("south"); }
-	static @Provides @Singleton @East BooleanProperty provideEast() { return BooleanProperty.create("east"); }
-	static @Provides @Singleton @West BooleanProperty provideWest() { return BooleanProperty.create("west"); }
-	static @Provides @Singleton @AlignX BooleanProperty provideAlignX() { return BooleanProperty.create("alignx"); }
-	static @Provides @Singleton @AlignY BooleanProperty provideAlignY() { return BooleanProperty.create("aligny"); }
-	static @Provides @Singleton @AlignZ BooleanProperty provideAlignZ() { return BooleanProperty.create("alignz"); }
+	static @Provides @Singleton @Up BooleanProperty provideUp() { return BooleanProperty.of("up"); }
+	static @Provides @Singleton @Down BooleanProperty provideDown() { return BooleanProperty.of("down"); }
+	static @Provides @Singleton @North BooleanProperty provideNorth() { return BooleanProperty.of("north"); }
+	static @Provides @Singleton @South BooleanProperty provideSouth() { return BooleanProperty.of("south"); }
+	static @Provides @Singleton @East BooleanProperty provideEast() { return BooleanProperty.of("east"); }
+	static @Provides @Singleton @West BooleanProperty provideWest() { return BooleanProperty.of("west"); }
+	static @Provides @Singleton @AlignX BooleanProperty provideAlignX() { return BooleanProperty.of("alignx"); }
+	static @Provides @Singleton @AlignY BooleanProperty provideAlignY() { return BooleanProperty.of("aligny"); }
+	static @Provides @Singleton @AlignZ BooleanProperty provideAlignZ() { return BooleanProperty.of("alignz"); }
 	// @formatter:on
 }

@@ -9,24 +9,25 @@ import net.minecraft.network.chat.TextComponent;
 
 @Getter
 public abstract class BaseItem extends Item {
-	private String name, id;
+	private String itemName, id;
 
 	public BaseItem(String name) {
 		this(name, new Settings());
 	}
 
 	public BaseItem(String name, ItemGroup group) {
-		this(name, new Settings().itemGroup(group));
+		this(name, new Settings().group(group));
 	}
 
 	public BaseItem(String name, Settings settings) {
 		super(settings);
-		this.name = name;
+		this.itemName = name;
 		this.id = name.replace(" ", "_").toLowerCase();
 	}
 
+	
 	@Override
-	public Component getTranslatedNameTrimmed(ItemStack stack) {
-		return new TextComponent(name);
+	public Component getName(ItemStack stack) {
+		return new TextComponent(itemName);
 	}
 }

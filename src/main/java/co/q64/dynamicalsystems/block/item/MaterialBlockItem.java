@@ -24,7 +24,7 @@ public class MaterialBlockItem extends BaseBlockItem implements MaterialItem {
 	private MaterialBlock block;
 
 	protected MaterialBlockItem(Material material, Component component, @Provided MaterialBlockFactoryFactory blockFactoryFactory, @Provided MaterialItemNameGenerator generator, @Provided @MaterialsItemGroup ItemGroup group) {
-		super(blockFactoryFactory.getFactory().create(generator.generate(component, material)), new Settings().itemGroup(group));
+		super(blockFactoryFactory.getFactory().create(generator.generate(component, material)), new Settings().group(group));
 		this.block = (MaterialBlock) super.getBlock();
 		this.component = component;
 		this.material = material;
@@ -32,7 +32,7 @@ public class MaterialBlockItem extends BaseBlockItem implements MaterialItem {
 	}
 
 	protected MaterialBlockItem(Material material, Component component, BaseBlock block, ItemGroup group) {
-		super(block, new Settings().itemGroup(group));
+		super(block, new Settings().group(group));
 		this.block = (MaterialBlock) super.getBlock();
 		this.component = component;
 		this.material = material;

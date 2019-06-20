@@ -8,9 +8,9 @@ import co.q64.dynamicalsystems.material.base.Component;
 @Singleton
 public class QuintupleIngotComponent extends Component {
 	protected @Inject QuintupleIngotComponent() {
-		prefix = "Quadruple";
+		prefix = "Quintuple";
 		name = "Ingot";
-		textureName = "ingot_quadruple";
+		textureName = "ingot_quintuple";
 		generate = material -> true;
 	}
 }

@@ -1,26 +1,43 @@
 package co.q64.dynamicalsystems.util;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import co.q64.dynamicalsystems.item.BaseItem;
 import co.q64.dynamicalsystems.item.MaterialItem;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 @Singleton
 public class ItemRegistrationUtil {
 	protected @Inject ItemIdentifierUtil identifierUtil;
+	protected @Inject Logger logger;
+
+	private Set<Identifier> registered = new HashSet<>();
 
 	protected @Inject ItemRegistrationUtil() {}
 
 	public void registerItem(BaseItem item) {
-		Registry.register(Registry.ITEM, identifierUtil.getIdentifier(item), item);
+		Identifier id = identifierUtil.getIdentifier(item);
+		if (registered.contains(id)) {
+			logger.info("ITEM REGISTRY DUPLICATION: " + id.toString());
+		}
+		registered.add(id);
+		Registry.register(Registry.ITEM, id, item);
 	}
 
 	public void registerMaterial(MaterialItem item) {
-		Registry.register(Registry.ITEM, identifierUtil.getIdentifier(item), item.getItem());
+		Identifier id = identifierUtil.getIdentifier(item);
+		if (registered.contains(id)) {
+			logger.info("ITEM REGISTRY DUPLICATION (material): " + id.toString());
+		}
+		registered.add(id);
+		Registry.register(Registry.ITEM, id, item.getItem());
 		if (item.isBlock()) {
-			Registry.register(Registry.BLOCK, identifierUtil.getIdentifier(item), item.getBlock());
+			Registry.register(Registry.BLOCK, id, item.getBlock());
 		}
 	}
 }

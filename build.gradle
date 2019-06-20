@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.2.2-SNAPSHOT'
+	id 'fabric-loom' version '0.2.4-SNAPSHOT'
 	id 'com.github.johnrengelman.shadow' version '4.0.4'
 	id "net.ltgt.apt" version "0.21"
     id "io.freefair.lombok" version "3.6.4"
@@ -29,14 +29,14 @@ dependencies {
 	modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	
 	modCompile 'org.projectlombok:lombok:1.18.8'
-	modCompile 'com.google.dagger:dagger:2.22.1'
+	modCompile 'com.google.dagger:dagger:2.23.1'
     modCompile 'javax.inject:javax.inject:1'
     modCompile 'com.google.auto.factory:auto-factory:1.0-beta6'
     
     //annotationProcessor 'org.projectlombok:lombok:1.18.8'
 	annotationProcessor 'com.google.guava:failureaccess:1.0.1'
 	annotationProcessor 'com.google.auto.factory:auto-factory:1.0-beta6'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.22.1'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.23.1'
 	
 	// dev enviorment
 	modCompile 'roughly-enough-items:RoughlyEnoughItems:2.9.1+build.116'

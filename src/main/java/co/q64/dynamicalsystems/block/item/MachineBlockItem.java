@@ -19,7 +19,7 @@ public class MachineBlockItem extends BaseBlockItem {
 	private MachineBlock block;
 
 	protected MachineBlockItem(Machine machine, @Provided MachineBlockFactoryFactory blockFactoryFactory, @Provided @MachinesItemGroup ItemGroup group) {
-		super(blockFactoryFactory.getFactory().create(""), new Settings().itemGroup(group));
+		super(blockFactoryFactory.getFactory().create(""), new Settings().group(group));
 		this.machine = machine;
 		this.block = (MachineBlock) super.getBlock();
 	}

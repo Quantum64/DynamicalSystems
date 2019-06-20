@@ -11,7 +11,7 @@ public interface MaterialItem {
 
 	public Material getMaterial();
 
-	public String getName();
+	public String getItemName();
 
 	public String getId();
 

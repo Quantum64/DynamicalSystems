@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 
 import co.q64.dynamicalsystems.link.LinkManager;
 import co.q64.dynamicalsystems.material.MaterialItemLoader;
+import net.minecraft.util.registry.Registry;
 
 @Singleton
 public class CommonLoader {
