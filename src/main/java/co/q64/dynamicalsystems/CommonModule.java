@@ -1,7 +1,5 @@
 package co.q64.dynamicalsystems;
 
-import javax.inject.Singleton;
-
 import co.q64.dynamicalsystems.binders.ConstantBinders.Author;
 import co.q64.dynamicalsystems.binders.ConstantBinders.MachinesItemGroup;
 import co.q64.dynamicalsystems.binders.ConstantBinders.MaterialsItemGroup;
@@ -37,39 +35,54 @@ import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.state.property.BooleanProperty;
 
+import javax.inject.Singleton;
+
 @Module
 public interface CommonModule {
-	// @formatter:off
-	
-	@Binds @IntoSet ComponentLoader bindCraftingComponentLoader(CraftingComponentLoader craftingComponentLoader);
-	
-	@Binds @IntoSet LinkInfo bindCottonResourcesLink(CottonResourcesLinkInfo cottonResourcesLinkInfo);
-	
-	static @Provides FabricLoader provideFabricLoader() { return FabricLoader.getInstance(); }
-	static @Provides ModContainer provideModContainer(FabricLoader loader, @ModId String modId) { return loader.getModContainer(modId).get(); }
-	
-	static @Provides @ModId String provideModId() { return ModInformation.ID; }
-	static @Provides @Name String provideName() { return ModInformation.NAME; }
-	static @Provides @Version String provideAuthor() { return ModInformation.VERSION; }
-	static @Provides @Author String provideVersion() { return ModInformation.AUTHOR; }
-	static @Provides @SharedNamespace String provideSharedNamespace() { return ModInformation.SHARED_NAMESPACE; }
-	
-	static @Provides @Singleton @MaterialsItemGroup ItemGroup provideMaterialsItemGroup(IdentifierUtil identifierUtil, Lazy<Unification> unification, Lazy<GoldMaterial> gold, Lazy<ScrewComponent> screw) {
-		return FabricItemGroupBuilder.create(identifierUtil.get("materials")).icon(() -> unification.get().getStack(screw.get(), gold.get()).getItemStack()).build();
-	}
-		
-	static @Provides @Singleton @MachinesItemGroup ItemGroup provideMachinesItemGroup(IdentifierUtil identifierUtil, Lazy<Unification> unification, Lazy<GoldMaterial> gold, Lazy<ScrewComponent> screw) {
-		return FabricItemGroupBuilder.create(identifierUtil.get("machines")).icon(() -> unification.get().getStack(screw.get(), gold.get()).getItemStack()).build();
-	}
-	
-	static @Provides @Singleton @Up BooleanProperty provideUp() { return BooleanProperty.of("up"); }
-	static @Provides @Singleton @Down BooleanProperty provideDown() { return BooleanProperty.of("down"); }
-	static @Provides @Singleton @North BooleanProperty provideNorth() { return BooleanProperty.of("north"); }
-	static @Provides @Singleton @South BooleanProperty provideSouth() { return BooleanProperty.of("south"); }
-	static @Provides @Singleton @East BooleanProperty provideEast() { return BooleanProperty.of("east"); }
-	static @Provides @Singleton @West BooleanProperty provideWest() { return BooleanProperty.of("west"); }
-	static @Provides @Singleton @AlignX BooleanProperty provideAlignX() { return BooleanProperty.of("alignx"); }
-	static @Provides @Singleton @AlignY BooleanProperty provideAlignY() { return BooleanProperty.of("aligny"); }
-	static @Provides @Singleton @AlignZ BooleanProperty provideAlignZ() { return BooleanProperty.of("alignz"); }
-	// @formatter:on
+    // @formatter:off
+
+    @Binds @IntoSet ComponentLoader bindCraftingComponentLoader(CraftingComponentLoader craftingComponentLoader);
+
+    @Binds @IntoSet LinkInfo bindCottonResourcesLink(CottonResourcesLinkInfo cottonResourcesLinkInfo);
+
+    static @Provides FabricLoader provideFabricLoader() { return FabricLoader.getInstance(); }
+
+    static @Provides ModContainer provideModContainer(FabricLoader loader, @ModId String modId) { return loader.getModContainer(modId).get(); }
+
+    static @Provides @ModId String provideModId() { return ModInformation.ID; }
+
+    static @Provides @Name String provideName() { return ModInformation.NAME; }
+
+    static @Provides @Version String provideAuthor() { return ModInformation.VERSION; }
+
+    static @Provides @Author String provideVersion() { return ModInformation.AUTHOR; }
+
+    static @Provides @SharedNamespace String provideSharedNamespace() { return ModInformation.SHARED_NAMESPACE; }
+
+    static @Provides @Singleton @MaterialsItemGroup ItemGroup provideMaterialsItemGroup(IdentifierUtil identifierUtil, Lazy<Unification> unification, Lazy<GoldMaterial> gold, Lazy<ScrewComponent> screw) {
+        return FabricItemGroupBuilder.create(identifierUtil.get("materials")).icon(() -> unification.get().getStack(screw.get(), gold.get()).getItemStack()).build();
+    }
+
+    static @Provides @Singleton @MachinesItemGroup ItemGroup provideMachinesItemGroup(IdentifierUtil identifierUtil, Lazy<Unification> unification, Lazy<GoldMaterial> gold, Lazy<ScrewComponent> screw) {
+        return FabricItemGroupBuilder.create(identifierUtil.get("machines")).icon(() -> unification.get().getStack(screw.get(), gold.get()).getItemStack()).build();
+    }
+
+    static @Provides @Singleton @Up BooleanProperty provideUp() { return BooleanProperty.of("up"); }
+
+    static @Provides @Singleton @Down BooleanProperty provideDown() { return BooleanProperty.of("down"); }
+
+    static @Provides @Singleton @North BooleanProperty provideNorth() { return BooleanProperty.of("north"); }
+
+    static @Provides @Singleton @South BooleanProperty provideSouth() { return BooleanProperty.of("south"); }
+
+    static @Provides @Singleton @East BooleanProperty provideEast() { return BooleanProperty.of("east"); }
+
+    static @Provides @Singleton @West BooleanProperty provideWest() { return BooleanProperty.of("west"); }
+
+    static @Provides @Singleton @AlignX BooleanProperty provideAlignX() { return BooleanProperty.of("alignx"); }
+
+    static @Provides @Singleton @AlignY BooleanProperty provideAlignY() { return BooleanProperty.of("aligny"); }
+
+    static @Provides @Singleton @AlignZ BooleanProperty provideAlignZ() { return BooleanProperty.of("alignz"); }
+    // @formatter:on
 }

@@ -4,8 +4,8 @@ import net.fabricmc.api.ClientModInitializer;
 
 public class DynamicalSystemsClient implements ClientModInitializer {
 
-	@Override
-	public void onInitializeClient() {
-		DaggerClientComponent.create().getLoader().load();
-	}
+    @Override
+    public void onInitializeClient() {
+        DaggerClientComponent.create().getLoader().load();
+    }
 }

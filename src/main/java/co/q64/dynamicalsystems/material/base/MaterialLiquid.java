@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 
 public abstract class MaterialLiquid extends MaterialFluid {
-	public MaterialLiquid() {
-		super(Arrays.asList(MaterialLiquid.class));
-	}
+    public MaterialLiquid() {
+        super(Arrays.asList(MaterialLiquid.class));
+    }
 }

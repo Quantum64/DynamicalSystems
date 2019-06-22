@@ -5,11 +5,11 @@ import javax.inject.Singleton;
 
 @Singleton
 public class Recipes {
-	protected @Inject RecipeParser recipeParser;
+    protected @Inject RecipeParser recipeParser;
 
-	protected @Inject Recipes() {}
+    protected @Inject Recipes() {}
 
-	public void addCrafting(Object... data) {
-		recipeParser.addCrafting(data);
-	}
+    public void addCrafting(Object... data) {
+        recipeParser.addCrafting(data);
+    }
 }

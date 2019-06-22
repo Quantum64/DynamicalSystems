@@ -7,35 +7,35 @@ import co.q64.dynamicalsystems.material.base.Material;
 import net.minecraft.item.Item;
 
 public interface MaterialItem {
-	public Component getComponent();
+    public Component getComponent();
 
-	public Material getMaterial();
+    public Material getMaterial();
 
-	public String getItemName();
+    public String getItemName();
 
-	public String getId();
+    public String getId();
 
-	public default boolean isBlock() {
-		return this instanceof MaterialBlockItem;
-	}
-	
-	public default boolean isItem() {
-		return this instanceof SimpleMaterialItem;
-	}
+    public default boolean isBlock() {
+        return this instanceof MaterialBlockItem;
+    }
 
-	public default Item getItem() {
-		return (Item) this;
-	}
+    public default boolean isItem() {
+        return this instanceof SimpleMaterialItem;
+    }
 
-	public default SimpleMaterialItem getMaterialItem() {
-		return (SimpleMaterialItem) this;
-	}
+    public default Item getItem() {
+        return (Item) this;
+    }
 
-	public default MaterialBlockItem getBlockItem() {
-		return (MaterialBlockItem) this;
-	}
+    public default SimpleMaterialItem getMaterialItem() {
+        return (SimpleMaterialItem) this;
+    }
 
-	public default MaterialBlock getBlock() {
-		return ((MaterialBlockItem) this).getBlock();
-	}
+    public default MaterialBlockItem getBlockItem() {
+        return (MaterialBlockItem) this;
+    }
+
+    public default MaterialBlock getBlock() {
+        return ((MaterialBlockItem) this).getBlock();
+    }
 }

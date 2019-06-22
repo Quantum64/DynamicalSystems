@@ -10,25 +10,25 @@ import net.minecraft.network.chat.TextComponent;
 
 @Getter
 public class BaseBlockItem extends BlockItem {
-	private String itemName, id;
+    private String itemName, id;
 
-	public BaseBlockItem(BaseBlock block) {
-		this(block, new Settings());
-	}
+    public BaseBlockItem(BaseBlock block) {
+        this(block, new Settings());
+    }
 
-	public BaseBlockItem(BaseBlock block, ItemGroup group) {
-		this(block, new Settings().group(group));
-	}
+    public BaseBlockItem(BaseBlock block, ItemGroup group) {
+        this(block, new Settings().group(group));
+    }
 
-	public BaseBlockItem(BaseBlock block, Settings settings) {
-		super(block, settings);
-		this.itemName = block.getName();
-		this.id = itemName.replace(" ", "_").toLowerCase();
-	}
+    public BaseBlockItem(BaseBlock block, Settings settings) {
+        super(block, settings);
+        this.itemName = block.getName();
+        this.id = itemName.replace(" ", "_").toLowerCase();
+    }
 
-	@Override
-	public Component getName(ItemStack stack) {
-		return new TextComponent(itemName);
-	}
-	
+    @Override
+    public Component getName(ItemStack stack) {
+        return new TextComponent(itemName);
+    }
+
 }

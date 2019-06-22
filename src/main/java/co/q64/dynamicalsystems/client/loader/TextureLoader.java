@@ -1,8 +1,5 @@
 package co.q64.dynamicalsystems.client.loader;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import co.q64.dynamicalsystems.binders.ConstantBinders.ModId;
 import co.q64.dynamicalsystems.block.MaterialBlock;
 import co.q64.dynamicalsystems.block.item.MaterialBlockItem;
@@ -20,41 +17,44 @@ import net.minecraft.block.Block;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.util.Identifier;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 @Singleton
 public class TextureLoader {
-	protected @Inject Logger logger;
-	protected @Inject AlphaMapRequestRegistry alphaMapRequestRegistry;
-	protected @Inject AlphaMapSpriteFactory alphaMapSpriteFactory;
-	protected @Inject @ModId String modId;
-	protected @Inject ItemUtil itemUtil;
-	protected @Inject IdentifierUtil identifierUtil;
+    protected @Inject Logger logger;
+    protected @Inject AlphaMapRequestRegistry alphaMapRequestRegistry;
+    protected @Inject AlphaMapSpriteFactory alphaMapSpriteFactory;
+    protected @Inject @ModId String modId;
+    protected @Inject ItemUtil itemUtil;
+    protected @Inject IdentifierUtil identifierUtil;
 
-	protected @Inject TextureLoader() {}
+    protected @Inject TextureLoader() {}
 
-	public void loadTextures() {
-		ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEX).register((texture, registry) -> {
-			logger.info("Processing " + alphaMapRequestRegistry.getRequests().size() + " alphamap requests...");
-			for (AlphaMapRequest request : alphaMapRequestRegistry.getRequests()) {
-				registry.register(alphaMapSpriteFactory.create(identifierUtil.get(request.getGeneratedTexture()), new Identifier("textures/" + request.getBaseTexture() + ".png"), identifierUtil.get("textures/" + request.getOverlayTexture() + ".png")));
-			}
-		});
+    public void loadTextures() {
+        ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEX).register((texture, registry) -> {
+            logger.info("Processing " + alphaMapRequestRegistry.getRequests().size() + " alphamap requests...");
+            for (AlphaMapRequest request : alphaMapRequestRegistry.getRequests()) {
+                registry.register(alphaMapSpriteFactory.create(identifierUtil.get(request.getGeneratedTexture()), new Identifier("textures/" + request.getBaseTexture() + ".png"), identifierUtil.get("textures/" + request.getOverlayTexture() + ".png")));
+            }
+        });
 
-		ColorProviderRegistry.ITEM.register((item, layer) -> {
-			if (layer == 0) {
-				return ((SimpleMaterialItem) item.getItem()).getMaterial().getColor();
-			}
-			return 0xFFFFFF;
-		}, itemUtil.getMaterialItems().stream().filter(MaterialItem::isItem).toArray(SimpleMaterialItem[]::new));
+        ColorProviderRegistry.ITEM.register((item, layer) -> {
+            if (layer == 0) {
+                return ((SimpleMaterialItem) item.getItem()).getMaterial().getColor();
+            }
+            return 0xFFFFFF;
+        }, itemUtil.getMaterialItems().stream().filter(MaterialItem::isItem).toArray(SimpleMaterialItem[]::new));
 
-		ColorProviderRegistry.ITEM.register((item, layer) -> {
-			if (layer == 0) {
-				return ((MaterialBlockItem) item.getItem()).getMaterial().getColor();
-			}
-			return 0xFFFFFF;
-		}, itemUtil.getMaterialItems().stream().filter(MaterialItem::isBlock).toArray(MaterialBlockItem[]::new));
+        ColorProviderRegistry.ITEM.register((item, layer) -> {
+            if (layer == 0) {
+                return ((MaterialBlockItem) item.getItem()).getMaterial().getColor();
+            }
+            return 0xFFFFFF;
+        }, itemUtil.getMaterialItems().stream().filter(MaterialItem::isBlock).toArray(MaterialBlockItem[]::new));
 
-		ColorProviderRegistry.BLOCK.register((state, view, position, layer) -> {
-			return ((MaterialBlock) state.getBlock()).getItem().getMaterial().getColor();
-		}, itemUtil.getMaterialItems().stream().filter(MaterialItem::isBlock).map(MaterialItem::getBlock).toArray(Block[]::new));
-	}
+        ColorProviderRegistry.BLOCK.register((state, view, position, layer) -> {
+            return ((MaterialBlock) state.getBlock()).getItem().getMaterial().getColor();
+        }, itemUtil.getMaterialItems().stream().filter(MaterialItem::isBlock).map(MaterialItem::getBlock).toArray(Block[]::new));
+    }
 }

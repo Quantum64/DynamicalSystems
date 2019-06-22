@@ -10,10 +10,10 @@ import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 
 @Module
 public interface ClientModule {
-	// @formatter:off
-	
-	@Binds @IntoSet CustomModel bindCableUnbakedModel(CableModel cableModel);
-	
-	static @Provides ModelLoadingRegistry provideModelLoadingRegistry() { return ModelLoadingRegistry.INSTANCE; }
-	// @formatter:on
+    // @formatter:off
+
+    @Binds @IntoSet CustomModel bindCableUnbakedModel(CableModel cableModel);
+
+    static @Provides ModelLoadingRegistry provideModelLoadingRegistry() { return ModelLoadingRegistry.INSTANCE; }
+    // @formatter:on
 }

@@ -1,13 +1,13 @@
 package co.q64.dynamicalsystems.server;
 
-import javax.inject.Singleton;
-
 import co.q64.dynamicalsystems.CommonModule;
 import co.q64.dynamicalsystems.loader.CommonLoader;
 import dagger.Component;
 
+import javax.inject.Singleton;
+
 @Singleton
-@Component(modules = { CommonModule.class })
+@Component(modules = {CommonModule.class})
 public interface ServerComponent {
-	public CommonLoader getLoader();
+    public CommonLoader getLoader();
 }

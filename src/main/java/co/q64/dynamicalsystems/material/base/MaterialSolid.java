@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 
 
 public abstract class MaterialSolid extends Material {
-	public MaterialSolid(List<Class<? extends Material>> types) {
-		super(Stream.concat(types.stream(), Arrays.asList(MaterialSolid.class).stream()).collect(Collectors.toList()));
-	}
+    public MaterialSolid(List<Class<? extends Material>> types) {
+        super(Stream.concat(types.stream(), Arrays.asList(MaterialSolid.class).stream()).collect(Collectors.toList()));
+    }
 }

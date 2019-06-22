@@ -4,7 +4,7 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.UnbakedModel;
 
 public interface CustomModel extends BakedModel, UnbakedModel {
-	public String getId();
+    public String getId();
 
 	/*
 	@Override
@@ -13,18 +13,18 @@ public interface CustomModel extends BakedModel, UnbakedModel {
 	}
 	*/
 
-	@Override
-	public default boolean useAmbientOcclusion() {
-		return false;
-	}
+    @Override
+    public default boolean useAmbientOcclusion() {
+        return false;
+    }
 
-	@Override
-	public default boolean hasDepthInGui() {
-		return true;
-	}
+    @Override
+    public default boolean hasDepthInGui() {
+        return true;
+    }
 
-	@Override
-	public default boolean isBuiltin() {
-		return false;
-	}
+    @Override
+    public default boolean isBuiltin() {
+        return false;
+    }
 }

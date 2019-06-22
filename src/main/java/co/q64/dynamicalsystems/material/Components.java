@@ -1,8 +1,5 @@
 package co.q64.dynamicalsystems.material;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import co.q64.dynamicalsystems.material.components.CableComponent;
 import co.q64.dynamicalsystems.material.components.CentrifugedCrushedComponent;
 import co.q64.dynamicalsystems.material.components.CentrifugedTinyCrushedComponent;
@@ -51,56 +48,59 @@ import co.q64.dynamicalsystems.material.components.block.EndOreComponent;
 import co.q64.dynamicalsystems.material.components.block.NetherOreComponent;
 import co.q64.dynamicalsystems.material.components.block.StoneOreComponent;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 @Singleton
 public class Components {
-	public @Inject BlockComponent block;
-	public @Inject CableComponent cable;
-	public @Inject CentrifugedCrushedComponent centrifugedCrushed;
-	public @Inject CentrifugedTinyCrushedComponent centrifugedTinyCrushed;
-	public @Inject ChainComponent chain;
-	public @Inject ChunkComponent chunk;
-	public @Inject CrushedComponent crushed;
-	public @Inject CurvedPlateComponent curvedPlate;
-	public @Inject DensePlateComponent densePlate;
-	public @Inject DoubleIngotComponent doubleIngot;
-	public @Inject DustComponent dust;
-	public @Inject EndOreComponent endOre;
-	public @Inject ExquisiteGemComponent exquisiteGem;
-	public @Inject FineWireComponent fineWire;
-	public @Inject FlawedGemComponent flawedGem;
-	public @Inject FlawlessGemComponent flawlessGem;
-	public @Inject FoilComponent foil;
-	public @Inject GearComponent gear;
-	public @Inject GemComponent gem;
-	public @Inject HotIngotComponent hotIngot;
-	public @Inject ImpureDustComponent impureDust;
-	public @Inject IngotComponent ingot;
-	public @Inject LegendaryGemComponent legendaryGem;
-	public @Inject LensComponent lens;
-	public @Inject LongStickComponent longStick;
-	public @Inject NetherOreComponent netherOre;
-	public @Inject NuggetComponent nugget;
-	public @Inject PlateComponent plate;
-	public @Inject PureDustComponent pureDust;
-	public @Inject PurifiedCrushedComponent purifiedCrushed;
-	public @Inject PurifiedTinyCrushedComponent purifiedTinyCrushed;
-	public @Inject QuadrupleIngotComponent quadrupleIngot;
-	public @Inject QuintupleIngotComponent quintupleIngot;
-	public @Inject RingComponent ring;
-	public @Inject RockComponent rock;
-	public @Inject ScrapComponent scrap;
-	public @Inject ScrewComponent screw;
-	public @Inject SmallCasingComponent smallCasing;
-	public @Inject SmallDustComponent smallDust;
-	public @Inject SmallGearComponent smallGear;
-	public @Inject SmallSpringComponent smallSpring;
-	public @Inject SpringComponent spring;
-	public @Inject StickComponent stick;
-	public @Inject StoneOreComponent stoneOre;
-	public @Inject TinyCrushedComponent tinyCrushed;
-	public @Inject TinyPlateComponent tinyPlate;
-	public @Inject TripleIngotComponent tripleIngot;
+    public @Inject BlockComponent block;
+    public @Inject CableComponent cable;
+    public @Inject CentrifugedCrushedComponent centrifugedCrushed;
+    public @Inject CentrifugedTinyCrushedComponent centrifugedTinyCrushed;
+    public @Inject ChainComponent chain;
+    public @Inject ChunkComponent chunk;
+    public @Inject CrushedComponent crushed;
+    public @Inject CurvedPlateComponent curvedPlate;
+    public @Inject DensePlateComponent densePlate;
+    public @Inject DoubleIngotComponent doubleIngot;
+    public @Inject DustComponent dust;
+    public @Inject EndOreComponent endOre;
+    public @Inject ExquisiteGemComponent exquisiteGem;
+    public @Inject FineWireComponent fineWire;
+    public @Inject FlawedGemComponent flawedGem;
+    public @Inject FlawlessGemComponent flawlessGem;
+    public @Inject FoilComponent foil;
+    public @Inject GearComponent gear;
+    public @Inject GemComponent gem;
+    public @Inject HotIngotComponent hotIngot;
+    public @Inject ImpureDustComponent impureDust;
+    public @Inject IngotComponent ingot;
+    public @Inject LegendaryGemComponent legendaryGem;
+    public @Inject LensComponent lens;
+    public @Inject LongStickComponent longStick;
+    public @Inject NetherOreComponent netherOre;
+    public @Inject NuggetComponent nugget;
+    public @Inject PlateComponent plate;
+    public @Inject PureDustComponent pureDust;
+    public @Inject PurifiedCrushedComponent purifiedCrushed;
+    public @Inject PurifiedTinyCrushedComponent purifiedTinyCrushed;
+    public @Inject QuadrupleIngotComponent quadrupleIngot;
+    public @Inject QuintupleIngotComponent quintupleIngot;
+    public @Inject RingComponent ring;
+    public @Inject RockComponent rock;
+    public @Inject ScrapComponent scrap;
+    public @Inject ScrewComponent screw;
+    public @Inject SmallCasingComponent smallCasing;
+    public @Inject SmallDustComponent smallDust;
+    public @Inject SmallGearComponent smallGear;
+    public @Inject SmallSpringComponent smallSpring;
+    public @Inject SpringComponent spring;
+    public @Inject StickComponent stick;
+    public @Inject StoneOreComponent stoneOre;
+    public @Inject TinyCrushedComponent tinyCrushed;
+    public @Inject TinyPlateComponent tinyPlate;
+    public @Inject TripleIngotComponent tripleIngot;
 
-	protected @Inject Components() {}
+    protected @Inject Components() {}
 
 }

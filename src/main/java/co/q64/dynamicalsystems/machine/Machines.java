@@ -1,21 +1,20 @@
 package co.q64.dynamicalsystems.machine;
 
-import java.util.List;
+import co.q64.dynamicalsystems.machine.processing.PulverizerMachine;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import co.q64.dynamicalsystems.machine.processing.PulverizerMachine;
+import java.util.List;
 
 @Singleton
 public class Machines {
-	protected @Inject MachineRegistry registry;
+    protected @Inject MachineRegistry registry;
 
-	public @Inject PulverizerMachine pulverizer;
+    public @Inject PulverizerMachine pulverizer;
 
-	protected @Inject Machines() {}
+    protected @Inject Machines() {}
 
-	public List<Machine> getAll() {
-		return registry.getMachines();
-	}
+    public List<Machine> getAll() {
+        return registry.getMachines();
+    }
 }

@@ -1,16 +1,16 @@
 package co.q64.dynamicalsystems.link.cottonresources;
 
+import co.q64.dynamicalsystems.link.Link;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import co.q64.dynamicalsystems.link.Link;
-
 @Singleton
 public class CottonResourcesLink implements Link {
-	protected @Inject CottonResourcesLink() {}
+    protected @Inject CottonResourcesLink() {}
 
-	@Override
-	public void initialize() {
+    @Override
+    public void initialize() {
 
-	}
+    }
 }

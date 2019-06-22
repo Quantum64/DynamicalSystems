@@ -5,8 +5,8 @@ import javax.inject.Singleton;
 
 @Singleton
 public class FluidRegistry {
-	protected @Inject MaterialFluidFactory fluidFactory;	
+    protected @Inject MaterialFluidFactory fluidFactory;
 
-	protected @Inject FluidRegistry() {}
+    protected @Inject FluidRegistry() {}
 
 }
