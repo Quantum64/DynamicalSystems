@@ -1,37 +1,12 @@
 package co.q64.dynamicalsystems.unification;
 
-import co.q64.dynamicalsystems.mixin.RecipeManagerMixin;
-import co.q64.dynamicalsystems.mixin.TagMixin;
 import co.q64.dynamicalsystems.recipe.RecipeParser;
+import co.q64.dynamicalsystems.util.IdentifierUtil;
 import co.q64.dynamicalsystems.util.TagUtil;
-import co.q64.dynamicalsystems.util.identifier.IdentifierUtil;
-import net.fabricmc.fabric.api.event.server.ServerStartCallback;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.AbstractCookingRecipe;
-import net.minecraft.recipe.CraftingRecipe;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeManager;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ResourceType;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.tag.Tag;
-import net.minecraft.tag.Tag.Entry;
-import net.minecraft.tag.Tag.TagEntry;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Singleton
 public class ServerDataUnifier {
@@ -45,6 +20,7 @@ public class ServerDataUnifier {
     protected @Inject ServerDataUnifier() {}
 
     public void register() {
+        /*
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
 
             @Override
@@ -65,8 +41,11 @@ public class ServerDataUnifier {
             activeServer = server;
             hijackRecipes(server.getRecipeManager());
         });
+        */
+
     }
 
+    /*
     private void hijackItemTags() {
         for (SharedItem shared : unification.getItems()) {
             for (Tag<Item> tag : tagUtil.getPossibleTags(shared)) {
@@ -110,4 +89,6 @@ public class ServerDataUnifier {
             }
         }
     }
+
+     */
 }

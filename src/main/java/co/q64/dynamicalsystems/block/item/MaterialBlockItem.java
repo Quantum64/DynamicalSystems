@@ -1,9 +1,9 @@
 package co.q64.dynamicalsystems.block.item;
 
-import co.q64.dynamicalsystems.binders.ConstantBinders.MaterialsItemGroup;
 import co.q64.dynamicalsystems.block.BaseBlock;
 import co.q64.dynamicalsystems.block.MaterialBlock;
 import co.q64.dynamicalsystems.block.MaterialBlockFactory;
+import co.q64.dynamicalsystems.group.MaterialsGroup;
 import co.q64.dynamicalsystems.item.MaterialItem;
 import co.q64.dynamicalsystems.material.MaterialItemNameGenerator;
 import co.q64.dynamicalsystems.material.base.Component;
@@ -22,8 +22,8 @@ public class MaterialBlockItem extends BaseBlockItem implements MaterialItem {
     private Material material;
     private MaterialBlock block;
 
-    protected MaterialBlockItem(Material material, Component component, @Provided MaterialBlockFactoryFactory blockFactoryFactory, @Provided MaterialItemNameGenerator generator, @Provided @MaterialsItemGroup ItemGroup group) {
-        super(blockFactoryFactory.getFactory().create(generator.generate(component, material)), new Settings().group(group));
+    protected MaterialBlockItem(Material material, Component component, @Provided MaterialBlockFactoryFactory blockFactoryFactory, @Provided MaterialItemNameGenerator generator, @Provided MaterialsGroup group) {
+        super(blockFactoryFactory.getFactory().create(generator.generate(component, material)), new Properties().group(group));
         this.block = (MaterialBlock) super.getBlock();
         this.component = component;
         this.material = material;
@@ -31,7 +31,7 @@ public class MaterialBlockItem extends BaseBlockItem implements MaterialItem {
     }
 
     protected MaterialBlockItem(Material material, Component component, BaseBlock block, ItemGroup group) {
-        super(block, new Settings().group(group));
+        super(block, new Properties().group(group));
         this.block = (MaterialBlock) super.getBlock();
         this.component = component;
         this.material = material;
@@ -39,7 +39,7 @@ public class MaterialBlockItem extends BaseBlockItem implements MaterialItem {
     }
 
     @Override
-    public MaterialBlock getBlock() {
+    public MaterialBlock getBaseBlock() {
         return block;
     }
 

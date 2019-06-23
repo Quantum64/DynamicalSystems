@@ -6,17 +6,16 @@ import co.q64.dynamicalsystems.material.base.Material;
 import co.q64.dynamicalsystems.unification.SharedItem;
 import co.q64.dynamicalsystems.unification.SharedItemStack;
 import co.q64.dynamicalsystems.unification.Unification;
-import co.q64.dynamicalsystems.util.ItemIdentifierUtil;
-import co.q64.dynamicalsystems.util.identifier.IdentifierUtil;
+import co.q64.dynamicalsystems.util.IdentifierUtil;
 import lombok.Getter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.ShapedRecipe;
-import net.minecraft.recipe.ShapelessRecipe;
-import net.minecraft.util.DefaultedList;
-import net.minecraft.util.Identifier;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.item.crafting.ShapedRecipe;
+import net.minecraft.item.crafting.ShapelessRecipe;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -28,11 +27,10 @@ import java.util.List;
 @Singleton
 public class RecipeParser {
     protected @Inject IdentifierUtil identifierUtil;
-    protected @Inject ItemIdentifierUtil itemIdentifierUtil;
     protected @Inject Unification unification;
     protected @Inject @Name String modName;
 
-    private @Getter List<Recipe<?>> recipes = new ArrayList<>();
+    private @Getter List<IRecipe<?>> recipes = new ArrayList<>();
 
     protected @Inject RecipeParser() {}
 
@@ -66,7 +64,7 @@ public class RecipeParser {
             throw new IllegalStateException("One or fewer items in recipe!");
         }
         SharedItemStack result = items.get(items.size() - 1);
-        Identifier recipeId = identifierUtil.get("crafting_" + itemIdentifierUtil.getSharedIdentifier(result.getItem()).getPath());
+        ResourceLocation recipeId = identifierUtil.get("crafting_" + identifierUtil.getSharedIdentifier(result.getItem()).getPath());
         ItemStack output = result.getItemStack();
         items.remove(items.size() - 1);
         List<Ingredient> inputs = new ArrayList<>();
@@ -80,14 +78,14 @@ public class RecipeParser {
             throw new IllegalArgumentException("Pattern must contain zero, two, or three strings!");
         }
         if (pattern.size() == 0) {
-            DefaultedList<Ingredient> shapelessInputs = DefaultedList.create();
+            NonNullList<Ingredient> shapelessInputs = NonNullList.create();
             shapelessInputs.addAll(inputs);
             ShapelessRecipe recipe = new ShapelessRecipe(recipeId, modName, output, shapelessInputs);
             recipes.add(recipe);
             return;
         }
         boolean small = pattern.size() == 2;
-        DefaultedList<Ingredient> shapedInputs = DefaultedList.create();
+        NonNullList<Ingredient> shapedInputs = NonNullList.create();
         for (String row : pattern) {
             if (small && row.length() != 2) {
                 throw new IllegalArgumentException("Pattern row '" + row + "' does not have two charachers in a small recipe.");

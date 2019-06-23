@@ -4,7 +4,7 @@ import co.q64.dynamicalsystems.grid.GridManager;
 import co.q64.dynamicalsystems.grid.GridTile;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import net.minecraft.util.math.Direction;
+import net.minecraft.util.Direction;
 
 @AutoFactory
 public class CableTile extends GridTile {

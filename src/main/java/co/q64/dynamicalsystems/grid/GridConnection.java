@@ -2,7 +2,7 @@ package co.q64.dynamicalsystems.grid;
 
 import com.google.auto.factory.AutoFactory;
 import lombok.Getter;
-import net.minecraft.util.math.Direction;
+import net.minecraft.util.Direction;
 
 @Getter
 @AutoFactory

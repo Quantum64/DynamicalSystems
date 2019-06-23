@@ -8,14 +8,12 @@ import javax.inject.Singleton;
 @Singleton
 public class ClientLoader {
     protected @Inject CommonLoader commonLoader;
-    protected @Inject TextureLoader textureLoader;
-    protected @Inject ModelLoader modelLoader;
+    protected @Inject ClientResourceRegistryLoader clientResourceRegistryLoader;
 
     protected @Inject ClientLoader() {}
 
     public void load() {
-        commonLoader.load();
-        modelLoader.loadModels();
-        textureLoader.loadTextures();
+        //commonLoader.load();
+        clientResourceRegistryLoader.initialize();
     }
 }

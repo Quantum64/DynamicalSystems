@@ -4,10 +4,10 @@ import co.q64.dynamicalsystems.item.MaterialItem;
 import co.q64.dynamicalsystems.item.SimpleMaterialItemFactory;
 import co.q64.dynamicalsystems.material.base.Component;
 import co.q64.dynamicalsystems.material.base.Material;
-import co.q64.dynamicalsystems.util.ItemIdentifierUtil;
-import co.q64.dynamicalsystems.util.ItemRegistrationUtil;
+import co.q64.dynamicalsystems.util.IdentifierUtil;
+import co.q64.dynamicalsystems.util.RegistryUtil;
 import lombok.Getter;
-import net.minecraft.util.Identifier;
+import net.minecraft.util.ResourceLocation;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -24,12 +24,12 @@ public class MaterialItemLoader {
     protected @Inject MaterialRegistry materialRegistry;
     protected @Inject ComponentRegistry componentRegistry;
     protected @Inject SimpleMaterialItemFactory materialItemFactory;
-    protected @Inject ItemRegistrationUtil itemRegistrationUtil;
-    protected @Inject ItemIdentifierUtil identifierUtil;
+    protected @Inject RegistryUtil registryUtil;
+    protected @Inject IdentifierUtil identifierUtil;
 
     private @Getter List<MaterialItem> items = new ArrayList<>();
     private @Getter Map<Component, Map<Material, MaterialItem>> itemMap = new HashMap<>();
-    private @Getter Map<Identifier, MaterialItem> identifierCache = new HashMap<>();
+    private @Getter Map<ResourceLocation, MaterialItem> identifierCache = new HashMap<>();
 
     protected @Inject MaterialItemLoader() {}
 
@@ -46,10 +46,11 @@ public class MaterialItemLoader {
                     }
                     materialMap.put(material, item);
                     identifierCache.put(identifierUtil.getIdentifier(item), item);
-                    itemRegistrationUtil.registerMaterial(item);
+                    registryUtil.registerMaterial(item);
                 }
             }
         }
+        components.freeze();
     }
 
     // Generate all items with recipes

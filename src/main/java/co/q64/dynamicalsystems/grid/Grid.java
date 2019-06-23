@@ -1,8 +1,8 @@
 package co.q64.dynamicalsystems.grid;
 
 import lombok.Getter;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -54,7 +54,7 @@ public abstract class Grid {
         }
         for (Iterator<GridTile> itr = tiles.iterator(); itr.hasNext(); ) {
             GridTile current = itr.next();
-            if (current.isInvalid() || !current.getWorld().isChunkLoaded(current.getPos().getX(), current.getPos().getZ())) {
+            if (current.isRemoved() /*|| !current.getWorld().isChunkLoaded(current.getPos().getX(), current.getPos().getZ())*/) {
                 itr.remove();
                 flush();
             }

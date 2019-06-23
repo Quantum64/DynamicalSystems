@@ -1,30 +1,23 @@
 package co.q64.dynamicalsystems.client.model;
 
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.UnbakedModel;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.IUnbakedModel;
 
-public interface CustomModel extends BakedModel, UnbakedModel {
+public interface CustomModel extends IUnbakedModel, IBakedModel {
     public String getId();
 
-	/*
-	@Override
-	public default boolean isVanillaAdapter() {
-		return false;
-	}
-	*/
-
     @Override
-    public default boolean useAmbientOcclusion() {
+    public default boolean isAmbientOcclusion() {
         return false;
     }
 
     @Override
-    public default boolean hasDepthInGui() {
+    public default boolean isGui3d() {
         return true;
     }
 
     @Override
-    public default boolean isBuiltin() {
+    public default boolean isBuiltInRenderer() {
         return false;
     }
 }

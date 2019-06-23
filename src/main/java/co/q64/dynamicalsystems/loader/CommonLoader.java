@@ -8,6 +8,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class CommonLoader {
+    protected @Inject RegistryLoader registryLoader;
     protected @Inject MaterialItemLoader materialItems;
     protected @Inject LinkManager linkManager;
     protected @Inject UnificationLoader unificationLoader;
@@ -17,6 +18,7 @@ public class CommonLoader {
 
     public void load() {
         materialItems.registerItems();
+        registryLoader.initialize();
         unificationLoader.load();
         linkManager.initializeLinks();
         materialLoader.load();

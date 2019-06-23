@@ -23,7 +23,7 @@ public class SharedItem {
     protected SharedItem(Component component, Material material, @Provided MaterialItemLoader materialItemLoader) {
         this.component = Optional.of(component);
         this.material = Optional.of(material);
-        materialItemLoader.getItem(component, material).ifPresent(item -> unify(item.getItem()));
+        materialItemLoader.getItem(component, material).ifPresent(item -> unify(item.getBaseItem()));
     }
 
     protected SharedItem() {}

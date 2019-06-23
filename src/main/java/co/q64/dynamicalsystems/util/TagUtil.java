@@ -4,8 +4,8 @@ import co.q64.dynamicalsystems.binders.ConstantBinders.SharedNamespace;
 import co.q64.dynamicalsystems.material.MaterialItemLoader;
 import co.q64.dynamicalsystems.unification.SharedItem;
 import net.minecraft.item.Item;
-import net.minecraft.tag.ItemTags;
-import net.minecraft.tag.Tag;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.Tag;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -16,12 +16,12 @@ import java.util.List;
 public class TagUtil {
     protected @Inject @SharedNamespace String namespace;
     protected @Inject MaterialItemLoader materialItemLoader;
-    protected @Inject ItemIdentifierUtil identifierUtil;
+    protected @Inject IdentifierUtil identifierUtil;
 
     public @Inject TagUtil() {}
 
     public Tag<Item> getTag(SharedItem item) {
-        return ItemTags.getContainer().getOrCreate(identifierUtil.getSharedIdentifier(item));
+        return ItemTags.getCollection().getOrCreate(identifierUtil.getSharedIdentifier(item));
     }
 
     public List<Tag<Item>> getPossibleTags(SharedItem item) {

@@ -2,7 +2,7 @@ package co.q64.dynamicalsystems.util;
 
 import co.q64.dynamicalsystems.item.MaterialItem;
 import co.q64.dynamicalsystems.material.MaterialItemLoader;
-import net.minecraft.util.Identifier;
+import net.minecraft.util.ResourceLocation;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -19,7 +19,7 @@ public class ItemUtil {
         return materialItemLoader.getItems();
     }
 
-    public Optional<MaterialItem> getMaterialItem(Identifier identifier) {
+    public Optional<MaterialItem> getMaterialItem(ResourceLocation identifier) {
         return Optional.ofNullable(materialItemLoader.getIdentifierCache().get(identifier));
     }
 }

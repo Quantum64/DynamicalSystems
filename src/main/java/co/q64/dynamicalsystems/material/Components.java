@@ -101,6 +101,11 @@ public class Components {
     public @Inject TinyPlateComponent tinyPlate;
     public @Inject TripleIngotComponent tripleIngot;
 
+    protected @Inject ComponentRegistry registry;
+
     protected @Inject Components() {}
 
+    public void freeze() {
+        registry.freeze();
+    }
 }

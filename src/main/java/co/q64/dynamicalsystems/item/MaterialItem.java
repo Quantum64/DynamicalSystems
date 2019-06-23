@@ -23,7 +23,7 @@ public interface MaterialItem {
         return this instanceof SimpleMaterialItem;
     }
 
-    public default Item getItem() {
+    public default Item getBaseItem() {
         return (Item) this;
     }
 
@@ -35,7 +35,7 @@ public interface MaterialItem {
         return (MaterialBlockItem) this;
     }
 
-    public default MaterialBlock getBlock() {
-        return ((MaterialBlockItem) this).getBlock();
+    public default MaterialBlock getBaseBlock() {
+        return ((MaterialBlockItem) this).getBaseBlock();
     }
 }

@@ -4,19 +4,19 @@ import co.q64.dynamicalsystems.util.state.DirectionalPropertyUtil;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import lombok.Getter;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.block.BlockState;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
+import net.minecraft.world.IBlockReader;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 @Getter
 @AutoFactory
 public class CableBlock extends MaterialBlock {
     private DirectionalPropertyUtil propertyUtil;
 
-    public CableBlock(String name, Settings settings, @Provided DirectionalPropertyUtil propertyUtil) {
+    public CableBlock(String name, Properties settings, @Provided DirectionalPropertyUtil propertyUtil) {
         super(name, settings);
         this.propertyUtil = propertyUtil;
     }
@@ -27,13 +27,13 @@ public class CableBlock extends MaterialBlock {
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.TRANSLUCENT;
     }
 
     @Override
-    public boolean isTranslucent(BlockState state, BlockView view, BlockPos position) {
+    public boolean propagatesSkylightDown(BlockState state, IBlockReader view, BlockPos position) {
         return true;
     }
 }

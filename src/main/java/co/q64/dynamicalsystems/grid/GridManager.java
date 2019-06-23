@@ -1,11 +1,10 @@
 package co.q64.dynamicalsystems.grid;
 
 import co.q64.dynamicalsystems.grid.energy.EnergyGridFactory;
-import net.fabricmc.fabric.api.event.server.ServerTickCallback;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -15,14 +14,14 @@ import java.util.List;
 import java.util.Set;
 
 @Singleton
-public class GridManager implements ServerTickCallback {
+public class GridManager /*implements ServerTickCallback*/ {
     private static final Direction[] DIRECTIONS = Direction.values(); // Cache to avoid copy
     protected @Inject EnergyGridFactory gridFactory; //TODO fix
 
     private List<Grid> grids = new ArrayList<>();
 
     protected @Inject GridManager() {
-        ServerTickCallback.EVENT.register(this);
+        //ServerTickCallback.EVENT.register(this);
     }
 
     public void addTileToGridOnLoad(GridTile tile) {
@@ -34,8 +33,8 @@ public class GridManager implements ServerTickCallback {
         Set<Grid> adjacent = new HashSet<Grid>(); // Set checks grid reference equality
         for (Direction direction : DIRECTIONS) {
             BlockPos position = tile.getPos().offset(direction);
-            if (tile.getWorld().isChunkLoaded(position.getX(), position.getZ())) {
-                BlockEntity blockEntity = tile.getWorld().getBlockEntity(position);
+            if (tile.getWorld().isAreaLoaded(position, 1)) {
+                TileEntity blockEntity = tile.getWorld().getTileEntity(position);
                 if (blockEntity != null && blockEntity instanceof GridTile) {
                     adjacent.add(((GridTile) blockEntity).getGrid());
                 }
@@ -75,7 +74,7 @@ public class GridManager implements ServerTickCallback {
         primary.flush();
     }
 
-    @Override
+    //@Override
     public void tick(MinecraftServer server) {
         // TODO Auto-generated method stub
 

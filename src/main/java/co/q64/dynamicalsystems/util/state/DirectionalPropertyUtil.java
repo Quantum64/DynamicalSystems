@@ -9,8 +9,8 @@ import co.q64.dynamicalsystems.binders.PropertyBinders.North;
 import co.q64.dynamicalsystems.binders.PropertyBinders.South;
 import co.q64.dynamicalsystems.binders.PropertyBinders.Up;
 import co.q64.dynamicalsystems.binders.PropertyBinders.West;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.util.math.Direction;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.util.Direction;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

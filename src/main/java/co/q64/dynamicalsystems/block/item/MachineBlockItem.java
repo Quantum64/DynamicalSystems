@@ -1,13 +1,12 @@
 package co.q64.dynamicalsystems.block.item;
 
-import co.q64.dynamicalsystems.binders.ConstantBinders.MachinesItemGroup;
 import co.q64.dynamicalsystems.block.MachineBlock;
 import co.q64.dynamicalsystems.block.MachineBlockFactory;
+import co.q64.dynamicalsystems.group.MaterialsGroup;
 import co.q64.dynamicalsystems.machine.Machine;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import lombok.Getter;
-import net.minecraft.item.ItemGroup;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -17,8 +16,8 @@ public class MachineBlockItem extends BaseBlockItem {
     private Machine machine;
     private MachineBlock block;
 
-    protected MachineBlockItem(Machine machine, @Provided MachineBlockFactoryFactory blockFactoryFactory, @Provided @MachinesItemGroup ItemGroup group) {
-        super(blockFactoryFactory.getFactory().create(""), new Settings().group(group));
+    protected MachineBlockItem(Machine machine, @Provided MachineBlockFactoryFactory blockFactoryFactory, @Provided MaterialsGroup group) {
+        super(blockFactoryFactory.getFactory().create(""), new Properties().group(group));
         this.machine = machine;
         this.block = (MachineBlock) super.getBlock();
     }

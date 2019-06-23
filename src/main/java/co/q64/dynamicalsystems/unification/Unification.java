@@ -77,9 +77,9 @@ public class Unification {
 	}
 	
 	public ItemStack getMaterialStack(Component component, Material material, int size) {
-		Optional<MaterialItem> generated = materialItemLoader.getItem(component, material);
+		Optional<MaterialItem> generated = materialItemLoader.getBaseItem(component, material);
 		if (generated.isPresent()) {
-			return new ItemStack(generated.get().getItem(), size);
+			return new ItemStack(generated.get().getBaseItem(), size);
 		}
 		return ItemStack.EMPTY;
 	}
@@ -89,7 +89,7 @@ public class Unification {
     protected void init() {
         for (Entry<Component, Map<Material, MaterialItem>> component : materialItemLoader.getItemMap().entrySet()) {
             for (Entry<Material, MaterialItem> material : component.getValue().entrySet()) {
-                get(component.getKey(), material.getKey()).unify(material.getValue().getItem());
+                get(component.getKey(), material.getKey()).unify(material.getValue().getBaseItem());
             }
         }
         // TODO other generated items

@@ -4,7 +4,7 @@ import com.google.auto.factory.AutoFactory;
 import lombok.Getter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
+import net.minecraft.item.crafting.Ingredient;
 
 @AutoFactory
 public class SharedItemStack {
@@ -28,6 +28,6 @@ public class SharedItemStack {
     }
 
     public Ingredient toIngredient() {
-        return Ingredient.ofItems(item.getItems().toArray(new Item[0]));
+        return Ingredient.fromItems(item.getItems().toArray(new Item[0]));
     }
 }

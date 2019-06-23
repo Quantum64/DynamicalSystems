@@ -2,8 +2,10 @@ package co.q64.dynamicalsystems.util;
 
 import co.q64.dynamicalsystems.item.BaseItem;
 import co.q64.dynamicalsystems.item.MaterialItem;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import lombok.Getter;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -11,32 +13,35 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Singleton
-public class ItemRegistrationUtil {
-    protected @Inject ItemIdentifierUtil identifierUtil;
+public class RegistryUtil {
+    protected @Inject IdentifierUtil identifierUtil;
     protected @Inject Logger logger;
 
-    private Set<Identifier> registered = new HashSet<>();
+    private Set<ResourceLocation> registered = new HashSet<>();
 
-    protected @Inject ItemRegistrationUtil() {}
+    private @Getter Set<Block> blocks = new HashSet<>();
+    private @Getter Set<Item> items = new HashSet<>();
+
+    protected @Inject RegistryUtil() {}
 
     public void registerItem(BaseItem item) {
-        Identifier id = identifierUtil.getIdentifier(item);
+        ResourceLocation id = identifierUtil.getIdentifier(item);
         if (registered.contains(id)) {
             logger.info("ITEM REGISTRY DUPLICATION: " + id.toString());
         }
         registered.add(id);
-        Registry.register(Registry.ITEM, id, item);
+        items.add(item);
     }
 
     public void registerMaterial(MaterialItem item) {
-        Identifier id = identifierUtil.getIdentifier(item);
+        ResourceLocation id = identifierUtil.getIdentifier(item);
         if (registered.contains(id)) {
             logger.info("ITEM REGISTRY DUPLICATION (material): " + id.toString());
         }
         registered.add(id);
-        Registry.register(Registry.ITEM, id, item.getItem());
+        items.add(item.getBaseItem());
         if (item.isBlock()) {
-            Registry.register(Registry.BLOCK, id, item.getBlock());
+            blocks.add(item.getBaseBlock());
         }
     }
 }

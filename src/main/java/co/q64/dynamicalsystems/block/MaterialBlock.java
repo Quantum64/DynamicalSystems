@@ -4,9 +4,9 @@ import co.q64.dynamicalsystems.block.item.MaterialBlockItem;
 import co.q64.dynamicalsystems.material.base.ComponentOre;
 import com.google.auto.factory.AutoFactory;
 import lombok.Getter;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockRenderLayer;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 @Getter
 @AutoFactory
@@ -14,7 +14,7 @@ public class MaterialBlock extends BaseBlock {
     private MaterialBlockItem item;
     private BlockRenderLayer renderLayer;
 
-    public MaterialBlock(String name, Settings settings) {
+    public MaterialBlock(String name, Properties settings) {
         super(name, settings);
     }
 
@@ -27,7 +27,7 @@ public class MaterialBlock extends BaseBlock {
         this.renderLayer = (item.getComponent().isHasTextureOverlay() || item.getComponent() instanceof ComponentOre) ? BlockRenderLayer.CUTOUT : BlockRenderLayer.SOLID;
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public BlockRenderLayer getRenderLayer() {
         return renderLayer;
     }

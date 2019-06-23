@@ -1,25 +1,25 @@
 package co.q64.dynamicalsystems.block;
 
 import lombok.Getter;
-import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 
 @Getter
 public class BaseBlock extends Block {
     private String name, id;
 
     public BaseBlock(String name) {
-        this(name, FabricBlockSettings.of(Material.METAL).build());
+        this(name, Properties.create(Material.IRON));
     }
 
     public BaseBlock(String name, Material material) {
-        this(name, FabricBlockSettings.of(material).build());
+        this(name, Properties.create(Material.IRON));
     }
 
-    public BaseBlock(String name, Settings settings) {
+    public BaseBlock(String name, Properties settings) {
         super(settings);
         this.name = name;
         this.id = name.replace(" ", "_").toLowerCase();
+        setRegistryName(id);
     }
 }
