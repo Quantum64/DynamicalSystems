@@ -4,9 +4,11 @@ import co.q64.dynamicalsystems.block.BaseBlock;
 import co.q64.dynamicalsystems.block.MaterialBlock;
 import co.q64.dynamicalsystems.block.MaterialBlockFactory;
 import co.q64.dynamicalsystems.group.MaterialsGroup;
+import co.q64.dynamicalsystems.group.OresGroup;
 import co.q64.dynamicalsystems.item.MaterialItem;
 import co.q64.dynamicalsystems.material.MaterialItemNameGenerator;
 import co.q64.dynamicalsystems.material.base.Component;
+import co.q64.dynamicalsystems.material.base.ComponentOre;
 import co.q64.dynamicalsystems.material.base.Material;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
@@ -22,8 +24,8 @@ public class MaterialBlockItem extends BaseBlockItem implements MaterialItem {
     private Material material;
     private MaterialBlock block;
 
-    protected MaterialBlockItem(Material material, Component component, @Provided MaterialBlockFactoryFactory blockFactoryFactory, @Provided MaterialItemNameGenerator generator, @Provided MaterialsGroup group) {
-        super(blockFactoryFactory.getFactory().create(generator.generate(component, material)), new Properties().group(group));
+    protected MaterialBlockItem(Material material, Component component, @Provided MaterialBlockFactoryFactory blockFactoryFactory, @Provided MaterialItemNameGenerator generator, @Provided MaterialsGroup materialsGroup, @Provided OresGroup oresGroup) {
+        super(blockFactoryFactory.getFactory().create(generator.generate(component, material)), new Properties().group(component instanceof ComponentOre ? oresGroup : materialsGroup));
         this.block = (MaterialBlock) super.getBlock();
         this.component = component;
         this.material = material;

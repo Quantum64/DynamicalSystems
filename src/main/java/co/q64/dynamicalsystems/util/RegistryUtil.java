@@ -1,5 +1,6 @@
 package co.q64.dynamicalsystems.util;
 
+import co.q64.dynamicalsystems.block.item.BaseBlockItem;
 import co.q64.dynamicalsystems.item.BaseItem;
 import co.q64.dynamicalsystems.item.MaterialItem;
 import lombok.Getter;
@@ -9,7 +10,9 @@ import net.minecraft.util.ResourceLocation;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Singleton
@@ -19,8 +22,8 @@ public class RegistryUtil {
 
     private Set<ResourceLocation> registered = new HashSet<>();
 
-    private @Getter Set<Block> blocks = new HashSet<>();
-    private @Getter Set<Item> items = new HashSet<>();
+    private @Getter List<Block> blocks = new ArrayList<>();
+    private @Getter List<Item> items = new ArrayList<>();
 
     protected @Inject RegistryUtil() {}
 
@@ -31,6 +34,11 @@ public class RegistryUtil {
         }
         registered.add(id);
         items.add(item);
+    }
+
+    public void registerBlock(BaseBlockItem item) {
+        items.add(item);
+        blocks.add(item.getBlock());
     }
 
     public void registerMaterial(MaterialItem item) {

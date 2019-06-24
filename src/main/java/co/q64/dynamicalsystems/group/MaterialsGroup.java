@@ -5,6 +5,8 @@ import co.q64.dynamicalsystems.material.Materials;
 import co.q64.dynamicalsystems.unification.Unification;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -20,6 +22,7 @@ public class MaterialsGroup extends ItemGroup {
     }
 
     @Override
+    @OnlyIn(Dist.CLIENT)
     public ItemStack createIcon() {
         return unification.getStack(components.screw, materials.gold).getItemStack();
     }

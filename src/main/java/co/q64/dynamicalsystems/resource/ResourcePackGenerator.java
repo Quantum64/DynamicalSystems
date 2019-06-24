@@ -44,7 +44,11 @@ public class ResourcePackGenerator {
     }
 
     public void writeBlockstate(String name) {
-        writeBlockstateInternal(name);
+        writeSimpleBlockstateInternal(name);
+    }
+
+    public void writeBlockstate(String name, MultipartBuilder builder) {
+        writeSimpleBlockstateInternal(name, builder);
     }
 
     public void writeBlockModel(String name, ResourceLocation parent, Map<String, ResourceLocation> textures) {
@@ -62,7 +66,7 @@ public class ResourcePackGenerator {
         writeJson(model, "models/item/" + name + ".json");
     }
 
-    private void writeBlockstateInternal(String name) {
+    private void writeSimpleBlockstateInternal(String name) {
         JsonObject blockstate = new JsonObject();
         JsonObject variants = new JsonObject();
         JsonObject variant = new JsonObject();
@@ -70,6 +74,10 @@ public class ResourcePackGenerator {
         variants.add("", variant);
         blockstate.add("variants", variants);
         writeJson(blockstate, "blockstates/" + name + ".json");
+    }
+
+    private void WriteMultipartBlockStateInternal(String name, MultipartBuilder builder) {
+        writeJson(builder.build(), "blockstates/" + name + ".json");
     }
 
     private void writeBlockModelInternal(String name, ResourceLocation parent, Map<String, ResourceLocation> texmap) {

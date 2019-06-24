@@ -12,13 +12,13 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class OresGroup extends ItemGroup {
+public class MachinesGroup extends ItemGroup {
     protected @Inject Unification unification;
     protected @Inject Materials materials;
     protected @Inject Components components;
 
-    protected @Inject OresGroup() {
-        super("ores");
+    protected @Inject MachinesGroup() {
+        super("machines");
     }
 
     @Override

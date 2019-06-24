@@ -17,4 +17,8 @@ public class Machines {
     public List<Machine> getAll() {
         return registry.getMachines();
     }
+
+    public void freeze() {
+        registry.freeze();
+    }
 }

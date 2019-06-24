@@ -1,16 +1,50 @@
 package co.q64.dynamicalsystems.grid.energy;
 
+import lombok.Getter;
+
 public enum Voltage {
-    T1(1), T2(2), T3(3), T4(4), T5(5), T6(6), T7(7), T8(8);
+    MANUAL(0, "Manual"),
+    STEAM(0, "Steam"),
+    T1(1, "One"),
+    T2(2, "Two"),
+    T3(3, "Three"),
+    T4(4, "Four"),
+    T5(5, "Five"),
+    T6(6, "Six"),
+    T7(7, "Seven"),
+    T8(8, "Eight");
+
+    private static final @Getter(lazy = true) Voltage[] all = Voltage.values();
 
     private int tier;
+    private String tierName;
 
-    private Voltage(int tier) {
+    private Voltage(int tier, String tierName) {
         this.tier = tier;
+        this.tierName = tierName;
     }
 
     public int tier() {
         return tier;
+    }
+
+    public String getDisplayName(String machineName) {
+        switch (this) {
+            case MANUAL:
+                return "Manual " + machineName;
+            case STEAM:
+                return "Steam " + machineName;
+            default:
+                return machineName + " Tier " + tier();
+        }
+    }
+
+    public String tierName() {
+        return tierName;
+    }
+
+    public String tierTextureName() {
+        return tierName.toLowerCase();
     }
 
     public static Voltage max() {
