@@ -48,7 +48,7 @@ public class ResourcePackGenerator {
     }
 
     public void writeBlockstate(String name, MultipartBuilder builder) {
-        writeSimpleBlockstateInternal(name, builder);
+        WriteMultipartBlockStateInternal(name, builder);
     }
 
     public void writeBlockModel(String name, ResourceLocation parent, Map<String, ResourceLocation> textures) {

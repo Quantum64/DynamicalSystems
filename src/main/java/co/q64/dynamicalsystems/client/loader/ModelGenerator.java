@@ -2,7 +2,6 @@ package co.q64.dynamicalsystems.client.loader;
 
 import co.q64.dynamicalsystems.binders.ConstantBinders.ModId;
 import co.q64.dynamicalsystems.block.item.MachineBlockItem;
-import co.q64.dynamicalsystems.client.model.CustomModel;
 import co.q64.dynamicalsystems.client.texture.MachineTextureMap;
 import co.q64.dynamicalsystems.client.texture.MaterialTextureMap;
 import co.q64.dynamicalsystems.item.MaterialItem;
@@ -20,7 +19,6 @@ import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Singleton
@@ -31,11 +29,11 @@ public class ModelGenerator {
     protected @Inject MaterialTextureMap materialTextureMap;
     protected @Inject MachineTextureMap machineTextureMap;
     protected @Inject MultipartBuilderFactory multipartFactory;
-    //protected @Inject AlphaMapRequestRegistry alphaMapRequestRegistry;
-    //protected @Inject AlphaMapRequestFactory alphaMapRequestFactory;
-    protected @Inject Set<CustomModel> customUnbakedModels;
     protected @Inject ResourcePackGenerator generator;
     protected @Inject Logger logger;
+
+    //protected @Inject AlphaMapRequestRegistry alphaMapRequestRegistry;
+    //protected @Inject AlphaMapRequestFactory alphaMapRequestFactory;
 
     protected @Inject ModelGenerator() {}
 
@@ -79,9 +77,15 @@ public class ModelGenerator {
         for (MachineBlockItem machine : itemUtil.getMachineItems()) {
             generator.writeItemModel(machine.getId(), identifiers.get("block/" + machine.getId() + "_off"));
             generator.writeBlockstate(machine.getId(), multipartFactory.create()
-                    .when("running", "false").apply(machine.getId() + "_off")
-                    .when("running", "true").apply(machine.getId() + "_on"));
-                    // TODO Side configurations
+                    .and("running", "false").when("north", "front").end().apply(identifiers.get("block/" + machine.getId() + "_off"))
+                    .and("running", "true").when("north", "front").end().apply(identifiers.get("block/" + machine.getId() + "_off"))
+                    .and("running", "false").when("south", "front").end().apply(identifiers.get("block/" + machine.getId() + "_off"), 180)
+                    .and("running", "true").when("south", "front").end().apply(identifiers.get("block/" + machine.getId() + "_off"), 180)
+                    .and("running", "false").when("west", "front").end().apply(identifiers.get("block/" + machine.getId() + "_off"), 270)
+                    .and("running", "true").when("west", "front").end().apply(identifiers.get("block/" + machine.getId() + "_off"), 270)
+                    .and("running", "false").when("east", "front").end().apply(identifiers.get("block/" + machine.getId() + "_off"), 90)
+                    .and("running", "true").when("east", "front").end().apply(identifiers.get("block/" + machine.getId() + "_off"), 90)
+            );
             generator.writeBlockModel(machine.getId() + "_off", identifiers.get("block/block_machine"), machineTextureMap.getTextures(machine.getBlock(), false));
             generator.writeBlockModel(machine.getId() + "_on", identifiers.get("block/block_machine"), machineTextureMap.getTextures(machine.getBlock(), true));
             generatedBlocks++;

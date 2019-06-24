@@ -19,7 +19,7 @@ public class MachineBlockItem extends BaseBlockItem {
     private @Getter MachineBlock block;
 
     protected MachineBlockItem(Machine machine, Voltage voltage, @Provided MachineBlockFactoryFactory blockFactoryFactory, @Provided MachinesGroup group) {
-        super(blockFactoryFactory.getFactory().create(machine.getName() + " Tier " + voltage.tier()), new Properties().group(group));
+        super(blockFactoryFactory.getFactory().create(voltage.getDisplayName(machine.getName())), new Properties().group(group));
         this.machine = machine;
         this.voltage = voltage;
         this.block = (MachineBlock) super.getBlock();

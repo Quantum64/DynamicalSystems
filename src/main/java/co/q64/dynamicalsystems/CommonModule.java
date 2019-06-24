@@ -6,12 +6,10 @@ import co.q64.dynamicalsystems.binders.ConstantBinders.ModId;
 import co.q64.dynamicalsystems.binders.ConstantBinders.Name;
 import co.q64.dynamicalsystems.binders.ConstantBinders.SharedNamespace;
 import co.q64.dynamicalsystems.binders.ConstantBinders.Version;
-import co.q64.dynamicalsystems.binders.PropertyBinders.AlignX;
-import co.q64.dynamicalsystems.binders.PropertyBinders.AlignY;
-import co.q64.dynamicalsystems.binders.PropertyBinders.AlignZ;
 import co.q64.dynamicalsystems.binders.PropertyBinders.Down;
 import co.q64.dynamicalsystems.binders.PropertyBinders.East;
 import co.q64.dynamicalsystems.binders.PropertyBinders.North;
+import co.q64.dynamicalsystems.binders.PropertyBinders.Running;
 import co.q64.dynamicalsystems.binders.PropertyBinders.South;
 import co.q64.dynamicalsystems.binders.PropertyBinders.Up;
 import co.q64.dynamicalsystems.binders.PropertyBinders.West;
@@ -60,8 +58,7 @@ public interface CommonModule {
     static @Provides @Singleton @South BooleanProperty provideSouth() { return BooleanProperty.create("south"); }
     static @Provides @Singleton @East BooleanProperty provideEast() { return BooleanProperty.create("east"); }
     static @Provides @Singleton @West BooleanProperty provideWest() { return BooleanProperty.create("west"); }
-    static @Provides @Singleton @AlignX BooleanProperty provideAlignX() { return BooleanProperty.create("alignx"); }
-    static @Provides @Singleton @AlignY BooleanProperty provideAlignY() { return BooleanProperty.create("aligny"); }
-    static @Provides @Singleton @AlignZ BooleanProperty provideAlignZ() { return BooleanProperty.create("alignz"); }
+
+    static @Provides @Singleton @Running BooleanProperty provideAlignX() { return BooleanProperty.create("running"); }
     // @formatter:on
 }

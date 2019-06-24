@@ -4,6 +4,7 @@ import co.q64.dynamicalsystems.resource.MultipartBuilder.MultipartPart.Multipart
 import com.google.auto.factory.AutoFactory;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.minecraft.util.ResourceLocation;
 
 @AutoFactory
 public class MultipartBuilder {
@@ -19,8 +20,28 @@ public class MultipartBuilder {
         return part().apply(model, x, y);
     }
 
+    public MultipartBuilder apply(String model, int y) {
+        return part().apply(model, 0, y);
+    }
+
     public MultipartBuilder apply(String model, int x, int y, boolean uvlock) {
         return part().apply(model, x, y, uvlock);
+    }
+
+    public MultipartBuilder apply(ResourceLocation model) {
+        return part().apply(model.toString());
+    }
+
+    public MultipartBuilder apply(ResourceLocation model, int x, int y) {
+        return part().apply(model.toString(), x, y);
+    }
+
+    public MultipartBuilder apply(ResourceLocation model, int y) {
+        return part().apply(model.toString(), y);
+    }
+
+    public MultipartBuilder apply(ResourceLocation model, int x, int y, boolean uvlock) {
+        return part().apply(model.toString(), x, y, uvlock);
     }
 
     public MultipartPart when(String property, String condition) {
@@ -65,8 +86,28 @@ public class MultipartBuilder {
             return new MultipartWhenCondition("AND");
         }
 
+        public MultipartBuilder apply(ResourceLocation model) {
+            return apply(model.toString());
+        }
+
+        public MultipartBuilder apply(ResourceLocation model, int x, int y) {
+            return apply(model.toString(), x, y);
+        }
+
+        public MultipartBuilder apply(ResourceLocation model, int y) {
+            return apply(model.toString(), y);
+        }
+
+        public MultipartBuilder apply(ResourceLocation model, int x, int y, boolean uvlock) {
+            return apply(model.toString(), x, y, uvlock);
+        }
+
         public MultipartBuilder apply(String model) {
             return apply(model, 0, 0);
+        }
+
+        public MultipartBuilder apply(String model, int y) {
+            return apply(model, 0, y, false);
         }
 
         public MultipartBuilder apply(String model, int x, int y) {
@@ -99,10 +140,11 @@ public class MultipartBuilder {
                 return this;
             }
 
-            public void end() {
+            public MultipartPart end() {
                 JsonObject when = new JsonObject();
                 when.add(key, conditions);
                 part.add("when", when);
+                return MultipartPart.this;
             }
         }
     }

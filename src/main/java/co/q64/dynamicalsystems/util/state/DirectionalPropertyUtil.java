@@ -1,8 +1,5 @@
 package co.q64.dynamicalsystems.util.state;
 
-import co.q64.dynamicalsystems.binders.PropertyBinders.AlignX;
-import co.q64.dynamicalsystems.binders.PropertyBinders.AlignY;
-import co.q64.dynamicalsystems.binders.PropertyBinders.AlignZ;
 import co.q64.dynamicalsystems.binders.PropertyBinders.Down;
 import co.q64.dynamicalsystems.binders.PropertyBinders.East;
 import co.q64.dynamicalsystems.binders.PropertyBinders.North;
@@ -24,10 +21,6 @@ public class DirectionalPropertyUtil {
     protected @Inject @East BooleanProperty east;
     protected @Inject @West BooleanProperty west;
 
-    protected @Inject @AlignX BooleanProperty alignX;
-    protected @Inject @AlignY BooleanProperty alignY;
-    protected @Inject @AlignZ BooleanProperty alignZ;
-
     protected @Inject DirectionalPropertyUtil() {}
 
     public BooleanProperty getDirection(Direction direction) {
@@ -44,19 +37,6 @@ public class DirectionalPropertyUtil {
                 return up;
             case WEST:
                 return west;
-            default:
-                throw new IllegalStateException("no");
-        }
-    }
-
-    public BooleanProperty getAlignment(AlignmentDirection direction) {
-        switch (direction) {
-            case X:
-                return alignX;
-            case Y:
-                return alignY;
-            case Z:
-                return alignZ;
             default:
                 throw new IllegalStateException("no");
         }

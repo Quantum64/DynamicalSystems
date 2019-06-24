@@ -26,6 +26,7 @@ public class MachineLoader {
             for (Voltage voltage : Voltage.getAll()) {
                 if (machine.getGenerateTier().test(voltage)) {
                     MachineBlockItem item = itemFactory.create(machine, voltage);
+                    items.add(item);
                     registryUtil.registerBlock(item);
                 }
             }

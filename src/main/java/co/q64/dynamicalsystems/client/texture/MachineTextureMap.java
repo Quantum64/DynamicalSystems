@@ -21,11 +21,11 @@ public class MachineTextureMap {
         Map<String, ResourceLocation> result = new HashMap<>();
         Machine machine = block.getMachine();
         Voltage voltage = block.getVoltage();
-        result.put("base", identifiers.get(machine.getBaseTextureOverride().apply(voltage).orElse(machine.getBaseTexture() + "_tier_" + voltage.tierTextureName())));
+        result.put("base", identifiers.get(machine.getBaseTextureOverride().apply(voltage).orElse("block/" + machine.getBaseTexture() + "_tier_" + voltage.tierTextureName())));
         if (on) {
-            result.put("overlay", identifiers.get("machine/" + machine.getOverlayOnTextureOverride().apply(voltage).orElse(machine.getOverlayOnTexture())));
+            result.put("overlay", identifiers.get("block/machine/" + machine.getOverlayOnTextureOverride().apply(voltage).orElse(machine.getOverlayOnTexture())));
         } else {
-            result.put("overlay", identifiers.get("machine/" + machine.getOverlayOffTextureOverride().apply(voltage).orElse(machine.getOverlayOffTexture())));
+            result.put("overlay", identifiers.get("block/machine/" + machine.getOverlayOffTextureOverride().apply(voltage).orElse(machine.getOverlayOffTexture())));
         }
         return result;
     }

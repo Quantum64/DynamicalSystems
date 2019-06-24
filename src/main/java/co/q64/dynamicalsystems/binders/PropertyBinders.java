@@ -4,23 +4,12 @@ import javax.inject.Qualifier;
 
 public interface PropertyBinders {
     // @formatter:off
-    @Qualifier
-    public static @interface Up {}
-    @Qualifier
-    public static @interface Down {}
-    @Qualifier
-    public static @interface North {}
-    @Qualifier
-    public static @interface South {}
-    @Qualifier
-    public static @interface East {}
-    @Qualifier
-    public static @interface West {}
-    @Qualifier
-    public static @interface AlignX {}
-    @Qualifier
-    public static @interface AlignY {}
-    @Qualifier
-    public static @interface AlignZ {}
+    public static @Qualifier @interface Up {}
+    public static @Qualifier @interface Down {}
+    public static @Qualifier @interface North {}
+    public static @Qualifier @interface South {}
+    public static @Qualifier @interface East {}
+    public static @Qualifier @interface West {}
+    public static @Qualifier @interface Running {}
     // @formatter:on
 }
