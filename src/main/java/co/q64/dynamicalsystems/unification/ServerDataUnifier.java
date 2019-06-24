@@ -33,7 +33,7 @@ public class ServerDataUnifier {
 
             @Override
             public Identifier getFabricId() {
-                return identifierUtil.get("server_data_unifier");
+                return identifiers.get("server_data_unifier");
             }
         });
 

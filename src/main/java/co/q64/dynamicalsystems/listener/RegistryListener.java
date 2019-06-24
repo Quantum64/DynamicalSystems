@@ -1,6 +1,5 @@
-package co.q64.dynamicalsystems.loader;
+package co.q64.dynamicalsystems.listener;
 
-import co.q64.dynamicalsystems.util.EventSubscriber;
 import co.q64.dynamicalsystems.util.RegistryUtil;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -11,12 +10,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class RegistryLoader extends EventSubscriber {
+public class RegistryListener implements Listener {
     protected @Inject RegistryUtil registryUtil;
 
-    protected @Inject RegistryLoader() {}
-
-    public void initialize() {}
+    protected @Inject RegistryListener() {}
 
     @SubscribeEvent
     public void onBlockRegistry(Register<Block> event) {

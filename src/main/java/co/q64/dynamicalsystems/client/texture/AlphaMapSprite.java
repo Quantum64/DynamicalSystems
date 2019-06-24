@@ -1,26 +1,6 @@
 package co.q64.dynamicalsystems.client.texture;
 
-import com.google.auto.factory.AutoFactory;
-import com.mojang.blaze3d.platform.TextureUtil;
-import net.minecraft.client.renderer.texture.MissingTextureSprite;
-import net.minecraft.client.renderer.texture.NativeImage;
-import net.minecraft.client.renderer.texture.PngSizeInfo;
-import net.minecraft.client.renderer.texture.Texture;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.data.AnimationMetadataSection;
-import net.minecraft.resources.IResource;
-import net.minecraft.resources.IResourceManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.extensions.IForgeTextureAtlasSprite;
-
-import javax.annotation.Nullable;
-import java.io.IOException;
-import java.util.Set;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
+/*
 @AutoFactory
 public class AlphaMapSprite extends TextureAtlasSprite implements IForgeTextureAtlasSprite {
     private ResourceLocation base, overlay;
@@ -38,7 +18,7 @@ public class AlphaMapSprite extends TextureAtlasSprite implements IForgeTextureA
             //PngFile basePng = new PngFile(baseResource.toString(), baseResource.getInputStream());
             //AnimationMetadataSection baseMeta = baseResource.getMetadata(AnimationMetadataSection.SERIALIZER);
             //TextureAtlasSprite baseGenerated = new FabricSprite(new ResourceLocation("dynamicalsystems", "generated_block_" + UUID.randomUUID()), basePng, baseMeta);
-            //baseGenerated.load(manager.getResource(base), mipLevel);
+            //baseGenerated.generateModels(manager.getResource(base), mipLevel);
 
             TextureAtlasSprite baseGenerated = textureGetter.apply(base);
             NativeImage baseImage = new NativeImage(baseGenerated.getWidth(), baseGenerated.getHeight(), true);
@@ -52,7 +32,7 @@ public class AlphaMapSprite extends TextureAtlasSprite implements IForgeTextureA
             //PngFile overlayPng = new PngFile(overlayResource.toString(), overlayResource.getInputStream());
             //AnimationResourceMetadata overlayMeta = overlayResource.getMetadata(AnimationResourceMetadata.READER);
             //TextureAtlasSprite overlayGenerated = new FabricSprite(new ResourceLocation("dynamicalsystems", "generated_block_" + UUID.randomUUID()), overlayPng, overlayMeta);
-            //overlayGenerated.load(manager.getResource(overlay), mipLevel);
+            //overlayGenerated.generateModels(manager.getResource(overlay), mipLevel);
             //NativeImage overlayImage = ((SpriteMixin) overlayGenerated).getImages()[0];
 
             TextureAtlasSprite overlayGenerated = textureGetter.apply(overlay);
@@ -164,3 +144,4 @@ public class AlphaMapSprite extends TextureAtlasSprite implements IForgeTextureA
         return dynamicTexture;
     }
 }
+*/

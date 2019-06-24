@@ -26,7 +26,7 @@ public class GridManager /*implements ServerTickCallback*/ {
 
     public void addTileToGridOnLoad(GridTile tile) {
         if (tile.getGrid() != null) {
-            throw new IllegalStateException("Only on load");
+            throw new IllegalStateException("Only on generateModels");
         }
 
         // Check what grid(s) we are adjacent to

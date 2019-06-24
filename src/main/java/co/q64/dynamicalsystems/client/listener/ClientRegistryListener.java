@@ -1,26 +1,21 @@
-package co.q64.dynamicalsystems.client.loader;
+package co.q64.dynamicalsystems.client.listener;
 
-import co.q64.dynamicalsystems.util.EventSubscriber;
+import co.q64.dynamicalsystems.client.loader.ColorHandlerLoader;
+import co.q64.dynamicalsystems.listener.Listener;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class ClientResourceRegistryLoader extends EventSubscriber {
-    protected @Inject ModelLoader loader;
+public class ClientRegistryListener implements Listener {
     protected @Inject ColorHandlerLoader colorHandlerLoader;
-    protected @Inject TextureLoader textureLoader;
+    //protected @Inject TextureLoader textureLoader;
 
-    protected @Inject ClientResourceRegistryLoader() {}
-
-    public void initialize() {
-        ModelLoaderRegistry.registerLoader(loader);
-    }
+    protected @Inject ClientRegistryListener() {}
 
     @SubscribeEvent
     public void modelLoadEvent(ModelRegistryEvent event) {
@@ -39,6 +34,6 @@ public class ClientResourceRegistryLoader extends EventSubscriber {
 
     @SubscribeEvent
     public void onTextureStitch(TextureStitchEvent.Pre event) {
-        textureLoader.loadTextures(event.getMap());
+        //textureLoader.loadTextures(event.getMap());
     }
 }

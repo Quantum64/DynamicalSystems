@@ -30,7 +30,7 @@ public class LinkManager {
                     enabledLinks.add(link);
                     logger.info("Enabled link to '" + info.getName() + "'.");
                 } catch (Exception e) {
-                    logger.info("Failed to load link '" + info.getName() + "'.");
+                    logger.info("Failed to generateModels link '" + info.getName() + "'.");
                     e.printStackTrace();
                 }
             } else {

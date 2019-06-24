@@ -1,6 +1,7 @@
 package co.q64.dynamicalsystems;
 
 import co.q64.dynamicalsystems.binders.ConstantBinders.Author;
+import co.q64.dynamicalsystems.binders.ConstantBinders.ConfigFolder;
 import co.q64.dynamicalsystems.binders.ConstantBinders.ModId;
 import co.q64.dynamicalsystems.binders.ConstantBinders.Name;
 import co.q64.dynamicalsystems.binders.ConstantBinders.SharedNamespace;
@@ -16,6 +17,9 @@ import co.q64.dynamicalsystems.binders.PropertyBinders.Up;
 import co.q64.dynamicalsystems.binders.PropertyBinders.West;
 import co.q64.dynamicalsystems.link.LinkInfo;
 import co.q64.dynamicalsystems.link.cottonresources.CottonResourcesLinkInfo;
+import co.q64.dynamicalsystems.listener.Listener;
+import co.q64.dynamicalsystems.listener.RegistryListener;
+import co.q64.dynamicalsystems.listener.ServerStartListener;
 import co.q64.dynamicalsystems.loader.component.CraftingComponentLoader;
 import co.q64.dynamicalsystems.material.ComponentLoader;
 import dagger.Binds;
@@ -24,10 +28,12 @@ import dagger.Provides;
 import dagger.multibindings.IntoSet;
 import net.minecraft.state.BooleanProperty;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.inject.Singleton;
+import java.io.File;
 
 @Module
 public interface CommonModule {
@@ -35,7 +41,11 @@ public interface CommonModule {
     @Binds @IntoSet ComponentLoader bindCraftingComponentLoader(CraftingComponentLoader craftingComponentLoader);
     @Binds @IntoSet LinkInfo bindCottonResourcesLink(CottonResourcesLinkInfo cottonResourcesLinkInfo);
 
+    @Binds @IntoSet Listener bindRegistryListener(RegistryListener serverStartListener);
+    @Binds @IntoSet Listener bindServerStartListener(ServerStartListener serverStartListener);
+
     static @Provides @Singleton FMLJavaModLoadingContext provideFMLModLoadingContext() { return FMLJavaModLoadingContext.get(); }
+    static @Provides @ConfigFolder @Singleton File provideConfigFolder(@ModId String modId) { return new File(FMLPaths.CONFIGDIR.get().toFile(), modId); }
     static @Provides @Singleton Logger provideLogger() { return LogManager.getLogger(); }
 
     static @Provides @ModId String provideModId() { return ModInformation.ID; }

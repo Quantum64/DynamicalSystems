@@ -9,5 +9,6 @@ public interface ConstantBinders {
     public static @Qualifier @interface Author {}
     public static @Qualifier @interface Version {}
     public static @Qualifier @interface SharedNamespace {}
+    public static @Qualifier @interface ConfigFolder {}
     // @formatter:on
 }
