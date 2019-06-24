@@ -1,43 +1,35 @@
 package co.q64.dynamicalsystems.resource;
 
-import co.q64.dynamicalsystems.binders.ConstantBinders.ConfigFolder;
 import co.q64.dynamicalsystems.binders.ConstantBinders.ModId;
 import co.q64.dynamicalsystems.util.IdentifierUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import lombok.Getter;
 import net.minecraft.util.ResourceLocation;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.io.File;
-import java.io.FileWriter;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.nio.file.Files;
 import java.util.Collections;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 @Singleton
 public class ResourcePackGenerator {
-    private static final String s = File.separator;
-    private static final boolean REWRITE_DEBUG = true;
-
-    protected @Inject @ConfigFolder File configFolder;
     protected @Inject @ModId String modId;
     protected @Inject IdentifierUtil identifierUtil;
 
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private File resourcePackFolder;
+    private @Getter Map<ResourceLocation, byte[]> virtualResourcePack = new HashMap<>();
 
     protected @Inject ResourcePackGenerator() {}
-
-    public File getResourcePackFolder() {
-        return resourcePackFolder;
-    }
 
     public void writeItemModel(String name, ResourceLocation parent) {
         writeItemModel(name, parent, Collections.emptyList());
@@ -67,7 +59,7 @@ public class ResourcePackGenerator {
             textures.addProperty("layer" + layer, layers.get(layer).toString());
         }
         model.add("textures", textures);
-        writeAssetJson(model, "models" + s + "item" + s + name + ".json");
+        writeJson(model, "models/item/" + name + ".json");
     }
 
     private void writeBlockstateInternal(String name) {
@@ -77,7 +69,7 @@ public class ResourcePackGenerator {
         variant.addProperty("model", identifierUtil.get("block/" + name).toString());
         variants.add("", variant);
         blockstate.add("variants", variants);
-        writeAssetJson(blockstate, "blockstates" + s + name + ".json");
+        writeJson(blockstate, "blockstates/" + name + ".json");
     }
 
     private void writeBlockModelInternal(String name, ResourceLocation parent, Map<String, ResourceLocation> texmap) {
@@ -88,23 +80,18 @@ public class ResourcePackGenerator {
             textures.addProperty(entry.getKey(), entry.getValue().toString());
         }
         model.add("textures", textures);
-        writeAssetJson(model, "models" + s + "block" + s + name + ".json");
-    }
-
-    private void writeAssetJson(JsonObject object, String path) {
-        writeJson(object, "assets" + s + modId + s + path);
+        writeJson(model, "models/" + "block/" + name + ".json");
     }
 
     private void writeJson(JsonObject object, String path) {
         try {
-            File file = new File(resourcePackFolder, path);
-            if (file.exists()) {
-                return;
-            }
-            file.getParentFile().mkdirs();
-            try (Writer writer = new FileWriter(file, false)) {
+            ByteArrayOutputStream result = new ByteArrayOutputStream();
+            try (Writer writer = new BufferedWriter(new OutputStreamWriter(result))) {
                 gson.toJson(object, writer);
             }
+            result.flush();
+            result.close();
+            virtualResourcePack.put(identifierUtil.get(path), result.toByteArray());
         } catch (IOException e) {
             e.printStackTrace();
             throw new IllegalStateException("Failed to write generated resources");
@@ -113,23 +100,6 @@ public class ResourcePackGenerator {
 
     @Inject
     protected void initialize() {
-        resourcePackFolder = new File(configFolder, "generated_resources");
-        if (REWRITE_DEBUG) {
-            try {
-                Files.walk(resourcePackFolder.toPath())
-                        .sorted(Comparator.reverseOrder())
-                        .forEach(t -> {
-                            try {
-                                Files.delete(t);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        });
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        resourcePackFolder.mkdirs();
         JsonObject packMeta = new JsonObject();
         JsonObject pack = new JsonObject();
         pack.addProperty("pack_format", 4);

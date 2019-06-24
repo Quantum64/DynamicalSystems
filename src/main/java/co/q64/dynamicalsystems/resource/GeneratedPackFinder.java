@@ -20,8 +20,7 @@ public class GeneratedPackFinder implements IPackFinder {
 
     @Override
     public <T extends ResourcePackInfo> void addPackInfosToMap(Map<String, T> map, IFactory<T> factory) {
-        String name = modId + "_generated";
-        name = "DynamicalSystems Generated";
+        String name = modId + "_virtual";
         T packInfo = ResourcePackInfo.createResourcePack(name, true, () -> generatedResourcePack.get(), factory, Priority.BOTTOM);
         map.put(name, packInfo);
     }
