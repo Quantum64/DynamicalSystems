@@ -12,16 +12,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Singleton
-public class MachineLoader {
+public class MachineProcessor {
     protected @Inject Machines machines;
     protected @Inject MachineBlockItemFactory itemFactory;
     protected @Inject RegistryUtil registryUtil;
 
     private @Getter List<MachineBlockItem> items = new ArrayList<>();
 
-    protected @Inject MachineLoader() {}
+    protected @Inject MachineProcessor() {}
 
-    public void loadMachines() {
+    @Inject
+    protected void loadMachines() {
         for (Machine machine : machines.getAll()) {
             for (Voltage voltage : Voltage.getAll()) {
                 if (machine.getGenerateTier().test(voltage)) {

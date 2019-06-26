@@ -8,11 +8,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 @Singleton
 public class BlocksGroup extends ItemGroup {
-    protected @Inject ItemUtil itemUtil;
+    protected @Inject Provider<ItemUtil> itemUtil;
     protected @Inject ExtraBlocks blocks;
 
     protected @Inject BlocksGroup() {
@@ -22,6 +23,6 @@ public class BlocksGroup extends ItemGroup {
     @Override
     @OnlyIn(Dist.CLIENT)
     public ItemStack createIcon() {
-        return new ItemStack(itemUtil.getExtraBlockItem(blocks.textureDebugBlock));
+        return new ItemStack(itemUtil.get().getExtraBlockItem(blocks.textureDebugBlock));
     }
 }

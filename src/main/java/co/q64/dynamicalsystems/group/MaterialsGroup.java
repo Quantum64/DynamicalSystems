@@ -9,11 +9,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 @Singleton
 public class MaterialsGroup extends ItemGroup {
-    protected @Inject Unification unification;
+    protected @Inject Provider<Unification> unification;
     protected @Inject Materials materials;
     protected @Inject Components components;
 
@@ -24,6 +25,6 @@ public class MaterialsGroup extends ItemGroup {
     @Override
     @OnlyIn(Dist.CLIENT)
     public ItemStack createIcon() {
-        return unification.getStack(components.screw, materials.gold).getItemStack();
+        return unification.get().getStack(components.screw, materials.gold).getItemStack();
     }
 }

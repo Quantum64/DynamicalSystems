@@ -33,7 +33,8 @@ public class MaterialItemLoader {
 
     protected @Inject MaterialItemLoader() {}
 
-    public void registerItems() {
+    @Inject
+    protected void registerItems() {
         for (Component component : componentRegistry.getComponents()) {
             for (Material material : materialRegistry.getMaterials()) {
                 if (component.getGenerate().test(material)) {

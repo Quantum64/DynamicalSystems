@@ -14,13 +14,13 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 @Singleton
-public class MaterialLoader {
+public class MaterialProcessor {
     protected @Inject ComponentRegistry componentRegistry;
     protected @Inject MaterialRegistry materialRegistry;
     protected @Inject MaterialItemLoader materialItemLoader;
     protected @Inject Set<ComponentLoader> componentLoaders;
 
-    protected @Inject MaterialLoader() {}
+    protected @Inject MaterialProcessor() {}
 
     public void load() {
         for (ComponentLoader loader : componentLoaders) {

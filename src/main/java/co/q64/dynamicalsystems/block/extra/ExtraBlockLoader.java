@@ -21,7 +21,8 @@ public class ExtraBlockLoader {
 
     protected @Inject ExtraBlockLoader() {}
 
-    public void loadExtraBlocks() {
+    @Inject
+    protected void loadExtraBlocks() {
         for (BlockDefinition definition : registry.getBlocks()) {
             ExtraBlockItem block = extraBlockItemFactory.create(definition);
             blocks.put(definition, block);
