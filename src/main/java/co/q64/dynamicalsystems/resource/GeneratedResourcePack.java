@@ -14,8 +14,9 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -54,8 +55,17 @@ public class GeneratedResourcePack extends ResourcePack {
     }
 
     @Override
-    public Collection<ResourceLocation> getAllResourceLocations(ResourcePackType type, String pathIn, int maxDepth, Predicate<String> filter) {
-        return Collections.emptyList(); //TODO Is this needed?
+    public Collection<ResourceLocation> getAllResourceLocations(ResourcePackType type, String path, int maxDepth, Predicate<String> filter) {
+        List<ResourceLocation> result = new ArrayList<>();
+        String target = path + "/";
+        for (ResourceLocation key : generator.getVirtualResourcePack().keySet()) {
+            if (key.getPath().startsWith(target)) {
+                if (filter.test(key.getPath().substring(target.length()))) {
+                    result.add(key);
+                }
+            }
+        }
+        return result;
     }
 
     @Override

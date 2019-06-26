@@ -1,9 +1,12 @@
 package co.q64.dynamicalsystems.block;
 
 import co.q64.dynamicalsystems.block.item.MaterialBlockItem;
+import co.q64.dynamicalsystems.material.base.Component;
 import co.q64.dynamicalsystems.material.base.ComponentOre;
 import com.google.auto.factory.AutoFactory;
 import lombok.Getter;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -14,12 +17,10 @@ public class MaterialBlock extends BaseBlock {
     private MaterialBlockItem item;
     private BlockRenderLayer renderLayer;
 
-    public MaterialBlock(String name, Properties settings) {
-        super(name, settings);
-    }
-
-    public MaterialBlock(String name) {
-        super(name);
+    public MaterialBlock(String name, Component component) {
+        super(name, Properties.create(component instanceof ComponentOre ? Material.ROCK : Material.IRON)
+                .sound(component instanceof ComponentOre ? SoundType.STONE : SoundType.METAL)
+                .hardnessAndResistance(1.5f, 6.0f));
     }
 
     public void setItem(MaterialBlockItem item) {

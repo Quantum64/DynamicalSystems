@@ -1,8 +1,10 @@
 package co.q64.dynamicalsystems.listener;
 
+import co.q64.dynamicalsystems.tile.TileEntityTypes;
 import co.q64.dynamicalsystems.util.RegistryUtil;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -12,6 +14,7 @@ import javax.inject.Singleton;
 @Singleton
 public class RegistryListener implements Listener {
     protected @Inject RegistryUtil registryUtil;
+    protected @Inject TileEntityTypes tileEntityTypes;
 
     protected @Inject RegistryListener() {}
 
@@ -28,5 +31,10 @@ public class RegistryListener implements Listener {
         for (Item item : registryUtil.getItems()) {
             event.getRegistry().register(item);
         }
+    }
+
+    @SubscribeEvent
+    public void onTileEntityRegistry(Register<TileEntityType<?>> event) {
+        event.getRegistry().registerAll(tileEntityTypes.getTypes().toArray(new TileEntityType[0]));
     }
 }

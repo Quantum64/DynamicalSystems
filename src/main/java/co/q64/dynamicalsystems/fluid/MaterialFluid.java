@@ -50,7 +50,7 @@ public class MaterialFluid extends BaseFluid {
     }
 
     public BlockState toBlockState(FluidState fluidState_1) {
-        return (BlockState) Blocks.WATER.getDefaultState().with(FluidBlock.LEVEL, method_15741(fluidState_1));
+        return (BlockState) ExtraBlocks.WATER.getDefaultState().with(FluidBlock.LEVEL, method_15741(fluidState_1));
     }
 
     public boolean matchesType(Fluid fluid_1) {

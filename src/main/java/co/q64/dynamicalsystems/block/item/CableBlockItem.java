@@ -19,7 +19,7 @@ public class CableBlockItem extends MaterialBlockItem implements MaterialItem {
     private @Getter CableBlock block;
 
     public CableBlockItem(Material material, Component component, @Provided CableBlockFactoryFactory blockFactoryFactory, @Provided MaterialItemNameGenerator generator, @Provided MaterialsGroup group) {
-        super(material, component, blockFactoryFactory.getFactory().create(generator.generate(component, material)), group);
+        super(material, component, blockFactoryFactory.getFactory().create(generator.generate(component, material), component), group);
         this.block = (CableBlock) super.getBaseBlock();
     }
 

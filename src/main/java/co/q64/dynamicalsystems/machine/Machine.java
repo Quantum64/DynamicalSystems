@@ -25,4 +25,8 @@ public abstract class Machine {
     protected void register() {
         registry.register(this);
     }
+
+    public String getId() {
+        return name.toLowerCase();
+    }
 }

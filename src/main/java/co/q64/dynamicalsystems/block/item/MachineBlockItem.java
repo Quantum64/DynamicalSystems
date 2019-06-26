@@ -35,6 +35,14 @@ public class MachineBlockItem extends BaseBlockItem {
         return machine;
     }
 
+    public String getOffModel() {
+        return "block/" + getId() + "_off";
+    }
+
+    public String getOnModel() {
+        return "block/" + getId() + "_on";
+    }
+
     @Singleton
     public static class MachineBlockFactoryFactory {
         protected @Inject MachineBlockFactoryFactory() {}

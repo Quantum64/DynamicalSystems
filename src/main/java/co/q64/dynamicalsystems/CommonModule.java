@@ -59,6 +59,6 @@ public interface CommonModule {
     static @Provides @Singleton @East BooleanProperty provideEast() { return BooleanProperty.create("east"); }
     static @Provides @Singleton @West BooleanProperty provideWest() { return BooleanProperty.create("west"); }
 
-    static @Provides @Singleton @Running BooleanProperty provideAlignX() { return BooleanProperty.create("running"); }
+    static @Provides @Singleton @Running BooleanProperty provideRunning() { return BooleanProperty.create("running"); }
     // @formatter:on
 }

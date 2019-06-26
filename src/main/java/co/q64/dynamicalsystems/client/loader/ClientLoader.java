@@ -10,13 +10,13 @@ import javax.inject.Singleton;
 @Singleton
 public class ClientLoader {
     protected @Inject CommonLoader commonLoader;
-    protected @Inject ModelGenerator modelGenerator;
+    protected @Inject ClientResourceGenerator clientResourceGenerator;
     protected @Inject GeneratedPackFinder generatedPackFinder;
 
     protected @Inject ClientLoader() {}
 
     public void load() {
-        modelGenerator.generateModels();
+        clientResourceGenerator.generateModels();
         //TODO move this (where?)
         Minecraft.getInstance().getResourcePackList().addPackFinder(generatedPackFinder);
     }

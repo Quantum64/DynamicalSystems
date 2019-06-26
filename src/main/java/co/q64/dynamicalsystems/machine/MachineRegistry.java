@@ -1,6 +1,5 @@
 package co.q64.dynamicalsystems.machine;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 
 import javax.inject.Inject;
@@ -10,7 +9,7 @@ import java.util.List;
 
 @Singleton
 public class MachineRegistry {
-    private @Getter(AccessLevel.PROTECTED) List<Machine> machines = new ArrayList<>();
+    private @Getter List<Machine> machines = new ArrayList<>();
     private boolean frozen;
 
     protected @Inject MachineRegistry() {}

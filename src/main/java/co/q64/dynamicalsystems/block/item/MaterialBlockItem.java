@@ -25,7 +25,7 @@ public class MaterialBlockItem extends BaseBlockItem implements MaterialItem {
     private MaterialBlock block;
 
     protected MaterialBlockItem(Material material, Component component, @Provided MaterialBlockFactoryFactory blockFactoryFactory, @Provided MaterialItemNameGenerator generator, @Provided MaterialsGroup materialsGroup, @Provided OresGroup oresGroup) {
-        super(blockFactoryFactory.getFactory().create(generator.generate(component, material)), new Properties().group(component instanceof ComponentOre ? oresGroup : materialsGroup));
+        super(blockFactoryFactory.getFactory().create(generator.generate(component, material), component), new Properties().group(component instanceof ComponentOre ? oresGroup : materialsGroup));
         this.block = (MaterialBlock) super.getBlock();
         this.component = component;
         this.material = material;

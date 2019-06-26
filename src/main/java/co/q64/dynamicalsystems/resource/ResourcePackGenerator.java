@@ -4,6 +4,7 @@ import co.q64.dynamicalsystems.binders.ConstantBinders.ModId;
 import co.q64.dynamicalsystems.util.IdentifierUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.Getter;
 import net.minecraft.util.ResourceLocation;
@@ -27,6 +28,7 @@ public class ResourcePackGenerator {
     protected @Inject IdentifierUtil identifierUtil;
 
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private @Getter int generatedJSONs, generatedBlockstates, generatedItemModels, generatedBlockModels, generatedLootTables;
     private @Getter Map<ResourceLocation, byte[]> virtualResourcePack = new HashMap<>();
 
     protected @Inject ResourcePackGenerator() {}
@@ -55,6 +57,10 @@ public class ResourcePackGenerator {
         writeBlockModelInternal(name, parent, textures);
     }
 
+    public void writeLootTable(String name, ResourceLocation drop) {
+        writeLootTableInternal(name, drop);
+    }
+
     private void writeItemModelInternal(String name, ResourceLocation parent, List<ResourceLocation> layers) {
         JsonObject model = new JsonObject();
         model.addProperty("parent", parent.toString());
@@ -64,6 +70,7 @@ public class ResourcePackGenerator {
         }
         model.add("textures", textures);
         writeJson(model, "models/item/" + name + ".json");
+        generatedItemModels++;
     }
 
     private void writeSimpleBlockstateInternal(String name) {
@@ -74,10 +81,12 @@ public class ResourcePackGenerator {
         variants.add("", variant);
         blockstate.add("variants", variants);
         writeJson(blockstate, "blockstates/" + name + ".json");
+        generatedBlockstates++;
     }
 
     private void WriteMultipartBlockStateInternal(String name, MultipartBuilder builder) {
         writeJson(builder.build(), "blockstates/" + name + ".json");
+        generatedBlockstates++;
     }
 
     private void writeBlockModelInternal(String name, ResourceLocation parent, Map<String, ResourceLocation> texmap) {
@@ -88,7 +97,32 @@ public class ResourcePackGenerator {
             textures.addProperty(entry.getKey(), entry.getValue().toString());
         }
         model.add("textures", textures);
-        writeJson(model, "models/" + "block/" + name + ".json");
+        writeJson(model, "models/block/" + name + ".json");
+        generatedBlockModels++;
+    }
+
+    private void writeLootTableInternal(String name, ResourceLocation drop) {
+        JsonObject result = new JsonObject();
+        result.addProperty("type", new ResourceLocation("block").toString());
+        JsonArray pools = new JsonArray();
+        JsonObject pool = new JsonObject();
+        pool.addProperty("name", name);
+        pool.addProperty("rolls", 1);
+        JsonArray entries = new JsonArray();
+        JsonObject entry = new JsonObject();
+        entry.addProperty("type", new ResourceLocation("item").toString());
+        entry.addProperty("name", identifierUtil.get(name).toString());
+        entries.add(entry);
+        pool.add("entries", entries);
+        JsonArray conditions = new JsonArray();
+        JsonObject condition = new JsonObject();
+        condition.addProperty("condition", new ResourceLocation("survives_explosion").toString());
+        conditions.add(condition);
+        pool.add("conditions", conditions);
+        pools.add(pool);
+        result.add("pools", pools);
+        writeJson(result, "loot_tables/extra/" + name + ".json");
+        generatedLootTables++;
     }
 
     private void writeJson(JsonObject object, String path) {
@@ -100,6 +134,7 @@ public class ResourcePackGenerator {
             result.flush();
             result.close();
             virtualResourcePack.put(identifierUtil.get(path), result.toByteArray());
+            generatedJSONs++;
         } catch (IOException e) {
             e.printStackTrace();
             throw new IllegalStateException("Failed to write generated resources");

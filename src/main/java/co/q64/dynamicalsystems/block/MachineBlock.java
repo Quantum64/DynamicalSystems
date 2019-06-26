@@ -2,37 +2,34 @@ package co.q64.dynamicalsystems.block;
 
 import co.q64.dynamicalsystems.grid.energy.Voltage;
 import co.q64.dynamicalsystems.machine.Machine;
-import co.q64.dynamicalsystems.machine.MachineSideConfiguration;
 import co.q64.dynamicalsystems.state.MachineProperties;
+import co.q64.dynamicalsystems.tile.MachineTileFactory;
 import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import lombok.Getter;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
+import net.minecraft.world.IBlockReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @Getter
 @AutoFactory
 public class MachineBlock extends BaseBlock {
+    private MachineTileFactory tileFactory;
     private Machine machine;
     private Voltage voltage;
 
-    public MachineBlock(String name) {
+    public MachineBlock(String name, @Provided co.q64.dynamicalsystems.tile.MachineTileFactory tileFactory) {
         super(name, Properties.create(Material.IRON));
-        setDefaultState(getStateContainer().getBaseState()
-                .with(MachineProperties.NORTH, MachineSideConfiguration.FRONT)
-                .with(MachineProperties.SOUTH, MachineSideConfiguration.DISABLED)
-                .with(MachineProperties.EAST, MachineSideConfiguration.DISABLED)
-                .with(MachineProperties.WEST, MachineSideConfiguration.DISABLED)
-                .with(MachineProperties.TOP, MachineSideConfiguration.INPUT)
-                .with(MachineProperties.BOTTOM, MachineSideConfiguration.OUTPUT)
-                .with(MachineProperties.RUNNING, false));
+        this.tileFactory = tileFactory;
+        setDefaultState(getStateContainer().getBaseState().with(MachineProperties.FACING, Direction.NORTH));
     }
 
     public void setMachine(Machine machine, Voltage voltage) {
@@ -42,24 +39,22 @@ public class MachineBlock extends BaseBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        BlockState result = getDefaultState();
-        Direction front = context.getPlacementHorizontalFacing().getOpposite();
-        if (front == Direction.DOWN || front == Direction.UP) {
-            throw new IllegalStateException("Invalid horizontal facing");
-        }
-        for (EnumProperty<MachineSideConfiguration> property : MachineProperties.SIDES) {
-            if (MachineProperties.getDirection(property) == front) {
-                result = result.with(property, MachineSideConfiguration.FRONT);
-            } else {
-                result = result.with(property, MachineSideConfiguration.DISABLED);
-            }
-        }
-        return result;
+        return getDefaultState().with(MachineProperties.FACING, context.getPlacementHorizontalFacing().getOpposite());
     }
 
     @Override
     public void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder.add(MachineProperties.ALL));
+        super.fillStateContainer(builder.add(MachineProperties.FACING));
+    }
+
+    @Override
+    public boolean hasTileEntity(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+        return tileFactory.create();
     }
 
     @OnlyIn(Dist.CLIENT)
