@@ -12,14 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Singleton
-public class MachineProcessor {
+public class MachineLoader {
     protected @Inject Machines machines;
     protected @Inject MachineBlockItemFactory itemFactory;
     protected @Inject RegistryUtil registryUtil;
 
     private @Getter List<MachineBlockItem> items = new ArrayList<>();
 
-    protected @Inject MachineProcessor() {}
+    protected @Inject MachineLoader() {}
 
     @Inject
     protected void loadMachines() {

@@ -3,6 +3,7 @@ package co.q64.dynamicalsystems.block;
 import co.q64.dynamicalsystems.grid.energy.Voltage;
 import co.q64.dynamicalsystems.machine.Machine;
 import co.q64.dynamicalsystems.state.MachineProperties;
+import co.q64.dynamicalsystems.tile.MachineTile;
 import co.q64.dynamicalsystems.tile.MachineTileFactory;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
@@ -10,14 +11,21 @@ import lombok.Getter;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 @Getter
 @AutoFactory
@@ -35,6 +43,18 @@ public class MachineBlock extends BaseBlock {
     public void setMachine(Machine machine, Voltage voltage) {
         this.machine = machine;
         this.voltage = voltage;
+    }
+
+    @Override
+    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
+        if (!world.isRemote()) {
+            TileEntity machine = world.getTileEntity(pos);
+            if (machine instanceof MachineTile) {
+                NetworkHooks.openGui((ServerPlayerEntity) player, (MachineTile) machine);
+                player.openContainer((MachineTile) machine);
+            }
+        }
+        return super.onBlockActivated(state, world, pos, player, hand, result);
     }
 
     @Override

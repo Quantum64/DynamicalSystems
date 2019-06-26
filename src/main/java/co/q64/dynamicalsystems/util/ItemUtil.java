@@ -5,7 +5,7 @@ import co.q64.dynamicalsystems.block.extra.ExtraBlockLoader;
 import co.q64.dynamicalsystems.block.item.ExtraBlockItem;
 import co.q64.dynamicalsystems.block.item.MachineBlockItem;
 import co.q64.dynamicalsystems.item.MaterialItem;
-import co.q64.dynamicalsystems.machine.MachineProcessor;
+import co.q64.dynamicalsystems.machine.MachineLoader;
 import co.q64.dynamicalsystems.material.MaterialItemLoader;
 import net.minecraft.util.ResourceLocation;
 
@@ -18,7 +18,7 @@ import java.util.Optional;
 @Singleton
 public class ItemUtil {
     protected @Inject MaterialItemLoader materialItemLoader;
-    protected @Inject MachineProcessor machineProcessor;
+    protected @Inject MachineLoader machineLoader;
     protected @Inject ExtraBlockLoader extraBlockLoader;
 
     protected @Inject ItemUtil() {}
@@ -28,7 +28,7 @@ public class ItemUtil {
     }
 
     public List<MachineBlockItem> getMachineItems() {
-        return machineProcessor.getItems();
+        return machineLoader.getItems();
     }
 
     public Optional<MaterialItem> getMaterialItem(ResourceLocation identifier) {

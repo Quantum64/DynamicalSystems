@@ -13,6 +13,7 @@ import co.q64.dynamicalsystems.binders.PropertyBinders.Running;
 import co.q64.dynamicalsystems.binders.PropertyBinders.South;
 import co.q64.dynamicalsystems.binders.PropertyBinders.Up;
 import co.q64.dynamicalsystems.binders.PropertyBinders.West;
+import co.q64.dynamicalsystems.gui.type.MachineContainerType;
 import co.q64.dynamicalsystems.link.LinkInfo;
 import co.q64.dynamicalsystems.link.cottonresources.CottonResourcesLinkInfo;
 import co.q64.dynamicalsystems.listener.Listener;
@@ -24,6 +25,7 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoSet;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
@@ -41,6 +43,8 @@ public interface CommonModule {
 
     @Binds @IntoSet Listener bindRegistryListener(RegistryListener serverStartListener);
     @Binds @IntoSet Listener bindServerStartListener(ServerStartListener serverStartListener);
+
+    @Binds @IntoSet ContainerType<?> bindMachineContainerType(MachineContainerType type);
 
     static @Provides @Singleton FMLJavaModLoadingContext provideFMLModLoadingContext() { return FMLJavaModLoadingContext.get(); }
     static @Provides @ConfigFolder @Singleton File provideConfigFolder(@ModId String modId) { return new File(FMLPaths.CONFIGDIR.get().toFile(), modId); }
