@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -21,6 +22,7 @@ public abstract class Material {
     protected String name = "Unknown";
     protected String textureOverrideFamily = "";
     protected List<Component> textureOverrides = new ArrayList<>();
+    protected Supplier<String> tagPart = () -> name.toLowerCase().replace(" ", "");
     protected int color = 0xFFFFFF;
     protected Optional<Element> element = Optional.empty();
 

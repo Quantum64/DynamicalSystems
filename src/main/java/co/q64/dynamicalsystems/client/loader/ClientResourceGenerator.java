@@ -44,7 +44,6 @@ public class ClientResourceGenerator {
     protected @Inject ClientResourceGenerator() {}
 
     public void generateModels() {
-        logger.info("Generating models and blockstates...");
         long start = System.currentTimeMillis();
         for (MaterialItem item : itemUtil.getMaterialItems()) {
             if (item.isBlock()) {
@@ -121,7 +120,8 @@ public class ClientResourceGenerator {
         logger.info("Generated " + generator.getGeneratedItemModels() + " item models, " + generator.getGeneratedBlockstates() + " blockstates, and " +
                 generator.getGeneratedBlockModels() + " block models for a total of " + (generator.getGeneratedItemModels() + generator.getGeneratedBlockstates() + generator.getGeneratedBlockModels()) +
                 " JSON files (" + (System.currentTimeMillis() - start) + " ms)");
+        start = System.currentTimeMillis();
         generator.writeTranslations(translationService.getTranslations());
-        logger.info("Generated " + translationService.getTranslations().size() + " default translations...");
+        logger.info("Generated " + translationService.getTranslations().size() + " default translations (" + (System.currentTimeMillis() - start) + " ms)");
     }
 }

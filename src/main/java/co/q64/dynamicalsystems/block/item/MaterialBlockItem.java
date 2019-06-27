@@ -17,6 +17,7 @@ import net.minecraft.item.ItemGroup;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
 
 @AutoFactory
 public class MaterialBlockItem extends BaseBlockItem implements MaterialItem {
@@ -53,6 +54,11 @@ public class MaterialBlockItem extends BaseBlockItem implements MaterialItem {
     @Override
     public Material getMaterial() {
         return material;
+    }
+
+    @Override
+    public Optional<String> getTag() {
+        return Optional.of(component.getTagPart().get() + "/" + material.getTagPart().get());
     }
 
     @Singleton

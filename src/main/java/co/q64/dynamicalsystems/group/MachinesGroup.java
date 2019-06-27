@@ -24,6 +24,6 @@ public class MachinesGroup extends ItemGroup {
     @Override
     @OnlyIn(Dist.CLIENT)
     public ItemStack createIcon() {
-        return unification.getStack(components.stoneOre, materials.iron).getItemStack();
+        return unification.getStack(components.stoneOre, materials.iron);
     }
 }

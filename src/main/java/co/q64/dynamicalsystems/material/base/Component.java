@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 @Getter
 public abstract class Component {
@@ -20,6 +21,7 @@ public abstract class Component {
     protected String textureName = "";
     protected String model = "";
     protected boolean hasTextureOverlay = false;
+    protected Supplier<String> tagPart = () -> prefix.toLowerCase().replace(" ", "") + name.toLowerCase().replace(" ", "") + "s";
 
     protected Component() {}
 

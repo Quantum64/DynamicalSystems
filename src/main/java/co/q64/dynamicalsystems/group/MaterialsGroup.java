@@ -25,6 +25,6 @@ public class MaterialsGroup extends ItemGroup {
     @Override
     @OnlyIn(Dist.CLIENT)
     public ItemStack createIcon() {
-        return unification.get().getStack(components.screw, materials.gold).getItemStack();
+        return unification.get().getStack(components.screw, materials.gold);
     }
 }

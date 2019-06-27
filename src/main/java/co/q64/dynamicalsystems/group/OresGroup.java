@@ -25,6 +25,6 @@ public class OresGroup extends ItemGroup {
     @Override
     @OnlyIn(Dist.CLIENT)
     public ItemStack createIcon() {
-        return unification.get().getStack(components.stoneOre, materials.iron).getItemStack();
+        return unification.get().getStack(components.stoneOre, materials.iron);
     }
 }

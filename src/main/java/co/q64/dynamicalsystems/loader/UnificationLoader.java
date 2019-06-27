@@ -2,16 +2,14 @@ package co.q64.dynamicalsystems.loader;
 
 import co.q64.dynamicalsystems.material.Components;
 import co.q64.dynamicalsystems.material.Materials;
-import co.q64.dynamicalsystems.unification.ServerDataUnifier;
 import co.q64.dynamicalsystems.unification.Unification;
-import net.minecraft.item.Items;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
 public class UnificationLoader {
-    protected @Inject ServerDataUnifier serverDataUnifier;
+    //protected @Inject ServerDataUnifier serverDataUnifier;
     protected @Inject Components components;
     protected @Inject Materials materials;
     protected @Inject Unification unification;
@@ -19,9 +17,9 @@ public class UnificationLoader {
     protected @Inject UnificationLoader() {}
 
     public void load() {
-        serverDataUnifier.register();
+        //serverDataUnifier.register();
 
-        unification.get(components.ingot, materials.gold).unify(Items.GOLD_INGOT);
-        unification.get(components.ingot, materials.iron).unify(Items.IRON_INGOT);
+       // unification.get(components.ingot, materials.gold).unify(Items.GOLD_INGOT);
+        //unification.get(components.ingot, materials.iron).unify(Items.IRON_INGOT);
     }
 }

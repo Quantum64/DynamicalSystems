@@ -4,8 +4,10 @@ import lombok.Getter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 
+import java.util.Optional;
+
 @Getter
-public abstract class BaseItem extends Item {
+public abstract class BaseItem extends Item implements IdentifiableItem {
     private String id;
 
     public BaseItem(String id) {
@@ -20,5 +22,10 @@ public abstract class BaseItem extends Item {
         super(settings);
         this.id = id;
         setRegistryName(id);
+    }
+
+    @Override
+    public Optional<String> getTag() {
+        return Optional.empty();
     }
 }

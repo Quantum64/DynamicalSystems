@@ -8,6 +8,8 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import lombok.Getter;
 
+import java.util.Optional;
+
 @Getter
 @AutoFactory
 public class SimpleMaterialItem extends BaseItem implements MaterialItem {
@@ -18,5 +20,10 @@ public class SimpleMaterialItem extends BaseItem implements MaterialItem {
         super(service.registerMaterialItem(component, material), group);
         this.material = material;
         this.component = component;
+    }
+
+    @Override
+    public Optional<String> getTag() {
+        return Optional.of(component.getTagPart().get() + "/" + material.getTagPart().get());
     }
 }

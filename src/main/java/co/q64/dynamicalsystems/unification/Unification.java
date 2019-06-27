@@ -1,97 +1,104 @@
 package co.q64.dynamicalsystems.unification;
 
+import co.q64.dynamicalsystems.block.item.BaseBlockItem;
+import co.q64.dynamicalsystems.item.BaseItem;
 import co.q64.dynamicalsystems.item.MaterialItem;
 import co.q64.dynamicalsystems.material.MaterialItemLoader;
 import co.q64.dynamicalsystems.material.base.Component;
 import co.q64.dynamicalsystems.material.base.Material;
-import lombok.Getter;
+import co.q64.dynamicalsystems.resource.TranslationService;
+import co.q64.dynamicalsystems.util.IdentifierUtil;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.tags.ItemTags.Wrapper;
+import net.minecraft.tags.Tag;
+import net.minecraft.util.ResourceLocation;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Singleton
 public class Unification {
+    protected @Inject IdentifierUtil identifiers;
+    protected @Inject TranslationService translationService;
     protected @Inject MaterialItemLoader materialItemLoader;
-    protected @Inject SharedItemFactory sharedItemFactory;
-    protected @Inject SharedItemStackFactory sharedItemStackFactory;
 
-    private @Getter List<SharedItem> items = new ArrayList<>(1);
+    private Map<ResourceLocation, Tag<Item>> tags = new HashMap<>();
 
-    protected @Inject Unification() {}
+    @Inject
+    protected Unification() {}
 
-    public SharedItem get(Component component, Material material) {
-        for (SharedItem si : items) {
-            // TODO maybe cache in map
-            if (si.getComponent().orElse(null) == component && si.getMaterial().orElse(null) == material) {
-                return si;
-            }
+    public Tag<Item> get(Component component, Material material) {
+        return tagSynthesizer(get(identifiers.get(translationService.registerMaterialItem(component, material))), //TODO there has to be a better way
+                materialItemLoader.getItem(component, material).map(MaterialItem::getBaseItem).orElse(Items.BARRIER)); //TODO replace with error item
+    }
+
+    public Tag<Item> get(BaseItem item) {
+        return tagSynthesizer(get(identifiers.get(item.getId())), item);
+    }
+
+    public Tag<Item> get(BaseBlockItem item) {
+        return tagSynthesizer(get(identifiers.get(item.getId())), item);
+    }
+
+    public Tag<Item> get(ResourceLocation id) {
+        if (tags.containsKey(id)) {
+            return tags.get(id);
         }
-        SharedItem result = sharedItemFactory.create(component, material);
-        items.add(result);
+        Tag<Item> result = new Wrapper(id);
+        tags.put(id, result);
         return result;
     }
 
-    public SharedItem get(Item item) {
-        for (SharedItem si : items) {
-            if (si.getItems().contains(item)) {
-                return si;
-            }
-        }
-        SharedItem result = sharedItemFactory.create().unify(item);
-        items.add(result);
-        return result;
+    public ItemStack getStack(Component component, Material material, int amount) {
+        return getStack(get(component, material), amount);
     }
 
-    public SharedItemStack getStack(Component component, Material material, int amount) {
-        return sharedItemStackFactory.create(get(component, material), amount);
-    }
-
-    public SharedItemStack getStack(Component component, Material material) {
+    public ItemStack getStack(Component component, Material material) {
         return getStack(component, material, 1);
     }
 
-    public SharedItemStack getStack(Item item, int amount) {
-        return sharedItemStackFactory.create(get(item), amount);
+    public ItemStack getStack(BaseItem item, int amount) {
+        return getStack(get(item), amount);
     }
 
-    public SharedItemStack getStack(Item item) {
+    public ItemStack getStack(BaseItem item) {
         return getStack(item, 1);
     }
 
-    public SharedItemStack getStack(SharedItem item, int amount) {
-        return sharedItemStackFactory.create(item, amount);
+    public ItemStack getStack(Tag<Item> item, int amount) {
+        return new ItemStack(item.getAllElements().iterator().next(), amount); //TODO does this make sense
     }
 
-    public SharedItemStack getStack(SharedItem item) {
+    public ItemStack getStack(Tag<Item> item) {
         return getStack(item, 1);
     }
 
-	/*
-	public ItemStack getMaterialStack(Component component, Material material) {
-		return getMaterialStack(component, material, 1);
-	}
-	
-	public ItemStack getMaterialStack(Component component, Material material, int size) {
-		Optional<MaterialItem> generated = materialItemLoader.getBaseItem(component, material);
-		if (generated.isPresent()) {
-			return new ItemStack(generated.get().getBaseItem(), size);
-		}
-		return ItemStack.EMPTY;
-	}
-	*/
-
-    @Inject
-    protected void init() {
-        for (Entry<Component, Map<Material, MaterialItem>> component : materialItemLoader.getItemMap().entrySet()) {
-            for (Entry<Material, MaterialItem> material : component.getValue().entrySet()) {
-                get(component.getKey(), material.getKey()).unify(material.getValue().getBaseItem());
-            }
+    private Tag<Item> tagSynthesizer(Tag<Item> tag, Item defaultItem) {
+        if (!tag.getAllElements().isEmpty()) {
+            return tag;
         }
-        // TODO other generated items
+        return new SyntheticTag(tag.getId(), defaultItem);
+    }
+
+    private static class SyntheticTag extends Tag<Item> {
+        private Set<Item> elements;
+
+        public SyntheticTag(ResourceLocation id, Item defaultItem) {
+            super(id);
+            this.elements = Stream.of(defaultItem).collect(Collectors.toSet());
+        }
+
+        @Override
+        public Collection<Item> getAllElements() {
+            return elements;
+        }
     }
 }
