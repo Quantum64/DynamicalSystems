@@ -17,8 +17,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class CableBlock extends MaterialBlock {
     private DirectionalPropertyUtil propertyUtil;
 
-    public CableBlock(String name, Component settings, @Provided DirectionalPropertyUtil propertyUtil) {
-        super(name, settings);
+    public CableBlock(String id, Component settings, @Provided DirectionalPropertyUtil propertyUtil) {
+        super(id, settings);
         this.propertyUtil = propertyUtil;
     }
 

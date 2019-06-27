@@ -5,6 +5,7 @@ import co.q64.dynamicalsystems.block.MachineBlockFactory;
 import co.q64.dynamicalsystems.grid.energy.Voltage;
 import co.q64.dynamicalsystems.group.MachinesGroup;
 import co.q64.dynamicalsystems.machine.Machine;
+import co.q64.dynamicalsystems.resource.TranslationService;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import lombok.Getter;
@@ -18,17 +19,12 @@ public class MachineBlockItem extends BaseBlockItem {
     private @Getter Voltage voltage;
     private @Getter MachineBlock block;
 
-    protected MachineBlockItem(Machine machine, Voltage voltage, @Provided MachineBlockFactoryFactory blockFactoryFactory, @Provided MachinesGroup group) {
-        super(blockFactoryFactory.getFactory().create(voltage.getDisplayName(machine.getName())), new Properties().group(group));
+    protected MachineBlockItem(Machine machine, Voltage voltage, @Provided MachineBlockFactoryFactory blockFactoryFactory, @Provided MachinesGroup group, @Provided TranslationService service) {
+        super(blockFactoryFactory.getFactory().create(service.registerBlockTranslation(voltage.getDisplayName(machine.getName()))), new Properties().group(group));
         this.machine = machine;
         this.voltage = voltage;
         this.block = (MachineBlock) super.getBlock();
         block.setMachine(machine, voltage);
-    }
-
-    @Override
-    public MachineBlock getBlock() {
-        return block;
     }
 
     public Machine getMachine() {

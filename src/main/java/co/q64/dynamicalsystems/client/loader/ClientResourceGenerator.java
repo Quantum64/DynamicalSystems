@@ -12,6 +12,7 @@ import co.q64.dynamicalsystems.material.components.CableComponent;
 import co.q64.dynamicalsystems.resource.MultipartBuilder;
 import co.q64.dynamicalsystems.resource.MultipartBuilderFactory;
 import co.q64.dynamicalsystems.resource.ResourcePackGenerator;
+import co.q64.dynamicalsystems.resource.TranslationService;
 import co.q64.dynamicalsystems.util.IdentifierUtil;
 import co.q64.dynamicalsystems.util.ItemUtil;
 import co.q64.dynamicalsystems.util.Logger;
@@ -34,6 +35,7 @@ public class ClientResourceGenerator {
     protected @Inject MachineTextureMap machineTextureMap;
     protected @Inject MultipartBuilderFactory multipartFactory;
     protected @Inject ResourcePackGenerator generator;
+    protected @Inject TranslationService translationService;
     protected @Inject Logger logger;
 
     //protected @Inject AlphaMapRequestRegistry alphaMapRequestRegistry;
@@ -119,5 +121,7 @@ public class ClientResourceGenerator {
         logger.info("Generated " + generator.getGeneratedItemModels() + " item models, " + generator.getGeneratedBlockstates() + " blockstates, and " +
                 generator.getGeneratedBlockModels() + " block models for a total of " + (generator.getGeneratedItemModels() + generator.getGeneratedBlockstates() + generator.getGeneratedBlockModels()) +
                 " JSON files (" + (System.currentTimeMillis() - start) + " ms)");
+        generator.writeTranslations(translationService.getTranslations());
+        logger.info("Generated " + translationService.getTranslations().size() + " default translations...");
     }
 }

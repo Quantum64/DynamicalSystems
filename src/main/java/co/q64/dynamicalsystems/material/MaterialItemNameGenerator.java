@@ -13,8 +13,4 @@ public class MaterialItemNameGenerator {
     public String generate(Component component, Material material) {
         return component.getPrefix() + (component.getPrefix().isEmpty() ? "" : " ") + material.getName() + (component.getName().isEmpty() ? "" : " ") + component.getName();
     }
-
-    public String generateId(Component component, Material material) {
-        return generate(component, material).replace(" ", "_").toLowerCase();
-    }
 }

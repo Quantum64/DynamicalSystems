@@ -70,7 +70,7 @@ public class GeneratedResourcePack extends ResourcePack {
 
     @Override
     public Set<String> getResourceNamespaces(ResourcePackType type) {
-        return Stream.of(modId).collect(Collectors.toSet());
+        return Stream.of(modId, "forge").collect(Collectors.toSet());
     }
 
     @Override

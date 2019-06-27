@@ -27,6 +27,6 @@ public class CommonLoader {
         unificationLoader.load();
         linkManager.initializeLinks();
         materialProcessor.load();
-        serverDataGenerator.generateData();
+        serverDataGenerator.generateData(); // must be last
     }
 }

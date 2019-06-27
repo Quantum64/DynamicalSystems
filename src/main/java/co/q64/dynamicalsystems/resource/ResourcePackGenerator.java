@@ -57,6 +57,10 @@ public class ResourcePackGenerator {
         writeBlockModelInternal(name, parent, textures);
     }
 
+    public void writeTranslations(Map<String, String> translations) {
+        writeTranslationsInternal(translations);
+    }
+
     public void writeLootTable(String name, ResourceLocation drop) {
         writeLootTableInternal(name, drop);
     }
@@ -125,7 +129,19 @@ public class ResourcePackGenerator {
         generatedLootTables++;
     }
 
+    private void writeTranslationsInternal(Map<String, String> translations) {
+        JsonObject result = new JsonObject();
+        for (Entry<String, String> entry : translations.entrySet()) {
+            result.addProperty(entry.getKey(), entry.getValue());
+        }
+        writeJson(result, "lang/en_us.json");
+    }
+
     private void writeJson(JsonObject object, String path) {
+        writeJson(object, identifierUtil.get(path));
+    }
+
+    private void writeJson(JsonObject object, ResourceLocation path) {
         try {
             ByteArrayOutputStream result = new ByteArrayOutputStream();
             try (Writer writer = new BufferedWriter(new OutputStreamWriter(result))) {
@@ -133,7 +149,7 @@ public class ResourcePackGenerator {
             }
             result.flush();
             result.close();
-            virtualResourcePack.put(identifierUtil.get(path), result.toByteArray());
+            virtualResourcePack.put(path, result.toByteArray());
             generatedJSONs++;
         } catch (IOException e) {
             e.printStackTrace();

@@ -34,8 +34,8 @@ public class MachineBlock extends BaseBlock {
     private Machine machine;
     private Voltage voltage;
 
-    public MachineBlock(String name, @Provided co.q64.dynamicalsystems.tile.MachineTileFactory tileFactory) {
-        super(name, Properties.create(Material.IRON));
+    public MachineBlock(String id, @Provided co.q64.dynamicalsystems.tile.MachineTileFactory tileFactory) {
+        super(id, Properties.create(Material.IRON));
         this.tileFactory = tileFactory;
         setDefaultState(getStateContainer().getBaseState().with(MachineProperties.FACING, Direction.NORTH));
     }

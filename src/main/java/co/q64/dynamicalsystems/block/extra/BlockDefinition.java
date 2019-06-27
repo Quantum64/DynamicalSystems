@@ -12,7 +12,6 @@ public abstract class BlockDefinition {
     protected @Inject ExtraBlockRegistry registry;
 
     protected String name = "Unnamed Block";
-    protected String id = "unnamed_block";
     protected Optional<MultipartBuilder> stateBuilder = Optional.empty();
     protected BlockRenderLayer renderLayer = BlockRenderLayer.SOLID;
 

@@ -4,13 +4,11 @@ import co.q64.dynamicalsystems.block.BaseBlock;
 import lombok.Getter;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 
 @Getter
 public class BaseBlockItem extends BlockItem {
-    private String itemName, id;
+    private BaseBlock block;
+    private String id;
 
     public BaseBlockItem(BaseBlock block) {
         this(block, new Properties());
@@ -22,13 +20,13 @@ public class BaseBlockItem extends BlockItem {
 
     public BaseBlockItem(BaseBlock block, Properties settings) {
         super(block, settings);
-        this.itemName = block.getName();
-        this.id = itemName.replace(" ", "_").toLowerCase();
+        this.block = block;
+        this.id = block.getId();
         setRegistryName(id);
     }
 
     @Override
-    public ITextComponent getDisplayName(ItemStack stack) {
-        return new StringTextComponent(itemName);
+    public BaseBlock getBlock() {
+        return block;
     }
 }

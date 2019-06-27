@@ -66,7 +66,7 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
     }
 
     @Override
-    public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return containerFactory.create(i);
+    public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+        return containerFactory.create(windowId, playerInventory);
     }
 }

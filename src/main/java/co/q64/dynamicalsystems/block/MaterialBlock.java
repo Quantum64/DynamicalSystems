@@ -17,8 +17,8 @@ public class MaterialBlock extends BaseBlock {
     private MaterialBlockItem item;
     private BlockRenderLayer renderLayer;
 
-    public MaterialBlock(String name, Component component) {
-        super(name, Properties.create(component instanceof ComponentOre ? Material.ROCK : Material.IRON)
+    public MaterialBlock(String id, Component component) {
+        super(id, Properties.create(component instanceof ComponentOre ? Material.ROCK : Material.IRON)
                 .sound(component instanceof ComponentOre ? SoundType.STONE : SoundType.METAL)
                 .hardnessAndResistance(1.5f, 6.0f));
     }

@@ -12,7 +12,6 @@ import java.util.Optional;
 @Singleton
 public class TextureDebugBlock extends BlockDefinition {
     protected @Inject TextureDebugBlock(MultipartBuilderFactory stateFactory, IdentifierUtil identifiers) {
-        this.id = "texture_debug_block";
         this.name = "Texture Debug Block";
         this.renderLayer = BlockRenderLayer.CUTOUT;
         this.stateBuilder = Optional.of(stateFactory.create()

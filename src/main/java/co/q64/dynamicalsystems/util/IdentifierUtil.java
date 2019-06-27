@@ -35,7 +35,7 @@ public class IdentifierUtil {
 
     public ResourceLocation getSharedIdentifier(SharedItem si) {
         if (si.getComponent().isPresent() && si.getMaterial().isPresent()) {
-            return new ResourceLocation(shared, materialItemNameGenerator.generateId(si.getComponent().get(), si.getMaterial().get()));
+            //return new ResourceLocation(shared, materialItemNameGenerator.generateId(si.getComponent().get(), si.getMaterial().get()));
         }
         for (Item item : si.getItems()) {
             if (item instanceof BaseItem) {

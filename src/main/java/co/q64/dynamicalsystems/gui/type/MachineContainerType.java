@@ -1,7 +1,7 @@
 package co.q64.dynamicalsystems.gui.type;
 
 import co.q64.dynamicalsystems.gui.MachineContainer;
-import co.q64.dynamicalsystems.client.gui.MachineContainerFactory;
+import co.q64.dynamicalsystems.gui.MachineContainerFactory;
 import co.q64.dynamicalsystems.util.IdentifierUtil;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ContainerType;
@@ -18,7 +18,7 @@ public class MachineContainerType extends ContainerType<MachineContainer> {
     protected @Inject MachineContainerType(MachineContainerFactory factory, IdentifierUtil identifiers) {
         super(new IContainerFactory<MachineContainer>() {
             public @Override @OnlyIn(Dist.CLIENT) MachineContainer create(int windowId, PlayerInventory inv, PacketBuffer data) {
-                return factory.create(windowId);
+                return factory.create(windowId, inv);
             }
         });
         setRegistryName(identifiers.get("machine"));

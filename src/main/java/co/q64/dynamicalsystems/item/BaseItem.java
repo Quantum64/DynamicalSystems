@@ -3,31 +3,22 @@ package co.q64.dynamicalsystems.item;
 import lombok.Getter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 
 @Getter
 public abstract class BaseItem extends Item {
-    private String itemName, id;
+    private String id;
 
-    public BaseItem(String name) {
-        this(name, new Properties());
+    public BaseItem(String id) {
+        this(id, new Properties());
     }
 
-    public BaseItem(String name, ItemGroup group) {
-        this(name, new Properties().group(group));
+    public BaseItem(String id, ItemGroup group) {
+        this(id, new Properties().group(group));
     }
 
-    public BaseItem(String name, Properties settings) {
+    public BaseItem(String id, Properties settings) {
         super(settings);
-        this.itemName = name;
-        this.id = name.replace(" ", "_").toLowerCase();
+        this.id = id;
         setRegistryName(id);
-    }
-
-    @Override
-    public ITextComponent getDisplayName(ItemStack stack) {
-        return new StringTextComponent(itemName);
     }
 }

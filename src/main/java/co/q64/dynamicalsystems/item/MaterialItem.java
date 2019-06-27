@@ -11,8 +11,6 @@ public interface MaterialItem {
 
     public Material getMaterial();
 
-    public String getItemName();
-
     public String getId();
 
     public default boolean isBlock() {

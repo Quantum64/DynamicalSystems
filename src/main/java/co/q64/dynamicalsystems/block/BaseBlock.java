@@ -6,20 +6,19 @@ import net.minecraft.block.material.Material;
 
 @Getter
 public class BaseBlock extends Block {
-    private String name, id;
+    private String id;
 
-    public BaseBlock(String name) {
-        this(name, Properties.create(Material.IRON));
+    public BaseBlock(String id) {
+        this(id, Properties.create(Material.IRON));
     }
 
-    public BaseBlock(String name, Material material) {
-        this(name, Properties.create(Material.IRON));
+    public BaseBlock(String id, Material material) {
+        this(id, Properties.create(Material.IRON));
     }
 
-    public BaseBlock(String name, Properties settings) {
+    public BaseBlock(String id, Properties settings) {
         super(settings);
-        this.name = name;
-        this.id = name.replace(" ", "_").toLowerCase();
+        this.id = id;
         setRegistryName(id);
     }
 }
