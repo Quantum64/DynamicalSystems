@@ -1,19 +1,23 @@
 package co.q64.dynamicalsystems.gui;
 
 import co.q64.dynamicalsystems.gui.type.MachineContainerType;
+import co.q64.dynamicalsystems.tile.MachineTile;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
 
 @AutoFactory
-public class MachineContainer extends Container {
+public class MachineContainer extends DynamicContainer<MachineContainer> {
     private PlayerInventory inventory;
-    
-    protected MachineContainer(int windowId, PlayerInventory inventory, @Provided MachineContainerType type ) {
-        super(type, windowId);
+    private MachineTile tile;
+
+    protected MachineContainer(int windowId, PlayerInventory inventory, MachineTile tile, @Provided MachineContainerType type) {
+        super(windowId, inventory, type);
         this.inventory = inventory;
+        this.tile = tile;
+
+        setupInventory();
     }
 
     @Override

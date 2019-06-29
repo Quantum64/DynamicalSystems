@@ -50,8 +50,7 @@ public class MachineBlock extends BaseBlock {
         if (!world.isRemote()) {
             TileEntity machine = world.getTileEntity(pos);
             if (machine instanceof MachineTile) {
-                NetworkHooks.openGui((ServerPlayerEntity) player, (MachineTile) machine);
-                player.openContainer((MachineTile) machine);
+                NetworkHooks.openGui((ServerPlayerEntity) player, (MachineTile) machine, pos);
             }
         }
         return super.onBlockActivated(state, world, pos, player, hand, result);

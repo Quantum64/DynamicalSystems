@@ -3,6 +3,7 @@ package co.q64.dynamicalsystems.tile;
 import co.q64.dynamicalsystems.gui.MachineContainerFactory;
 import co.q64.dynamicalsystems.machine.MachineSideConfiguration;
 import co.q64.dynamicalsystems.state.MachineProperties;
+import co.q64.dynamicalsystems.tile.type.MachineTileType;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,8 +26,8 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
     private LazyOptional<ItemStackHandler> itemHandler = LazyOptional.of(this::createItemHandler);
 
     public MachineTile(@Provided co.q64.dynamicalsystems.gui.MachineContainerFactory containerFactory,
-                       @Provided TileEntityTypes types) {
-        super(types.getMachineTileTileEntityType());
+                       @Provided MachineTileType type) {
+        super(type);
         this.containerFactory = containerFactory;
     }
 
@@ -67,6 +68,6 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
 
     @Override
     public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return containerFactory.create(windowId, playerInventory);
+        return containerFactory.create(windowId, playerInventory, this);
     }
 }

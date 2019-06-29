@@ -123,5 +123,7 @@ public class ClientResourceGenerator {
         start = System.currentTimeMillis();
         generator.writeTranslations(translationService.getTranslations());
         logger.info("Generated " + translationService.getTranslations().size() + " default translations (" + (System.currentTimeMillis() - start) + " ms)");
+
+        logger.info("Total generated JSON files: " + generator.getGeneratedJSONs());
     }
 }

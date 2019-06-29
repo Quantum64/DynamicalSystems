@@ -3,9 +3,12 @@ package co.q64.dynamicalsystems.recipe;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Singleton
 public class Recipes {
@@ -13,15 +16,14 @@ public class Recipes {
 
     private Map<RecipeType, List<Recipe>> types = new HashMap<>();
 
-    @Inject
-    protected Recipes() {}
+    protected @Inject Recipes() {}
 
-    public RecipeBuilder add(RecipeType type) {
-        return simpleRecipeFactory.create(type);
+    public RecipeBuilder add(RecipeType... types) {
+        return simpleRecipeFactory.create(Arrays.stream(types).collect(Collectors.toSet()));
     }
 
     protected void apply(SimpleRecipe builder) {
-        get(builder.getType()).add(builder);
+        getTypes(builder.getTypes()).forEach(list -> list.add(builder));
     }
 
     public List<Recipe> get(RecipeType... types) {
@@ -39,5 +41,9 @@ public class Recipes {
             types.put(type, recipes);
         }
         return recipes;
+    }
+
+    private List<List<Recipe>> getTypes(Set<RecipeType> types) {
+        return types.stream().map(this::get).collect(Collectors.toList());
     }
 }

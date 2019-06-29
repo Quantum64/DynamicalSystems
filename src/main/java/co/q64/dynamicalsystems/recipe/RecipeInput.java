@@ -45,4 +45,8 @@ public class RecipeInput implements RecipeComponent {
     public boolean hasItem() {
         return item != null;
     }
+
+    public boolean isItem() {
+        return hasTag() || hasItem();
+    }
 }

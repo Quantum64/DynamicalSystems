@@ -4,6 +4,7 @@ import co.q64.dynamicalsystems.grid.energy.Voltage;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;
+import java.util.Set;
 
 public interface Recipe {
     public List<RecipeInput> getInputs();
@@ -28,5 +29,5 @@ public interface Recipe {
 
     public Voltage getMinimumVoltage();
 
-    public RecipeType getType();
+    public Set<RecipeType> getTypes();
 }

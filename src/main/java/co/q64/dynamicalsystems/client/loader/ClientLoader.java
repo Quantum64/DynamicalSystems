@@ -1,6 +1,6 @@
 package co.q64.dynamicalsystems.client.loader;
 
-import co.q64.dynamicalsystems.client.gui.MachineScreenFactory;
+import co.q64.dynamicalsystems.client.gui.screen.MachineScreenFactory;
 import co.q64.dynamicalsystems.gui.type.MachineContainerType;
 import co.q64.dynamicalsystems.loader.CommonLoader;
 import co.q64.dynamicalsystems.resource.GeneratedPackFinder;

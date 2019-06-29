@@ -35,8 +35,8 @@ public class ResourcePackGenerator {
     private @Getter int generatedJSONs, generatedBlockstates, generatedItemModels, generatedBlockModels, generatedLootTables;
     private @Getter Map<ResourceLocation, byte[]> virtualResourcePack = new HashMap<>();
 
-    protected @Inject
-    ResourcePackGenerator() {}
+    @Inject
+    protected ResourcePackGenerator() {}
 
     public void writeItemModel(String name, ResourceLocation parent) {
         writeItemModel(name, parent, Collections.emptyList());
@@ -174,7 +174,7 @@ public class ResourcePackGenerator {
 
     private void writeRecipeInternal(Recipe recipe) {
         JsonObject result = new JsonObject();
-        if (recipe.getType() == RecipeType.CRAFTING) {
+        if (recipe.getTypes().contains(RecipeType.CRAFTING)) {
             if (recipe.getPattern() == null) {
                 result.addProperty("type", "minecraft:crafting_shapeless");
                 JsonArray ingredients = new JsonArray();
@@ -212,7 +212,7 @@ public class ResourcePackGenerator {
             output.addProperty("item", recipe.getOutput().getStack().getItem().getRegistryName().toString());
             output.addProperty("count", recipe.getOutput().getAmount());
             result.add("result", output);
-        } else if (recipe.getType() == RecipeType.SMELTING) {
+        } else if (recipe.getTypes().contains(RecipeType.SMELTING)) {
             if (recipe.getOutput().getAmount() > 1 || recipe.getMinimumVoltage().tier() > Voltage.MANUAL.tier()) {
                 return;
             }
@@ -228,7 +228,7 @@ public class ResourcePackGenerator {
         } else {
             return;
         }
-        writeJson(result, "recipes/" + recipe.getType().name().toLowerCase() + "_" + recipe.getOutput().getStack().getItem().getRegistryName().getPath() + ".json");
+        writeJson(result, "recipes/" + recipe.getTypes().iterator().next().name().toLowerCase() + "_" + recipe.getOutput().getStack().getItem().getRegistryName().getPath() + ".json");
     }
 
     private void writeJson(JsonObject object, String path) {

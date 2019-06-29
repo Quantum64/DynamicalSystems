@@ -40,4 +40,8 @@ public class RecipeOutput implements RecipeComponent {
     public boolean hasItem() {
         return item != null;
     }
+
+    public boolean isItem() {
+        return hasTag() || hasItem();
+    }
 }

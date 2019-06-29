@@ -1,6 +1,5 @@
 package co.q64.dynamicalsystems.listener;
 
-import co.q64.dynamicalsystems.tile.TileEntityTypes;
 import co.q64.dynamicalsystems.util.RegistryUtil;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.container.ContainerType;
@@ -16,7 +15,7 @@ import java.util.Set;
 @Singleton
 public class RegistryListener implements Listener {
     protected @Inject RegistryUtil registryUtil;
-    protected @Inject TileEntityTypes tileEntityTypes;
+    protected @Inject Set<TileEntityType<?>> tileEntityTypes;
 
     protected @Inject Set<ContainerType<?>> containerTypes;
 
@@ -39,7 +38,7 @@ public class RegistryListener implements Listener {
 
     @SubscribeEvent
     public void onTileEntityRegistry(Register<TileEntityType<?>> event) {
-        event.getRegistry().registerAll(tileEntityTypes.getTypes().toArray(new TileEntityType[0]));
+        event.getRegistry().registerAll(tileEntityTypes.toArray(new TileEntityType[0]));
     }
 
     @SubscribeEvent

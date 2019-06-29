@@ -26,7 +26,7 @@ public class SimpleRecipe implements Recipe, RecipeBuilder {
     private @Getter List<RecipeOutput> outputs = new ArrayList<>();
     private @Getter String[] pattern;
     private @Getter Voltage minimumVoltage = Voltage.MANUAL;
-    private @Getter RecipeType type;
+    private @Getter Set<RecipeType> types;
     private RecipeComponent lastComponent;
     private RecipeInput lastInput;
     private RecipeOutput lastOutput;
@@ -34,11 +34,11 @@ public class SimpleRecipe implements Recipe, RecipeBuilder {
     private boolean useFastMatching = true;
 
     protected SimpleRecipe(
-            RecipeType type,
+            Set<RecipeType> types,
             @Provided Unification unification, @Provided Recipes recipes,
             @Provided co.q64.dynamicalsystems.recipe.RecipeInputFactory inputFactory,
             @Provided co.q64.dynamicalsystems.recipe.RecipeOutputFactory outputFactory) {
-        this.type = type;
+        this.types = types;
         this.recipes = recipes;
         this.unification = unification;
         this.inputFactory = inputFactory;
@@ -248,6 +248,9 @@ public class SimpleRecipe implements Recipe, RecipeBuilder {
 
     @Override
     public void apply() {
+        if (getTypes().size() == 0) {
+            throw new IllegalStateException("Malformed recipe - No types");
+        }
         if (getOutputs().size() == 0) {
             throw new IllegalStateException("Malformed recipe - No output");
         }

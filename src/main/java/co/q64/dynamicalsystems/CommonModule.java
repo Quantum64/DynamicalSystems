@@ -21,12 +21,14 @@ import co.q64.dynamicalsystems.listener.RegistryListener;
 import co.q64.dynamicalsystems.listener.ServerStartListener;
 import co.q64.dynamicalsystems.loader.component.CraftingComponentLoader;
 import co.q64.dynamicalsystems.material.ComponentLoader;
+import co.q64.dynamicalsystems.tile.type.MachineTileType;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoSet;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.state.BooleanProperty;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.logging.log4j.LogManager;
@@ -45,6 +47,8 @@ public interface CommonModule {
     @Binds @IntoSet Listener bindServerStartListener(ServerStartListener serverStartListener);
 
     @Binds @IntoSet ContainerType<?> bindMachineContainerType(MachineContainerType type);
+
+    @Binds @IntoSet TileEntityType<?> bindMachineTileType(MachineTileType type);
 
     static @Provides @Singleton FMLJavaModLoadingContext provideFMLModLoadingContext() { return FMLJavaModLoadingContext.get(); }
     static @Provides @ConfigFolder @Singleton File provideConfigFolder(@ModId String modId) { return new File(FMLPaths.CONFIGDIR.get().toFile(), modId); }
