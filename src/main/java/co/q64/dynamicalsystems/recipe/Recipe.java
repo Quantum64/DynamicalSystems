@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiConsumer;
 
 public interface Recipe {
     public List<RecipeInput> getInputs();
@@ -15,13 +16,13 @@ public interface Recipe {
 
     public RecipeOutput getOutput();
 
-    public boolean matches(Voltage voltage, List<ItemStack> inputs);
+    public boolean matches(List<ItemStack> slots, Voltage voltage, int inputSlots);
 
-    public boolean matches(List<ItemStack> inputs);
+    public boolean matches(List<ItemStack> slots, int inputSlots);
 
-    public boolean canProcess(List<ItemStack> inputs);
+    public boolean canProcess(List<ItemStack> slots, int inputSlots);
 
-    public void process(ItemStack[] inputSlots, ItemStack[] outputSlots);
+    public void process(List<ItemStack> slots, int inputSlots, BiConsumer<Integer, ItemStack> output);
 
     public void calculateCanFastMatch();
 

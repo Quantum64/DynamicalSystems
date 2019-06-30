@@ -7,20 +7,29 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.Tag;
 
-@Getter
+import java.util.function.Supplier;
+
 @AutoFactory
 public class RecipeOutput implements RecipeComponent {
-    private Tag<Item> tag;
+    private Supplier<Tag<Item>> tag;
     private Item item;
-    private @Setter int amount = 1;
-    private @Setter float chance;
+    private @Getter @Setter int amount = 1;
+    private @Getter @Setter float chance;
 
     protected RecipeOutput(Item item) {
         this.item = item;
     }
 
-    protected RecipeOutput(Tag<Item> tag) {
+    protected RecipeOutput(Supplier<Tag<Item>> tag) {
         this.tag = tag;
+    }
+
+    @Override
+    public Item getItem() {
+        if (item != null) {
+            return item;
+        }
+        return getTag().getAllElements().iterator().next();
     }
 
     public ItemStack getStack() {
@@ -28,7 +37,7 @@ public class RecipeOutput implements RecipeComponent {
             return new ItemStack(item, amount);
         }
         if (hasTag()) {
-            return new ItemStack(tag.getAllElements().iterator().next(), amount);
+            return new ItemStack(getTag().getAllElements().iterator().next(), amount);
         }
         return ItemStack.EMPTY;
     }
@@ -43,5 +52,10 @@ public class RecipeOutput implements RecipeComponent {
 
     public boolean isItem() {
         return hasTag() || hasItem();
+    }
+
+    @Override
+    public Tag<Item> getTag() {
+        return tag.get();
     }
 }

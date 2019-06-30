@@ -11,19 +11,22 @@ import com.google.auto.factory.Provided;
 import lombok.Getter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tags.Tag;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 @AutoFactory
 public class SimpleRecipe implements Recipe, RecipeBuilder {
     private @Getter List<RecipeInput> inputs = new ArrayList<>();
     private @Getter List<RecipeOutput> outputs = new ArrayList<>();
+    private @Getter int itemInputs, itemOutputs;
     private @Getter String[] pattern;
     private @Getter Voltage minimumVoltage = Voltage.MANUAL;
     private @Getter Set<RecipeType> types;
@@ -48,22 +51,22 @@ public class SimpleRecipe implements Recipe, RecipeBuilder {
     @Override
     public RecipeBuilder withInput(Item item) {
         if (item instanceof BaseItem) {
-            return withInput(unification.get((BaseItem) item));
+            return withInput(inputFactory.create(() -> unification.get((BaseItem) item)));
         }
         if (item instanceof BaseBlockItem) {
-            return withInput(unification.get((BaseBlockItem) item));
+            return withInput(inputFactory.create(() -> unification.get((BaseBlockItem) item)));
         }
         return withInput(inputFactory.create(item));
     }
 
     @Override
-    public RecipeBuilder withInput(Tag<Item> tag) {
-        return withInput(inputFactory.create(tag));
+    public RecipeBuilder withInput(ResourceLocation tag) {
+        return withInput(inputFactory.create(() -> unification.get(tag)));
     }
 
     @Override
     public RecipeBuilder withInput(Component component, Material material) {
-        return withInput(inputFactory.create(unification.get(component, material)));
+        return withInput(inputFactory.create(() -> unification.get(component, material)));
     }
 
     @Override
@@ -77,22 +80,22 @@ public class SimpleRecipe implements Recipe, RecipeBuilder {
     @Override
     public RecipeBuilder withOutput(Item item) {
         if (item instanceof BaseItem) {
-            return withOutput(unification.get((BaseItem) item));
+            return withOutput(outputFactory.create(() -> unification.get((BaseItem) item)));
         }
         if (item instanceof BaseBlockItem) {
-            return withOutput(unification.get((BaseBlockItem) item));
+            return withOutput(outputFactory.create(() -> unification.get((BaseBlockItem) item)));
         }
         return withOutput(outputFactory.create(item));
     }
 
     @Override
-    public RecipeBuilder withOutput(Tag<Item> tag) {
-        return withOutput(outputFactory.create(tag));
+    public RecipeBuilder withOutput(ResourceLocation tag) {
+        return withOutput(outputFactory.create(() -> unification.get(tag)));
     }
 
     @Override
     public RecipeBuilder withOutput(Component component, Material material) {
-        return withOutput(outputFactory.create(unification.get(component, material)));
+        return withOutput(outputFactory.create(() -> unification.get(component, material)));
     }
 
     @Override
@@ -173,8 +176,8 @@ public class SimpleRecipe implements Recipe, RecipeBuilder {
     }
 
     @Override
-    public boolean matches(List<ItemStack> items) {
-        return matches(Voltage.MANUAL, items);
+    public boolean matches(List<ItemStack> items, int inputSlots) {
+        return matches(items, Voltage.MANUAL, inputSlots);
     }
 
     @Override
@@ -188,13 +191,14 @@ public class SimpleRecipe implements Recipe, RecipeBuilder {
     }
 
     @Override
-    public boolean matches(Voltage voltage, List<ItemStack> items) {
+    public boolean matches(List<ItemStack> slots, Voltage voltage, int inputSlots) {
         if (voltage.tier() < getMinimumVoltage().tier()) {
             return false;
         }
         if (useFastMatching) {
-            return fastMatches(items);
+            return fastMatches(slots, inputSlots);
         }
+        /*
         List<RecipeInput> inputsCopy = new ArrayList<>(getInputs());
         List<Item> itemsCopy = new ArrayList<>(items.size());
         for (ItemStack stack : items) {
@@ -215,12 +219,17 @@ public class SimpleRecipe implements Recipe, RecipeBuilder {
                 return false;
             }
         }
+        */
         return false;
     }
 
-    private boolean fastMatches(List<ItemStack> items) {
+    private boolean fastMatches(List<ItemStack> slots, int inputSlots) {
         List<RecipeInput> inputsCopy = new ArrayList<>(getInputs());
-        for (ItemStack item : items) {
+        for (int i = 0; i < inputSlots; i++) {
+            ItemStack item = slots.get(i);
+            if (item.isEmpty()) {
+                continue;
+            }
             boolean matched = false;
             for (Iterator<RecipeInput> itr = inputsCopy.iterator(); itr.hasNext(); ) {
                 RecipeInput input = itr.next();
@@ -237,13 +246,107 @@ public class SimpleRecipe implements Recipe, RecipeBuilder {
     }
 
     @Override
-    public boolean canProcess(List<ItemStack> inputs) {
+    public boolean canProcess(List<ItemStack> slots, int inputSlots) {
+        int itemInputs = 0;
+        for (int i = 0; i < inputSlots; i++) {
+            if (slots.get(i) != ItemStack.EMPTY) {
+                itemInputs++;
+            }
+        }
+        List<RecipeInput> inputsCopy = new ArrayList<>(getInputs());
+        int inputsMatched = 0;
+        for (int i = 0; i < inputSlots; i++) {
+            ItemStack item = slots.get(i);
+            if (item.isEmpty()) {
+                continue;
+            }
+            boolean matched = false;
+            for (Iterator<RecipeInput> itr = inputsCopy.iterator(); itr.hasNext(); ) {
+                RecipeInput input = itr.next();
+                if (input.matches(item.getItem())) {
+                    if (item.getCount() >= input.getAmount()) {
+                        matched = true;
+                        itr.remove();
+                        inputsMatched++;
+                    }
+                }
+            }
+            if (!matched) {
+                return false;
+            }
+        }
+        if (inputsMatched != itemInputs || !inputsCopy.isEmpty()) {
+            return false;
+        }
+        int openOutputSlots = 0;
+        checkNextOutputSlot:
+        for (int i = inputSlots; i < slots.size(); i++) {
+            if (openOutputSlots >= outputs.size()) {
+                break;
+            }
+            ItemStack stack = slots.get(i);
+            if (stack.isEmpty()) {
+                openOutputSlots++;
+                continue;
+            }
+            for (RecipeOutput output : getOutputs()) {
+                if (output.isItem()) {
+                    if (output.getItem() == stack.getItem()) {
+                        if (stack.getCount() + output.getAmount() <= stack.getMaxStackSize()) {
+                            openOutputSlots++;
+                            continue checkNextOutputSlot;
+                        }
+                    }
+                }
+            }
+        }
+        if (openOutputSlots >= outputs.size()) {
+            return true;
+        }
         return false;
     }
 
     @Override
-    public void process(ItemStack[] inputSlots, ItemStack[] outputSlots) {
+    public void process(List<ItemStack> slots, int inputSlots, BiConsumer<Integer, ItemStack> updateSlots) {
+        List<RecipeInput> inputsCopy = new ArrayList<>(getInputs());
+        for (int i = 0; i < inputSlots; i++) {
+            ItemStack stack = slots.get(i);
+            for (Iterator<RecipeInput> itr = inputsCopy.iterator(); itr.hasNext(); ) {
+                RecipeInput input = itr.next();
+                if (input.matches(stack.getItem()) && stack.getCount() >= input.getAmount()) {
+                    stack.shrink(input.getAmount());
+                    if (stack.isEmpty()) {
+                        stack = ItemStack.EMPTY;
+                    }
+                    updateSlots.accept(i, stack);
+                    itr.remove();
+                }
+            }
+        }
+        List<ItemStack> outputSlots = new ArrayList<>(slots.size() - inputSlots);
+        for (int i = inputSlots; i < slots.size(); i++) {
+            outputSlots.add(slots.get(i));
+        }
+        nextOutput:
+        for (RecipeOutput output : getOutputs()) {
+            for (ItemStack stack : outputSlots) {
+                if (stack.getItem() == output.getItem() && stack.getCount() + output.getAmount() <= stack.getMaxStackSize()) {
+                    stack.grow(output.getAmount());
+                    continue nextOutput;
+                }
+            }
+            for (ListIterator<ItemStack> itr = outputSlots.listIterator(); itr.hasNext(); ) {
+                ItemStack stack = itr.next();
+                if (stack.isEmpty()) {
+                    itr.set(output.getStack());
+                    continue nextOutput;
+                }
+            }
 
+        }
+        for (int i = inputSlots; i < slots.size(); i++) {
+            updateSlots.accept(i, outputSlots.get(i - inputSlots));
+        }
     }
 
     @Override
@@ -272,8 +375,9 @@ public class SimpleRecipe implements Recipe, RecipeBuilder {
                 throw new IllegalStateException("Malformed recipe - Pattern rows invalid length");
             }
         }
+        this.itemInputs = Math.toIntExact(getInputs().stream().filter(RecipeInput::isItem).count());
+        this.itemOutputs = Math.toIntExact(getOutputs().stream().filter(RecipeOutput::isItem).count());
         recipes.apply(this);
-        this.unification = null;
         this.inputFactory = null;
         this.outputFactory = null;
         this.recipes = null;

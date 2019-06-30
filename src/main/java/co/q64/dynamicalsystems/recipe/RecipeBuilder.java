@@ -5,11 +5,12 @@ import co.q64.dynamicalsystems.material.base.Component;
 import co.q64.dynamicalsystems.material.base.Material;
 import net.minecraft.item.Item;
 import net.minecraft.tags.Tag;
+import net.minecraft.util.ResourceLocation;
 
 public interface RecipeBuilder {
     public RecipeBuilder withInput(Item item);
 
-    public RecipeBuilder withInput(Tag<Item> tag);
+    public RecipeBuilder withInput(ResourceLocation tag);
 
     public RecipeBuilder withInput(Component component, Material material);
 
@@ -17,7 +18,7 @@ public interface RecipeBuilder {
 
     public RecipeBuilder withOutput(Item item);
 
-    public RecipeBuilder withOutput(Tag<Item> tag);
+    public RecipeBuilder withOutput(ResourceLocation tag);
 
     public RecipeBuilder withOutput(Component component, Material material);
 

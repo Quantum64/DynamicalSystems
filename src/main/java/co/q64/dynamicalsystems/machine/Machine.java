@@ -1,6 +1,7 @@
 package co.q64.dynamicalsystems.machine;
 
 import co.q64.dynamicalsystems.grid.energy.Voltage;
+import co.q64.dynamicalsystems.recipe.RecipeType;
 import lombok.Getter;
 
 import javax.inject.Inject;
@@ -12,6 +13,7 @@ import java.util.function.Predicate;
 public abstract class Machine {
     protected @Inject MachineRegistry registry;
 
+    protected RecipeType recipeType = RecipeType.CRAFTING;
     protected Predicate<Voltage> generateTier = i -> true;
     protected String name = "Invalid";
     protected String baseTexture = "machine_casing";
