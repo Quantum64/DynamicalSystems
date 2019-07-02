@@ -22,6 +22,11 @@ public class MachineScreen extends ContainerScreen<MachineContainer> {
     }
 
     @Override
+    protected void init() {
+        super.init();
+    }
+
+    @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
         super.render(mouseX, mouseY, partialTicks);
     }
@@ -33,6 +38,6 @@ public class MachineScreen extends ContainerScreen<MachineContainer> {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-
+        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
     }
 }

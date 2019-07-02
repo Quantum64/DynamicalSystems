@@ -1,6 +1,7 @@
 package co.q64.dynamicalsystems.tile;
 
 import co.q64.dynamicalsystems.block.MachineBlock;
+import co.q64.dynamicalsystems.grid.energy.EnergyTiers;
 import co.q64.dynamicalsystems.grid.energy.Voltage;
 import co.q64.dynamicalsystems.gui.MachineContainerFactory;
 import co.q64.dynamicalsystems.machine.Machine;
@@ -10,6 +11,7 @@ import co.q64.dynamicalsystems.recipe.Recipe;
 import co.q64.dynamicalsystems.recipe.Recipes;
 import co.q64.dynamicalsystems.state.MachineProperties;
 import co.q64.dynamicalsystems.tile.type.MachineTileType;
+import co.q64.dynamicalsystems.util.NBTUtil;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import lombok.Getter;
@@ -21,7 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.client.model.data.IModelData;
@@ -29,32 +31,53 @@ import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @AutoFactory
 public class MachineTile extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
     private static final boolean USE_THREADED_MATCHER = true;
     private static final boolean USE_THREADED_CALCULATOR = true;
 
+    private static final Direction[] DIRECTION_CACHE = Direction.values();
+
     private MachineContainerFactory containerFactory;
     private @Getter int inputSlots, outputSlots;
     private @Getter LazyOptional<MachineItemHandler> itemHandler = LazyOptional.of(this::createItemHandler);
     private @Getter Machine machine;
     private @Getter Voltage voltage;
+    private Map<Direction, LazyOptional<SidedMachineItemHandler>> delegateItemHandlers = new HashMap<>();
     private MachineGuiLayoutCache cache;
     private Recipes recipes;
     private boolean recalculateRecipe = false;
     private Recipe currentRecipe = null;
+    private int processingTick, maxTicks;
+    private EnergyTiers energyTiers;
+    private NBTUtil nbtUtil;
 
     public MachineTile(@Provided co.q64.dynamicalsystems.gui.MachineContainerFactory containerFactory,
-                       @Provided MachineTileType type, @Provided MachineGuiLayoutCache cache, @Provided Recipes recipes) {
+                       @Provided MachineTileType type, @Provided MachineGuiLayoutCache cache, @Provided Recipes recipes, @Provided EnergyTiers energyTiers, @Provided NBTUtil nbtUtil) {
         super(type);
         this.cache = cache;
         this.containerFactory = containerFactory;
         this.recipes = recipes;
+        this.energyTiers = energyTiers;
+        this.nbtUtil = nbtUtil;
+    }
+
+    public MachineTile(@Provided co.q64.dynamicalsystems.gui.MachineContainerFactory containerFactory,
+                       @Provided MachineTileType type, @Provided MachineGuiLayoutCache cache, @Provided Recipes recipes, @Provided EnergyTiers energyTiers, @Provided NBTUtil nbtUtil, MachineBlock block) {
+        this(containerFactory, type, cache, recipes, energyTiers, nbtUtil);
+        this.machine = block.getMachine();
+        this.voltage = block.getVoltage();
+        this.inputSlots = cache.get(machine.getRecipeType()).getInputSlots();
+        this.outputSlots = cache.get(machine.getRecipeType()).getOutputSlots();
+        markDirty();
     }
 
     private MachineItemHandler createItemHandler() {
@@ -63,15 +86,41 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
 
     @Override
     public void read(CompoundNBT tag) {
-        itemHandler.ifPresent(handler -> handler.deserializeNBT(tag.getCompound("inventory")));
+        itemHandler.ifPresent(handler -> {
+            if (tag.contains("inventory")) {
+                handler.deserializeNBT(tag.getCompound("inventory"));
+            }
+        });
+        this.machine = nbtUtil.deserializeMachine(tag.getString("machine"));
+        this.voltage = nbtUtil.deserializeVoltage(tag.getString("voltage"));
+        this.inputSlots = cache.get(machine.getRecipeType()).getInputSlots();
+        this.outputSlots = cache.get(machine.getRecipeType()).getOutputSlots();
         super.read(tag);
-        init();
     }
 
     @Override
     public CompoundNBT write(CompoundNBT tag) {
         itemHandler.ifPresent(handler -> tag.put("inventory", handler.serializeNBT()));
+        tag.putString("machine", nbtUtil.serializeMachine(machine));
+        tag.putString("voltage", nbtUtil.serializeVoltage(voltage));
         return super.write(tag);
+    }
+
+    public CompoundNBT getUpdateTag() {
+        CompoundNBT tag = super.getUpdateTag();
+        tag.putInt("inputSlots", inputSlots);
+        tag.putInt("outputSlots", outputSlots);
+        tag.putString("machine", nbtUtil.serializeMachine(machine));
+        tag.putString("voltage", nbtUtil.serializeVoltage(voltage));
+        return tag;
+    }
+
+    public void handleUpdateTag(CompoundNBT tag) {
+        this.inputSlots = tag.getInt("inputSlots");
+        this.outputSlots = tag.getInt("outputSlots");
+        this.machine = nbtUtil.deserializeMachine(tag.getString("machine"));
+        this.voltage = nbtUtil.deserializeVoltage(tag.getString("voltage"));
+        super.handleUpdateTag(tag);
     }
 
     @Override
@@ -86,7 +135,8 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
 
     @Override
     public void tick() {
-        if (world == null) {
+        if (machine == null) {
+            System.out.println("MACHINE NULL on tick! (client: " + world.isRemote + ")");
             return;
         }
         if (recalculateRecipe) {
@@ -94,12 +144,18 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
             itemHandler.ifPresent(itemHandler -> {
                 if (USE_THREADED_CALCULATOR) {
                     recipes.get(machine.getRecipeType()).parallelStream().filter(recipe -> recipe.canProcess(itemHandler.getStacks(), inputSlots)).findAny().ifPresent(r -> currentRecipe = r);
+                    maxTicks = energyTiers.getProcessingTicks(voltage); //TODO power multiplier
                 } else {
                     //TODO sequential matcher
                 }
             });
         }
         if (currentRecipe != null) {
+            if (processingTick < maxTicks) {
+                processingTick++;
+                return;
+            }
+            processingTick = 0;
             itemHandler.ifPresent(itemHandler -> {
                 if (!currentRecipe.canProcess(itemHandler.getStacks(), inputSlots)) {
                     currentRecipe = null;
@@ -114,12 +170,6 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
     }
 
     @Override
-    public void setPos(BlockPos p_174878_1_) {
-        super.setPos(p_174878_1_);
-        init();
-    }
-
-    @Override
     public ITextComponent getDisplayName() {
         return new StringTextComponent("Machine");
     }
@@ -129,23 +179,18 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
         return containerFactory.create(windowId, playerInventory, this);
     }
 
-    public <T> LazyOptional<T> getCapability(Capability<T> cap) {
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction direction) {
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            if (direction != null) {
+                return (LazyOptional<T>) delegateItemHandlers.computeIfAbsent(direction, dir -> LazyOptional.of(() ->
+                        new SidedMachineItemHandler(itemHandler.orElse(null), dir)
+                ));
+            }
             return (LazyOptional<T>) itemHandler;
         }
         return super.getCapability(cap);
     }
 
-    private void init() {
-        if (machine != null) {
-            return;
-        }
-        this.machine = ((MachineBlock) getBlockState().getBlock()).getMachine();
-        this.voltage = ((MachineBlock) getBlockState().getBlock()).getVoltage();
-        this.inputSlots = cache.get(machine.getRecipeType()).getInputSlots();
-        this.outputSlots = cache.get(machine.getRecipeType()).getOutputSlots();
-        requestModelDataUpdate();
-    }
 
     public class MachineItemHandler extends ItemStackHandler {
         protected MachineItemHandler() {
@@ -154,18 +199,6 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
 
         @Override
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
-            if (slot < inputSlots) {
-                return ItemStack.EMPTY;
-            }
-            return playerExtractItem(slot, amount, simulate);
-        }
-
-        @Override
-        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-            return playerInsertItem(slot, stack, simulate);
-        }
-
-        public ItemStack playerExtractItem(int slot, int amount, boolean simulate) {
             ItemStack result = super.extractItem(slot, amount, simulate);
             if (currentRecipe == null) {
                 recalculateRecipe = true;
@@ -173,7 +206,12 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
             return result;
         }
 
-        public ItemStack playerInsertItem(int slot, ItemStack stack, boolean simulate) {
+        @Override
+        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+            if (machine == null) {
+                System.out.println("MACHINE NULL on insert item! (client: " + world.isRemote + ")");
+                return ItemStack.EMPTY;
+            }
             if (slot >= inputSlots) {
                 return stack;
             }
@@ -207,6 +245,59 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
 
         public List<ItemStack> getStacks() {
             return stacks;
+        }
+
+        @Override
+        protected void onContentsChanged(int slot) {
+            markDirty();
+        }
+    }
+
+    public class SidedMachineItemHandler implements IItemHandlerModifiable {
+        private MachineItemHandler delegate;
+        private Direction side;
+
+        protected SidedMachineItemHandler(MachineItemHandler delegate, Direction side) {
+            this.delegate = delegate;
+            this.side = side;
+        }
+
+        @Override
+        public ItemStack extractItem(int slot, int amount, boolean simulate) {
+            if (slot < inputSlots) {
+                return ItemStack.EMPTY;
+            }
+            return delegate.extractItem(slot, amount, simulate);
+        }
+
+        @Override
+        public void setStackInSlot(int slot, ItemStack stack) {
+            delegate.setStackInSlot(slot, stack);
+        }
+
+        @Override
+        public int getSlots() {
+            return delegate.getSlots();
+        }
+
+        @Override
+        public ItemStack getStackInSlot(int slot) {
+            return delegate.getStackInSlot(slot);
+        }
+
+        @Override
+        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+            return delegate.insertItem(slot, stack, simulate);
+        }
+
+        @Override
+        public int getSlotLimit(int slot) {
+            return delegate.getSlotLimit(slot);
+        }
+
+        @Override
+        public boolean isItemValid(int slot, ItemStack stack) {
+            return delegate.isItemValid(slot, stack);
         }
     }
 }

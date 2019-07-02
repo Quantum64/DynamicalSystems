@@ -25,10 +25,10 @@ public class MachineContainer extends DynamicContainer<MachineContainer> {
         tile.getItemHandler().ifPresent(handler -> inventory = handler);
         int index = 0;
         for (int i = 0; i < tile.getInputSlots(); i++) {
-            addSlot(new SlotItemHandler(inventory, index++, 18 * index, 10));
+            addSlot(new MachineSlotItemHandler(inventory, index++, 18 * index, 10));
         }
         for (int i = 0; i < tile.getOutputSlots(); i++) {
-            addSlot(new SlotItemHandler(inventory, index++, (18 * index) + 10, 10));
+            addSlot(new MachineSlotItemHandler(inventory, index++, (18 * index) + 10, 10));
         }
         machineSlots = tile.getInputSlots() + tile.getOutputSlots();
         setupInventory();
@@ -52,8 +52,14 @@ public class MachineContainer extends DynamicContainer<MachineContainer> {
                 }
                 slot.onSlotChange(stack, itemstack);
             } else {
-                ItemStack result = inventory.playerInsertItem(index, stack, true);
-                if (!result.equals(stack)) {
+                boolean canInsert = false;
+                for (int i = 0; i < machineSlots; i++) {
+                    canInsert = !inventory.extractItem(i, 1, true).isEmpty();
+                    if (canInsert) {
+                        break;
+                    }
+                }
+                if (canInsert) {
                     if (!this.mergeItemStack(stack, 0, machineSlots, false)) {
                         return ItemStack.EMPTY;
                     }
@@ -88,12 +94,13 @@ public class MachineContainer extends DynamicContainer<MachineContainer> {
 
         public MachineSlotItemHandler(MachineItemHandler itemHandler, int index, int xPosition, int yPosition) {
             super(itemHandler, index, xPosition, yPosition);
+            this.handler = itemHandler;
             this.index = index;
         }
 
         @Override
         public boolean canTakeStack(PlayerEntity playerIn) {
-            return !handler.playerExtractItem(index, 1, true).isEmpty();
+            return !handler.extractItem(index, 1, true).isEmpty();
         }
     }
 }

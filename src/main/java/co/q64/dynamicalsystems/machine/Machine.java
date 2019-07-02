@@ -3,6 +3,7 @@ package co.q64.dynamicalsystems.machine;
 import co.q64.dynamicalsystems.grid.energy.Voltage;
 import co.q64.dynamicalsystems.recipe.RecipeType;
 import lombok.Getter;
+import net.minecraft.nbt.StringNBT;
 
 import javax.inject.Inject;
 import java.util.Optional;

@@ -23,6 +23,6 @@ public class EnergyTiers {
 
     public int getProcessingTicks(Voltage voltage) {
         int extraFun = voltage == Voltage.MANUAL ? 2 : 1;
-        return (2 << (Voltage.max().tier() - voltage.tier())) / 2 * extraFun;
+        return ((2 << (Voltage.max().tier() - voltage.tier())) - 1) / 2 * extraFun;
     }
 }

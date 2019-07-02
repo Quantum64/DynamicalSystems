@@ -73,7 +73,7 @@ public class MachineBlock extends BaseBlock {
 
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return tileFactory.create();
+        return tileFactory.create(this);
     }
 
     @OnlyIn(Dist.CLIENT)

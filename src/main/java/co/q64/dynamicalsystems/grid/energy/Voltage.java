@@ -1,6 +1,9 @@
 package co.q64.dynamicalsystems.grid.energy;
 
 import lombok.Getter;
+import net.minecraft.nbt.StringNBT;
+
+import java.util.Arrays;
 
 public enum Voltage {
     MANUAL(0, "Manual"),
