@@ -3,11 +3,14 @@ package co.q64.dynamicalsystems.unification;
 import co.q64.dynamicalsystems.block.item.BaseBlockItem;
 import co.q64.dynamicalsystems.item.BaseItem;
 import co.q64.dynamicalsystems.item.MaterialItem;
+import co.q64.dynamicalsystems.material.Components;
 import co.q64.dynamicalsystems.material.MaterialItemLoader;
+import co.q64.dynamicalsystems.material.Materials;
 import co.q64.dynamicalsystems.material.base.Component;
 import co.q64.dynamicalsystems.material.base.Material;
 import co.q64.dynamicalsystems.resource.TranslationService;
 import co.q64.dynamicalsystems.util.IdentifierUtil;
+import lombok.Getter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -29,6 +32,9 @@ public class Unification {
     protected @Inject IdentifierUtil identifiers;
     protected @Inject TranslationService translationService;
     protected @Inject MaterialItemLoader materialItemLoader;
+
+    protected @Getter @Inject Materials materials;
+    protected @Getter @Inject Components components;
 
     private Map<ResourceLocation, Tag<Item>> tags = new HashMap<>();
 

@@ -1,6 +1,13 @@
 package co.q64.dynamicalsystems.client.texture;
 
-/*
+
+import lombok.Getter;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.HashSet;
+import java.util.Set;
+
 @Singleton
 public class AlphaMapRequestRegistry {
     private @Getter Set<AlphaMapRequest> requests = new HashSet<>();
@@ -11,4 +18,3 @@ public class AlphaMapRequestRegistry {
         requests.add(request);
     }
 }
-*/

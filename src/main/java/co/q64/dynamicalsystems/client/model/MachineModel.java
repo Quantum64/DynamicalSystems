@@ -10,28 +10,23 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemOverrideList;
-import net.minecraft.client.renderer.texture.ISprite;
 import net.minecraft.client.renderer.texture.MissingTextureSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IEnviromentBlockReader;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
-import net.minecraftforge.common.model.IModelState;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 @AutoFactory
 public class MachineModel implements IDynamicBakedModel {
-    private Map<Direction, IBakedModel> baseOff = new HashMap<>();
-    private Map<Direction, IBakedModel> baseOn = new HashMap<>();
     private MachineBlockItem machine;
     private MachineSideModels sideModels;
     private IdentifierUtil identifiers;
@@ -44,12 +39,6 @@ public class MachineModel implements IDynamicBakedModel {
 
     public void bake(ModelLoader loader) {
         for (Direction direction : BlockStateProperties.HORIZONTAL_FACING.getAllowedValues()) {
-            baseOff.put(direction, loader.getUnbakedModel(identifiers.get(machine.getOffModel())).bake(loader, ModelLoader.defaultTextureGetter(), new ISprite() {
-                public @Override IModelState getState() { return MachineProperties.getRotation(MachineProperties.get(direction)); }
-            }, DefaultVertexFormats.BLOCK));
-            baseOn.put(direction, loader.getUnbakedModel(identifiers.get(machine.getOnModel())).bake(loader, ModelLoader.defaultTextureGetter(), new ISprite() {
-                public @Override IModelState getState() { return MachineProperties.getRotation(MachineProperties.get(direction)); }
-            }, DefaultVertexFormats.BLOCK));
         }
     }
 
@@ -57,15 +46,33 @@ public class MachineModel implements IDynamicBakedModel {
     public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand, IModelData extraData) {
         Direction direction = state == null ? Direction.NORTH : state.get(MachineProperties.FACING);
         Boolean running = extraData.getData(MachineProperties.RUNNING);
-        IBakedModel base = running != null && running == true ? baseOn.get(direction) : baseOff.get(direction);
-        List<BakedQuad> result = new ArrayList<>(base.getQuads(state, side, rand, extraData));
+        IBakedModel base = running != null && running == true ?
+                sideModels.getFrontOn().get(MachineProperties.get(direction)).get(machine.getMachine()).get(machine.getVoltage()) :
+                sideModels.getFrontOff().get(MachineProperties.get(direction)).get(machine.getMachine()).get(machine.getVoltage());
+        List<BakedQuad> baseQuads = base.getQuads(state, side, rand, extraData);
+        List<BakedQuad> result = new ArrayList<>();
+        result.addAll(baseQuads);
         for (ModelProperty<MachineSideConfiguration> property : MachineProperties.SIDES) {
             MachineSideConfiguration config = extraData.getData(property);
-            if (config == MachineSideConfiguration.INPUT || config == MachineSideConfiguration.OUTPUT || config == MachineSideConfiguration.BOTH) {
-                result.addAll(sideModels.getComponents().get(property).get(config).getQuads(state, side, rand, extraData));
+            if (config == MachineSideConfiguration.INPUT || config == MachineSideConfiguration.OUTPUT || config == MachineSideConfiguration.BOTH || config == MachineSideConfiguration.DISABLED) {
+                result.addAll(sideModels.getSides().get(property).get(config).get(machine.getVoltage()).getQuads(state, side, rand, extraData));
             }
         }
         return result;
+    }
+
+    @Override
+    public IModelData getModelData(IEnviromentBlockReader world, BlockPos pos, BlockState state, IModelData data) {
+        for (ModelProperty<MachineSideConfiguration> property : MachineProperties.SIDES) {
+            Direction direction = state.get(MachineProperties.FACING);
+            if (MachineProperties.getDirection(property) == direction) {
+                continue;
+            }
+            if (!data.hasProperty(property)) {
+                data.setData(property, MachineSideConfiguration.DISABLED);
+            }
+        }
+        return data;
     }
 
     @Override

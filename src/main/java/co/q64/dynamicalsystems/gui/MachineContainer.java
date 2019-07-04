@@ -1,5 +1,7 @@
 package co.q64.dynamicalsystems.gui;
 
+import co.q64.dynamicalsystems.client.gui.panel.machine.InfoPanel;
+import co.q64.dynamicalsystems.client.gui.panel.machine.SidePanel;
 import co.q64.dynamicalsystems.gui.type.MachineContainerType;
 import co.q64.dynamicalsystems.tile.MachineTile;
 import co.q64.dynamicalsystems.tile.MachineTile.MachineItemHandler;
@@ -18,7 +20,8 @@ public class MachineContainer extends DynamicContainer<MachineContainer> {
     private int machineSlots;
     private MachineTile tile;
 
-    protected MachineContainer(int windowId, PlayerInventory playerInventory, MachineTile tile, @Provided MachineContainerType type) {
+    protected MachineContainer(int windowId, PlayerInventory playerInventory, MachineTile tile, @Provided MachineContainerType type,
+                               @Provided InfoPanel infoPanel, @Provided SidePanel sidePanel) {
         super(windowId, playerInventory, type);
         this.playerInventory = playerInventory;
         this.tile = tile;
@@ -31,6 +34,10 @@ public class MachineContainer extends DynamicContainer<MachineContainer> {
             addSlot(new MachineSlotItemHandler(inventory, index++, (18 * index) + 10, 10));
         }
         machineSlots = tile.getInputSlots() + tile.getOutputSlots();
+
+        getPanels().add(infoPanel);
+        getPanels().add(sidePanel);
+
         setupInventory();
     }
 

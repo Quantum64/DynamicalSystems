@@ -1,19 +1,20 @@
 package co.q64.dynamicalsystems.gui;
 
+import co.q64.dynamicalsystems.client.gui.panel.Panel;
 import lombok.Getter;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class DynamicContainer<T extends Container> extends Container {
+    private @Getter List<Panel> panels = new ArrayList<>();
     private @Getter int x, y, width, height;
     private int machineSlots;
     private IItemHandler playerInventory;

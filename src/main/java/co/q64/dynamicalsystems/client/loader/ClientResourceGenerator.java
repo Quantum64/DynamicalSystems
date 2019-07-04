@@ -3,9 +3,16 @@ package co.q64.dynamicalsystems.client.loader;
 import co.q64.dynamicalsystems.binders.ConstantBinders.ModId;
 import co.q64.dynamicalsystems.block.item.ExtraBlockItem;
 import co.q64.dynamicalsystems.block.item.MachineBlockItem;
+import co.q64.dynamicalsystems.client.texture.AlphaMapRequestFactory;
+import co.q64.dynamicalsystems.client.texture.AlphaMapRequestRegistry;
+import co.q64.dynamicalsystems.client.texture.AlphaMapSpriteFactory;
 import co.q64.dynamicalsystems.client.texture.MachineTextureMap;
 import co.q64.dynamicalsystems.client.texture.MaterialTextureMap;
+import co.q64.dynamicalsystems.grid.energy.Voltage;
 import co.q64.dynamicalsystems.item.MaterialItem;
+import co.q64.dynamicalsystems.machine.Machine;
+import co.q64.dynamicalsystems.machine.MachineRegistry;
+import co.q64.dynamicalsystems.machine.MachineSideConfiguration;
 import co.q64.dynamicalsystems.material.base.Component;
 import co.q64.dynamicalsystems.material.base.ComponentOre;
 import co.q64.dynamicalsystems.material.components.CableComponent;
@@ -16,6 +23,7 @@ import co.q64.dynamicalsystems.resource.TranslationService;
 import co.q64.dynamicalsystems.util.IdentifierUtil;
 import co.q64.dynamicalsystems.util.ItemUtil;
 import co.q64.dynamicalsystems.util.Logger;
+import co.q64.dynamicalsystems.util.RegistryUtil;
 import net.minecraft.util.ResourceLocation;
 
 import javax.inject.Inject;
@@ -36,10 +44,14 @@ public class ClientResourceGenerator {
     protected @Inject MultipartBuilderFactory multipartFactory;
     protected @Inject ResourcePackGenerator generator;
     protected @Inject TranslationService translationService;
+    protected @Inject TextureLoader textureLoader;
+    protected @Inject MachineRegistry machineRegistry;
     protected @Inject Logger logger;
+    protected @Inject RegistryUtil registryUtil;
 
-    //protected @Inject AlphaMapRequestRegistry alphaMapRequestRegistry;
-    //protected @Inject AlphaMapRequestFactory alphaMapRequestFactory;
+    protected @Inject AlphaMapSpriteFactory alphaMapSpriteFactory;
+    protected @Inject AlphaMapRequestRegistry alphaMapRequestRegistry;
+    protected @Inject AlphaMapRequestFactory alphaMapRequestFactory;
 
     protected @Inject ClientResourceGenerator() {}
 
@@ -61,9 +73,9 @@ public class ClientResourceGenerator {
                 Map<String, ResourceLocation> textures = new HashMap<>();
                 textures.put("all", identifiers.get(textureList.get(0)));
                 if (component instanceof ComponentOre) {
-                    //String generated = "generated_block_ore_" + ((ComponentOre) component).getBaseTexture().replace("/", "_");
-                    textures.put("base", new ResourceLocation(((ComponentOre) component).getBaseTexture()));
-                    //alphaMapRequestRegistry.requestAlphaMap(alphaMapRequestFactory.create(identifiers.get(generated), new ResourceLocation(((ComponentOre) component).getBaseTexture()), identifiers.get(textureList.get(0))));
+                    String generated = "generated_block_ore_" + ((ComponentOre) component).getBaseTexture().replace("/", "_");
+                    textures.put("base", identifiers.get(generated));
+                    alphaMapRequestRegistry.requestAlphaMap(alphaMapRequestFactory.create(identifiers.get(generated), new ResourceLocation(((ComponentOre) component).getBaseTexture()), identifiers.get(textureList.get(0))));
                 } else if (textureList.size() > 1) {
                     //String generated = "generated_block_" + component.getTextureName();
                     textures.put("all", identifiers.get(component.getTextureName()));
@@ -81,20 +93,19 @@ public class ClientResourceGenerator {
                 generator.writeItemModel(item.getId(), materialTextureMap.getTextures(item).stream().map(s -> identifiers.get(s)).collect(Collectors.toList()));
             }
         }
+        for (MachineSideConfiguration type : MachineSideConfiguration.getValues()) {
+            if (type == MachineSideConfiguration.FRONT) {
+                continue;
+            }
+            registryUtil.registerTexture(identifiers.get(type.getTextureName()));
+            for (Voltage voltage : Voltage.getAll()) {
+                generator.writeModel(machineTextureMap.getMachineCasingTexture(voltage, type).getPath(), identifiers.get("block/block_machine"), machineTextureMap.getSideTextures(voltage, type));
+            }
+        }
         for (MachineBlockItem machine : itemUtil.getMachineItems()) {
-            generator.writeItemModel(machine.getId(), identifiers.get("block/" + machine.getId() + "_off"));
-            generator.writeBlockstate(machine.getId(), multipartFactory.create()
-                            /*
-                            .and("running", "false").when("facing", "north").end().apply(identifiers.get("block/" + machine.getId() + "_off"))
-                            .and("running", "true").when("facing", "north").end().apply(identifiers.get("block/" + machine.getId() + "_on"))
-                            .and("running", "false").when("facing", "south").end().apply(identifiers.get("block/" + machine.getId() + "_off"), 180)
-                            .and("running", "true").when("facing", "south").end().apply(identifiers.get("block/" + machine.getId() + "_on"), 180)
-                            .and("running", "false").when("facing", "west").end().apply(identifiers.get("block/" + machine.getId() + "_off"), 270)
-                            .and("running", "true").when("facing", "west").end().apply(identifiers.get("block/" + machine.getId() + "_on"), 270)
-                            .and("running", "false").when("facing", "east").end().apply(identifiers.get("block/" + machine.getId() + "_off"), 90)
-                            .and("running", "true").when("facing", "east").end().apply(identifiers.get("block/" + machine.getId() + "_on"), 90)
-                             */
+            generator.writeItemModel(machine.getId(), identifiers.get("block/" + machine.getId()));
 
+            generator.writeBlockstate(machine.getId(), multipartFactory.create()
                             // Currently needed to coerce texture loading of the casing and overlays
                             // https://github.com/MinecraftForge/MinecraftForge/pull/5870
                             .apply(identifiers.get(machine.getOffModel()))
@@ -103,10 +114,23 @@ public class ClientResourceGenerator {
                     // Probably not needed
                     //.apply(identifiers.get("block/dynamic/machine"))
             );
-
+/*
             // https://github.com/MinecraftForge/MinecraftForge/pull/5870
-            generator.writeBlockModel(machine.getId() + "_off", identifiers.get("block/block_machine"), machineTextureMap.getTextures(machine.getBlock(), false));
-            generator.writeBlockModel(machine.getId() + "_on", identifiers.get("block/block_machine"), machineTextureMap.getTextures(machine.getBlock(), true));
+            for (Voltage voltage : Voltage.getAll()) {
+                generator.writeBlockModel(machine.getId() + "_off", identifiers.get("block/block_machine"), machineTextureMap.getTextures(machine.getBlock(), false));
+                generator.writeBlockModel(machine.getId() + "_on", identifiers.get("block/block_machine"), machineTextureMap.getTextures(machine.getBlock(), true));
+            }
+            */
+        }
+        for (Machine machine : machineRegistry.getMachines()) {
+            for (Voltage voltage : Voltage.getAll()) {
+                Map<String, ResourceLocation> offTex = machineTextureMap.getTextures(machine, voltage, false);
+                Map<String, ResourceLocation> onTex = machineTextureMap.getTextures(machine, voltage, true);
+                generator.writeModel(machineTextureMap.getMachineCasingTexture(machine, voltage, false).getPath(), identifiers.get("block/block_machine"), offTex);
+                generator.writeModel(machineTextureMap.getMachineCasingTexture(machine, voltage, true).getPath(), identifiers.get("block/block_machine"), onTex);
+                offTex.values().forEach(registryUtil::registerTexture);
+                onTex.values().forEach(registryUtil::registerTexture);
+            }
         }
         //generator.writeBlockModel("dynamic/machine", identifiers.get("block/placeholder"), Collections.singletonMap("all", new ResourceLocation("block/stone"))); // Probably not needed
         for (ExtraBlockItem extraBlockItem : itemUtil.getExtraBlockItems()) {

@@ -2,7 +2,9 @@ package co.q64.dynamicalsystems.client.listener;
 
 import co.q64.dynamicalsystems.client.loader.ColorHandlerLoader;
 import co.q64.dynamicalsystems.client.loader.DynamicModelLoader;
+import co.q64.dynamicalsystems.client.loader.TextureLoader;
 import co.q64.dynamicalsystems.listener.Listener;
+import co.q64.dynamicalsystems.util.RegistryUtil;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -16,7 +18,8 @@ import javax.inject.Singleton;
 public class ClientRegistryListener implements Listener {
     protected @Inject ColorHandlerLoader colorHandlerLoader;
     protected @Inject DynamicModelLoader modelLoader;
-    //protected @Inject TextureLoader textureLoader;
+    protected @Inject TextureLoader textureLoader;
+    protected @Inject RegistryUtil registryUtil;
 
     protected @Inject ClientRegistryListener() {}
 
@@ -41,6 +44,9 @@ public class ClientRegistryListener implements Listener {
 
     @SubscribeEvent
     public void onTextureStitch(TextureStitchEvent.Pre event) {
-        //textureLoader.loadTextures(event.getMap());
+        if (event.getMap().getBasePath().equals("textures")) {
+            textureLoader.loadTextures(event.getMap());
+            registryUtil.getTextures().forEach(event::addSprite);
+        }
     }
 }

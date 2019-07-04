@@ -46,12 +46,13 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
 
     private static final Direction[] DIRECTION_CACHE = Direction.values();
 
-    private MachineContainerFactory containerFactory;
     private @Getter int inputSlots, outputSlots;
     private @Getter LazyOptional<MachineItemHandler> itemHandler = LazyOptional.of(this::createItemHandler);
     private @Getter Machine machine;
     private @Getter Voltage voltage;
+    private Map<Direction, MachineSideConfiguration> sideConfigurations = new HashMap<>();
     private Map<Direction, LazyOptional<SidedMachineItemHandler>> delegateItemHandlers = new HashMap<>();
+    private MachineContainerFactory containerFactory;
     private MachineGuiLayoutCache cache;
     private Recipes recipes;
     private boolean recalculateRecipe = false;
@@ -71,12 +72,15 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
     }
 
     public MachineTile(@Provided co.q64.dynamicalsystems.gui.MachineContainerFactory containerFactory,
-                       @Provided MachineTileType type, @Provided MachineGuiLayoutCache cache, @Provided Recipes recipes, @Provided EnergyTiers energyTiers, @Provided NBTUtil nbtUtil, MachineBlock block) {
+                       @Provided MachineTileType type, @Provided MachineGuiLayoutCache cache, @Provided Recipes recipes, @Provided EnergyTiers energyTiers, @Provided NBTUtil nbtUtil,
+                       MachineBlock block) {
         this(containerFactory, type, cache, recipes, energyTiers, nbtUtil);
         this.machine = block.getMachine();
         this.voltage = block.getVoltage();
         this.inputSlots = cache.get(machine.getRecipeType()).getInputSlots();
         this.outputSlots = cache.get(machine.getRecipeType()).getOutputSlots();
+        sideConfigurations.put(Direction.UP, MachineSideConfiguration.INPUT);
+        sideConfigurations.put(Direction.DOWN, MachineSideConfiguration.OUTPUT);
         markDirty();
     }
 
@@ -123,13 +127,21 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
         super.handleUpdateTag(tag);
     }
 
+    private void readConfigurationTag(CompoundNBT tag) {
+
+    }
+
+    private void writeConfigurationTag(CompoundNBT tag) {
+
+    }
+
     @Override
     public IModelData getModelData() {
         return new ModelDataMap.Builder()
                 .withInitial(MachineProperties.get(getBlockState().get(MachineProperties.FACING)), MachineSideConfiguration.FRONT)
                 .withInitial(MachineProperties.UP, MachineSideConfiguration.INPUT)
                 .withInitial(MachineProperties.DOWN, MachineSideConfiguration.OUTPUT)
-                .withInitial(MachineProperties.RUNNING, false)
+                .withInitial(MachineProperties.RUNNING, currentRecipe != null)
                 .build();
     }
 
@@ -143,7 +155,17 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
             recalculateRecipe = false;
             itemHandler.ifPresent(itemHandler -> {
                 if (USE_THREADED_CALCULATOR) {
-                    recipes.get(machine.getRecipeType()).parallelStream().filter(recipe -> recipe.canProcess(itemHandler.getStacks(), inputSlots)).findAny().ifPresent(r -> currentRecipe = r);
+                    if (currentRecipe != null) {
+                        if (currentRecipe.canProcess(itemHandler.getStacks(), inputSlots)) {
+                            return;
+                        }
+                    }
+                    currentRecipe = null;
+                    requestModelDataUpdate();
+                    recipes.get(machine.getRecipeType()).parallelStream().filter(recipe -> recipe.canProcess(itemHandler.getStacks(), inputSlots)).findFirst().ifPresent(r -> {
+                        currentRecipe = r;
+                        requestModelDataUpdate();
+                    });
                     maxTicks = energyTiers.getProcessingTicks(voltage); //TODO power multiplier
                 } else {
                     //TODO sequential matcher
@@ -160,6 +182,7 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
                 if (!currentRecipe.canProcess(itemHandler.getStacks(), inputSlots)) {
                     currentRecipe = null;
                     recalculateRecipe = true;
+                    requestModelDataUpdate();
                     return;
                 }
                 currentRecipe.process(itemHandler.getStacks(), inputSlots, (slot, item) -> {

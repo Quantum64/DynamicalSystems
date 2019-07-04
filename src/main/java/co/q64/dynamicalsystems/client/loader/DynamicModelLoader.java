@@ -4,6 +4,9 @@ import co.q64.dynamicalsystems.block.item.MachineBlockItem;
 import co.q64.dynamicalsystems.client.model.MachineModel;
 import co.q64.dynamicalsystems.client.model.MachineModelFactory;
 import co.q64.dynamicalsystems.client.model.MachineSideModels;
+import co.q64.dynamicalsystems.client.texture.AlphaMapRequest;
+import co.q64.dynamicalsystems.client.texture.AlphaMapRequestFactory;
+import co.q64.dynamicalsystems.client.texture.AlphaMapRequestRegistry;
 import co.q64.dynamicalsystems.util.IdentifierUtil;
 import co.q64.dynamicalsystems.util.ItemUtil;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -18,6 +21,8 @@ import java.util.Map;
 
 @Singleton
 public class DynamicModelLoader {
+    protected @Inject AlphaMapRequestFactory alphaMapRequestFactory;
+    protected @Inject AlphaMapRequestRegistry alphaMapRequestRegistry;
     protected @Inject MachineModelFactory machineModelFactory;
     protected @Inject IdentifierUtil identifiers;
     protected @Inject MachineSideModels machineSideOverlays;
@@ -40,7 +45,7 @@ public class DynamicModelLoader {
             if (modelResourceLocation.getVariant().equals("inventory")) {
                 // May add item rendering later but for now we have to load the base models as JSONs anyway
                 // since there's no way to get textures to load without that
-                continue;
+                //continue;
             }
             ResourceLocation block = new ResourceLocation(modelResourceLocation.getNamespace(), modelResourceLocation.getPath());
             if (machineModelOverloads.keySet().contains(block.getPath())) {

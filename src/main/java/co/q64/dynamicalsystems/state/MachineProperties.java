@@ -1,5 +1,6 @@
 package co.q64.dynamicalsystems.state;
 
+import co.q64.dynamicalsystems.grid.energy.Voltage;
 import co.q64.dynamicalsystems.machine.MachineSideConfiguration;
 import net.minecraft.client.renderer.model.ModelRotation;
 import net.minecraft.state.EnumProperty;

@@ -62,6 +62,10 @@ public class ResourcePackGenerator {
         writeBlockModelInternal(name, parent, textures);
     }
 
+    public void writeModel(String name, ResourceLocation parent, Map<String, ResourceLocation> textures) {
+        writeModelInternal(name, parent, textures);
+    }
+
     public void writeTranslations(Map<String, String> translations) {
         writeTranslationsInternal(translations);
     }
@@ -115,6 +119,10 @@ public class ResourcePackGenerator {
     }
 
     private void writeBlockModelInternal(String name, ResourceLocation parent, Map<String, ResourceLocation> texmap) {
+        writeModelInternal("block/" + name, parent, texmap);
+    }
+
+    private void writeModelInternal(String name, ResourceLocation parent, Map<String, ResourceLocation> texmap) {
         JsonObject model = new JsonObject();
         model.addProperty("parent", parent.toString());
         JsonObject textures = new JsonObject();
@@ -122,7 +130,7 @@ public class ResourcePackGenerator {
             textures.addProperty(entry.getKey(), entry.getValue().toString());
         }
         model.add("textures", textures);
-        writeJson(model, "models/block/" + name + ".json");
+        writeJson(model, "models/" + name + ".json");
         generatedBlockModels++;
     }
 

@@ -16,4 +16,8 @@ public enum MachineSideConfiguration implements IStringSerializable {
     public String getModelName() {
         return "block/machine_side_" + getName();
     }
+
+    public String getTextureName() {
+        return "block/machine/side_" + getName();
+    }
 }

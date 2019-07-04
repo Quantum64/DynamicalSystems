@@ -6,11 +6,14 @@ import co.q64.dynamicalsystems.item.BaseItem;
 import co.q64.dynamicalsystems.item.MaterialItem;
 import lombok.Getter;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Singleton
 public class RegistryUtil {
@@ -22,6 +25,7 @@ public class RegistryUtil {
     private @Getter List<BaseBlockItem> baseBlockItems = new ArrayList<>();
     private @Getter List<BaseBlock> blocks = new ArrayList<>();
     private @Getter List<Item> items = new ArrayList<>();
+    private @Getter Set<ResourceLocation> textures = new HashSet<>();
 
     protected @Inject RegistryUtil() {}
 
@@ -51,5 +55,9 @@ public class RegistryUtil {
         } else {
             baseItems.add((BaseItem) item.getBaseItem());
         }
+    }
+
+    public void registerTexture(ResourceLocation texture) {
+        textures.add(texture);
     }
 }

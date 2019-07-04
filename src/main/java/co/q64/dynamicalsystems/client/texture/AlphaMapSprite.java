@@ -1,147 +1,75 @@
 package co.q64.dynamicalsystems.client.texture;
 
-/*
-@AutoFactory
-public class AlphaMapSprite extends TextureAtlasSprite implements IForgeTextureAtlasSprite {
-    private ResourceLocation base, overlay;
+import ar.com.hjg.pngj.ImageLineInt;
+import ar.com.hjg.pngj.PngReader;
+import ar.com.hjg.pngj.PngWriter;
+import co.q64.dynamicalsystems.resource.ResourcePackGenerator;
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
+import net.minecraft.resources.IResourceManager;
+import net.minecraft.util.ResourceLocation;
 
-    protected AlphaMapSprite(ResourceLocation identifier, ResourceLocation base, ResourceLocation overlay) {
-        super(identifier, 16, 16);
-        this.base = base;
-        this.overlay = overlay;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+
+@AutoFactory
+public class AlphaMapSprite {
+    private static final boolean DEBUG_WRITE_TO_FILE = false;
+
+    private ResourceLocation identifier, base, overlay;
+    private ResourcePackGenerator resourcePackGenerator;
+
+    protected AlphaMapSprite(ResourceLocation identifier, ResourceLocation base, ResourceLocation overlay, @Provided ResourcePackGenerator resourcePackGenerator) {
+        this.resourcePackGenerator = resourcePackGenerator;
+        this.identifier = new ResourceLocation(identifier.getNamespace(), "textures/" + identifier.getPath() + ".png");
+        this.base = new ResourceLocation(base.getNamespace(), "textures/" + base.getPath() + ".png");
+        this.overlay = new ResourceLocation(overlay.getNamespace(), "textures/" + overlay.getPath() + ".png");
     }
 
-    @Override
-    public boolean load(IResourceManager manager, ResourceLocation location, Function<ResourceLocation, TextureAtlasSprite> textureGetter) {
+    public void load(IResourceManager manager) {
         try {
-            //IResource baseResource = manager.getResource(base);
-            //PngFile basePng = new PngFile(baseResource.toString(), baseResource.getInputStream());
-            //AnimationMetadataSection baseMeta = baseResource.getMetadata(AnimationMetadataSection.SERIALIZER);
-            //TextureAtlasSprite baseGenerated = new FabricSprite(new ResourceLocation("dynamicalsystems", "generated_block_" + UUID.randomUUID()), basePng, baseMeta);
-            //baseGenerated.generateModels(manager.getResource(base), mipLevel);
+            PngReader baseReader = new PngReader(manager.getResource(base).getInputStream());
+            PngReader overlayReader = new PngReader(manager.getResource(overlay).getInputStream());
 
-            TextureAtlasSprite baseGenerated = textureGetter.apply(base);
-            NativeImage baseImage = new NativeImage(baseGenerated.getWidth(), baseGenerated.getHeight(), true);
-            for (int x = 0; x < baseImage.getWidth(); x++) {
-                for (int y = 0; y < baseImage.getHeight(); y++) {
-                    baseImage.setPixelRGBA(x, y, baseGenerated.getPixelRGBA(0, x, y));
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            PngWriter writer = new PngWriter(outputStream, baseReader.imgInfo);
+
+            while (baseReader.hasMoreRows()) {
+                ImageLineInt baseLine = (ImageLineInt) baseReader.readRow();
+                if (!overlayReader.hasMoreRows()) {
+                    writer.writeRow(baseLine);
+                    continue;
                 }
-            }
-
-            //Resource overlayResource = manager.getResource(overlay);
-            //PngFile overlayPng = new PngFile(overlayResource.toString(), overlayResource.getInputStream());
-            //AnimationResourceMetadata overlayMeta = overlayResource.getMetadata(AnimationResourceMetadata.READER);
-            //TextureAtlasSprite overlayGenerated = new FabricSprite(new ResourceLocation("dynamicalsystems", "generated_block_" + UUID.randomUUID()), overlayPng, overlayMeta);
-            //overlayGenerated.generateModels(manager.getResource(overlay), mipLevel);
-            //NativeImage overlayImage = ((SpriteMixin) overlayGenerated).getImages()[0];
-
-            TextureAtlasSprite overlayGenerated = textureGetter.apply(overlay);
-            for (int x = 0; x < baseImage.getWidth(); x++) {
-                for (int y = 0; y < baseImage.getHeight(); y++) {
-                    if ((overlayGenerated.getPixelRGBA(0, x, y) & 0xFF) != 0) {
-                        baseImage.setPixelRGBA(x, y, 0x00000000);
+                ImageLineInt overlayLine = (ImageLineInt) overlayReader.readRow();
+                int[] baseScanline = baseLine.getScanline();
+                int[] overlayScanline = overlayLine.getScanline();
+                for (int col = 0; col < baseScanline.length; ) {
+                    for (int i = 0; i < 3; i++) {
+                        col++;
                     }
+                    if (col < overlayScanline.length) {
+                        baseScanline[col] = overlayScanline[col] == 0 ? baseScanline[col] : 0x00000000;
+                    }
+                    col++;
                 }
+                writer.writeRow(baseLine);
             }
 
-            this.frames = new NativeImage[]{baseImage};
+            baseReader.end();
+            overlayReader.end();
+            writer.end();
+
+            resourcePackGenerator.getVirtualResourcePack().put(identifier, outputStream.toByteArray());
+            if (DEBUG_WRITE_TO_FILE) {
+                File file = new File("E:\\" + identifier.getPath() + ".png");
+                file.getParentFile().mkdirs();
+                FileOutputStream os = new FileOutputStream(file);
+                os.write(outputStream.toByteArray());
+                os.close();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return true;
-    }
-
-    @Override
-    public Set<ResourceLocation> getDependencies() {
-        return Stream.of(base, overlay).collect(Collectors.toSet());
-    }
-
-    @Override
-    public boolean hasCustomLoader(IResourceManager manager, ResourceLocation location) {
-        return true;
-    }
-
-    //TODO Extremely hacky bad thing
-    // https://github.com/MinecraftForge/MinecraftForge/issues/5555
-
-    protected class VeryDynamicTexture extends Texture implements AutoCloseable {
-        private NativeImage dynamicTextureData;
-
-        public void loadTexture(IResourceManager manager) throws IOException {
-            dynamicTextureData = hackyLoad(manager);
-            TextureUtil.prepareImage(this.getGlTextureId(), this.dynamicTextureData.getWidth(), this.dynamicTextureData.getHeight());
-            updateDynamicTexture();
-        }
-
-        public void updateDynamicTexture() {
-            this.bindTexture();
-            this.dynamicTextureData.uploadTextureSub(0, 0, 0, false);
-        }
-
-        @Nullable
-        public NativeImage getTextureData() {
-            return this.dynamicTextureData;
-        }
-
-        public void setTextureData(NativeImage nativeImageIn) throws Exception {
-            this.dynamicTextureData.close();
-            this.dynamicTextureData = nativeImageIn;
-        }
-
-        public void close() {
-            this.dynamicTextureData.close();
-            this.deleteGlTexture();
-            this.dynamicTextureData = null;
-        }
-
-        private NativeImage hackyLoad(IResourceManager manager) {
-            try {
-                IResource baseResource = manager.getResource(new ResourceLocation(base.getNamespace(), "textures/" + base.getPath() + ".png"));
-                PngSizeInfo basePng = new PngSizeInfo(baseResource.toString(), baseResource.getInputStream());
-                AnimationMetadataSection baseMeta = baseResource.getMetadata(AnimationMetadataSection.SERIALIZER);
-                TextureAtlasSprite baseGenerated = new MyHackedSprite(new ResourceLocation("dynamicalsystems", "generated_block_" + UUID.randomUUID()), basePng, baseMeta);
-                baseGenerated.loadSpriteFrames(baseResource, 1);
-                NativeImage baseImage = new NativeImage(baseGenerated.getWidth(), baseGenerated.getHeight(), true);
-                for (int x = 0; x < baseImage.getWidth(); x++) {
-                    for (int y = 0; y < baseImage.getHeight(); y++) {
-                        baseImage.setPixelRGBA(x, y, baseGenerated.getPixelRGBA(0, x, y));
-                    }
-                }
-
-                IResource overlayResource = manager.getResource(new ResourceLocation(overlay.getNamespace(), "textures/" + overlay.getPath() + ".png"));
-                PngSizeInfo overlayPng = new PngSizeInfo(overlayResource.toString(), overlayResource.getInputStream());
-                AnimationMetadataSection overlayMeta = overlayResource.getMetadata(AnimationMetadataSection.SERIALIZER);
-                TextureAtlasSprite overlayGenerated = new MyHackedSprite(new ResourceLocation("dynamicalsystems", "generated_block_" + UUID.randomUUID()), overlayPng, overlayMeta);
-                baseGenerated.loadSpriteFrames(overlayResource, 1);
-                for (int x = 0; x < baseImage.getWidth(); x++) {
-                    for (int y = 0; y < baseImage.getHeight(); y++) {
-                        if ((overlayGenerated.getPixelRGBA(0, x, y) & 0xFF) != 0) {
-                            baseImage.setPixelRGBA(x, y, 0x00000000);
-                        }
-                    }
-                }
-
-                return baseImage;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return MissingTextureSprite.getDynamicTexture().getTextureData();
-        }
-    }
-
-    private VeryDynamicTexture dynamicTexture;
-
-    private static class MyHackedSprite extends TextureAtlasSprite {
-        protected MyHackedSprite(ResourceLocation locationIn, PngSizeInfo sizeIn, @Nullable AnimationMetadataSection animationMetadataIn) {
-            super(locationIn, sizeIn, animationMetadataIn);
-        }
-    }
-
-    public VeryDynamicTexture getDynamic() {
-        if (dynamicTexture == null) {
-            dynamicTexture = new VeryDynamicTexture();
-        }
-        return dynamicTexture;
     }
 }
-*/
