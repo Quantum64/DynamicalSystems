@@ -28,4 +28,17 @@ public enum MachineSideConfiguration implements IStringSerializable {
     public String getTextureName() {
         return "block/machine/side_" + getName();
     }
+
+    public MachineSideConfiguration next() {
+        switch (this) {
+            case INPUT:
+                return OUTPUT;
+            case OUTPUT:
+                return BOTH;
+            case DISABLED:
+                return INPUT;
+            default:
+                return DISABLED;
+        }
+    }
 }

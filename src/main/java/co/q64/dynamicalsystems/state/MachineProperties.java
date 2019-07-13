@@ -65,9 +65,9 @@ public interface MachineProperties {
             return ModelRotation.X0_Y180;
         } else if (property == WEST) {
             return ModelRotation.X0_Y270;
-        } else if (property == UP) {
-            return ModelRotation.X90_Y0;
         } else if (property == DOWN) {
+            return ModelRotation.X90_Y0;
+        } else if (property == UP) {
             return ModelRotation.X270_Y0;
         }
         return ModelRotation.X0_Y0;

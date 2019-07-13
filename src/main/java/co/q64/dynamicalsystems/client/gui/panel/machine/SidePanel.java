@@ -41,13 +41,24 @@ public class SidePanel extends Panel {
         MachineTile tile = container.getTile();
         Machine machine = tile.getMachine();
         Voltage voltage = tile.getVoltage();
-        for (Entry<Direction, MachineSideConfiguration> entry : container.getTile().getSideConfigurations().entrySet()) {
+        for (Entry<Direction, MachineSideConfiguration> entry : tile.getSideConfigurations().entrySet()) {
             Point point = getRenderLocation(entry.getKey());
             render.rect(machineTextureMap.getTexturePath(machineTextureMap.getMachineCasingTexture(machine, voltage, entry.getValue(), tile.running())),
-                    x + point.getX(), y + point.getY(), 16, 16, 0xFFFFFFFF);
+                    x + point.getX(), y + point.getY(), WIDTH, WIDTH, 0xFFFFFFFF);
             if (entry.getValue() != MachineSideConfiguration.DISABLED) {
                 render.rect(machineTextureMap.getTexturePath(machineTextureMap.getMachineOverlayTexture(machine, voltage, entry.getValue(), tile.running())),
-                        x + point.getX(), y + point.getY(), 16, 16, 0xFFFFFFFF);
+                        x + point.getX(), y + point.getY(), WIDTH, WIDTH, 0xFFFFFFFF);
+            }
+        }
+    }
+
+    public void click(int x, int y) {
+        for (Direction direction : Direction.values()) {
+            Point location = getRenderLocation(direction);
+            if (x > location.getX() && x < location.getX() + WIDTH && y > location.getY() && y < location.getY() + WIDTH) {
+                MachineTile tile = screen.getContainer().getTile();
+                tile.updateSide(direction, tile.getSideConfigurations().get(direction).next());
+                return;
             }
         }
     }
@@ -78,10 +89,10 @@ public class SidePanel extends Panel {
                         relative = RelativeDirection.BACK;
                         break;
                     case WEST:
-                        relative = RelativeDirection.RIGHT;
+                        relative = RelativeDirection.LEFT;
                         break;
                     case EAST:
-                        relative = RelativeDirection.LEFT;
+                        relative = RelativeDirection.RIGHT;
                         break;
                 }
                 break;
@@ -94,20 +105,20 @@ public class SidePanel extends Panel {
                         relative = RelativeDirection.FRONT;
                         break;
                     case WEST:
-                        relative = RelativeDirection.LEFT;
+                        relative = RelativeDirection.RIGHT;
                         break;
                     case EAST:
-                        relative = RelativeDirection.RIGHT;
+                        relative = RelativeDirection.LEFT;
                         break;
                 }
                 break;
             case WEST:
                 switch (front) {
                     case NORTH:
-                        relative = RelativeDirection.LEFT;
+                        relative = RelativeDirection.RIGHT;
                         break;
                     case SOUTH:
-                        relative = RelativeDirection.RIGHT;
+                        relative = RelativeDirection.LEFT;
                         break;
                     case WEST:
                         relative = RelativeDirection.FRONT;
@@ -120,10 +131,10 @@ public class SidePanel extends Panel {
             case EAST:
                 switch (front) {
                     case NORTH:
-                        relative = RelativeDirection.RIGHT;
+                        relative = RelativeDirection.LEFT;
                         break;
                     case SOUTH:
-                        relative = RelativeDirection.LEFT;
+                        relative = RelativeDirection.RIGHT;
                         break;
                     case WEST:
                         relative = RelativeDirection.BACK;

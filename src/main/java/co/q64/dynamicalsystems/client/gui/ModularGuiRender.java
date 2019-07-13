@@ -3,7 +3,6 @@ package co.q64.dynamicalsystems.client.gui;
 import co.q64.dynamicalsystems.client.gui.panel.Panel;
 import co.q64.dynamicalsystems.client.gui.screen.DynamicScreen;
 import co.q64.dynamicalsystems.gui.DynamicContainer;
-import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.inventory.container.Slot;
 
 import javax.inject.Inject;
@@ -60,7 +59,7 @@ public class ModularGuiRender {
             if (panel.isExpanded()) {
                 int panelX = panel.isLeft() ? x - panel.getExpandedWidth() : x + container.getWidth();
                 if (dx > panelX && dx < panelX + panel.getExpandedWidth() && dy > panelY && dy < panelY + panel.getExpandedHeight()) {
-                    // panel click
+                    panel.click((int) dx - panelX, (int) dy - panelY - 16);
                 }
                 if (panel.isLeft()) {
                     leftGutterY += panel.getExpandedHeight();

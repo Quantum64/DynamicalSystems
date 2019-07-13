@@ -16,6 +16,7 @@ import co.q64.dynamicalsystems.binders.PropertyBinders.West;
 import co.q64.dynamicalsystems.gui.type.MachineContainerType;
 import co.q64.dynamicalsystems.link.LinkInfo;
 import co.q64.dynamicalsystems.link.cottonresources.CottonResourcesLinkInfo;
+import co.q64.dynamicalsystems.listener.InitializationListener;
 import co.q64.dynamicalsystems.listener.Listener;
 import co.q64.dynamicalsystems.listener.RegistryListener;
 import co.q64.dynamicalsystems.listener.ServerStartListener;
@@ -36,6 +37,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.inject.Singleton;
 import java.io.File;
+import java.util.List;
 
 @Module
 public interface CommonModule {
@@ -45,6 +47,7 @@ public interface CommonModule {
 
     @Binds @IntoSet Listener bindRegistryListener(RegistryListener serverStartListener);
     @Binds @IntoSet Listener bindServerStartListener(ServerStartListener serverStartListener);
+    @Binds @IntoSet Listener bindInitializationListener(InitializationListener initializationListener);
 
     @Binds @IntoSet ContainerType<?> bindMachineContainerType(MachineContainerType type);
 
