@@ -42,6 +42,10 @@ public abstract class DynamicScreen<T extends DynamicContainer> extends Containe
         return itemRenderer;
     }
 
+    public FontRenderer getFontRenderer() {
+        return font;
+    }
+
     public void drawItemStack(ItemStack stack, int x, int y) {
         GlStateManager.translatef(0.0F, 0.0F, 32.0F);
         this.blitOffset = 200;

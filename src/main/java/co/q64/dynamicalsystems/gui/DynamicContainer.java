@@ -1,21 +1,17 @@
 package co.q64.dynamicalsystems.gui;
 
-import co.q64.dynamicalsystems.client.gui.panel.Panel;
 import lombok.Getter;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public abstract class DynamicContainer<T extends Container> extends Container {
     private @Getter int x, y, width, height;
-    private int machineSlots;
+    private @Getter int playerInventoryHeight;
+    //private int machineSlots;
     private IItemHandler playerInventory;
 
     public DynamicContainer(int windowId, PlayerInventory inventory, ContainerType<T> type) {
@@ -24,20 +20,22 @@ public abstract class DynamicContainer<T extends Container> extends Container {
     }
 
 
-    protected void setupInventory() {
+    protected void setupInventory(int h) {
         int topRow = 0;
         int leftCol = 7;
-        machineSlots = inventorySlots.size();
-        for (Slot slot : inventorySlots) {
-            topRow = Math.max(slot.yPos + 18, topRow);
-        }
-        topRow += 13;
+        //machineSlots = inventorySlots.size();
+        //for (Slot slot : inventorySlots) {
+        //   topRow = Math.max(slot.yPos + 18, topRow);
+        //}
+        topRow = h;
+        //topRow += 13;
+        playerInventoryHeight = topRow - 12;
         addSlotBox(playerInventory, 9, leftCol, topRow, 9, 18, 3, 18);
         topRow += 58;
         addSlotRange(playerInventory, 0, leftCol, topRow, 9, 18);
         topRow += 18;
-        height = topRow + 7;
 
+        height = topRow + 7;
         width = 176;
     }
 

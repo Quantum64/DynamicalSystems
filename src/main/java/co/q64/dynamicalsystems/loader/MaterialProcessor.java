@@ -1,5 +1,6 @@
 package co.q64.dynamicalsystems.loader;
 
+import co.q64.dynamicalsystems.machine.MachineLoader;
 import co.q64.dynamicalsystems.material.ComponentHandler;
 import co.q64.dynamicalsystems.material.ComponentLoader;
 import co.q64.dynamicalsystems.material.ComponentRegistry;
@@ -15,6 +16,7 @@ import java.util.Set;
 
 @Singleton
 public class MaterialProcessor {
+    protected @Inject MachineLoader machineLoader;
     protected @Inject ComponentRegistry componentRegistry;
     protected @Inject MaterialRegistry materialRegistry;
     protected @Inject MaterialItemLoader materialItemLoader;

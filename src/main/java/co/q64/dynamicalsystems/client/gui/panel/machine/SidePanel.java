@@ -8,12 +8,12 @@ import co.q64.dynamicalsystems.grid.energy.Voltage;
 import co.q64.dynamicalsystems.gui.MachineContainer;
 import co.q64.dynamicalsystems.machine.Machine;
 import co.q64.dynamicalsystems.machine.MachineSideConfiguration;
+import co.q64.dynamicalsystems.resource.Translations;
 import co.q64.dynamicalsystems.tile.MachineTile;
 import co.q64.dynamicalsystems.unification.Unification;
+import co.q64.dynamicalsystems.util.Point;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 
@@ -21,22 +21,23 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 @AutoFactory
-public class SidePanel extends Panel {
+public class SidePanel extends MachinePanel {
     private static final int PADDING = 4;
     private static final int WIDTH = 16;
 
-    private MachineScreen screen;
     private GuiDynamicRender render;
     private MachineTextureMap machineTextureMap;
 
-    protected SidePanel(MachineScreen screen, @Provided MachineTextureMap machineTextureMap, @Provided Unification unification, @Provided GuiDynamicRender render) {
+    protected SidePanel(MachineScreen screen, @Provided MachineTextureMap machineTextureMap, @Provided Unification unification, @Provided GuiDynamicRender render, @Provided Translations translations) {
+        super(screen);
+        this.translatedName = translations.configuration;
         this.icon = new ItemStack(unification.getStack(unification.getComponents().gear, unification.getMaterials().iron).getItem());
-        this.screen = screen;
         this.render = render;
         this.machineTextureMap = machineTextureMap;
     }
 
     public void render(int x, int y) {
+        super.render(x, y);
         MachineContainer container = screen.getContainer();
         MachineTile tile = container.getTile();
         Machine machine = tile.getMachine();
@@ -160,12 +161,6 @@ public class SidePanel extends Panel {
                 return new Point(WIDTH * 2 + PADDING * 3, PADDING * 3 + WIDTH * 2);
         }
         return new Point(0, 0);
-    }
-
-    @Data
-    @AllArgsConstructor
-    private static class Point {
-        private int x, y;
     }
 
     private static enum RelativeDirection {

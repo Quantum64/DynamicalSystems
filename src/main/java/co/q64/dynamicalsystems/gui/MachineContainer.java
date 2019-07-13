@@ -1,8 +1,10 @@
 package co.q64.dynamicalsystems.gui;
 
+import co.q64.dynamicalsystems.client.gui.DefaultMachineLayout;
 import co.q64.dynamicalsystems.gui.type.MachineContainerType;
 import co.q64.dynamicalsystems.tile.MachineTile;
 import co.q64.dynamicalsystems.tile.MachineTile.MachineItemHandler;
+import co.q64.dynamicalsystems.util.Point;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import lombok.Getter;
@@ -10,30 +12,58 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIntArray;
+import net.minecraft.util.IntArray;
 import net.minecraftforge.items.SlotItemHandler;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @AutoFactory
 public class MachineContainer extends DynamicContainer<MachineContainer> {
     private MachineItemHandler inventory;
     private PlayerInventory playerInventory;
     private int machineSlots;
+    private @Getter List<Slot> inputSlots = new ArrayList<>();
+    private @Getter List<Slot> outputSlots = new ArrayList<>();
+    private @Getter IIntArray tracked;
     private @Getter MachineTile tile;
 
-    protected MachineContainer(int windowId, PlayerInventory playerInventory, MachineTile tile, @Provided MachineContainerType type) {
+    protected MachineContainer(int windowId, PlayerInventory playerInventory, MachineTile tile, @Provided MachineContainerType type, @Provided DefaultMachineLayout layout) {
+        this(windowId, playerInventory, tile, new IntArray(4), type, layout);
+    }
+
+    protected MachineContainer(int windowId, PlayerInventory playerInventory, MachineTile tile, IIntArray tracked, @Provided MachineContainerType type, @Provided DefaultMachineLayout layout) {
         super(windowId, playerInventory, type);
         this.playerInventory = playerInventory;
         this.tile = tile;
+        this.tracked = tracked;
         tile.getItemHandler().ifPresent(handler -> inventory = handler);
         int index = 0;
         for (int i = 0; i < tile.getInputSlots(); i++) {
-            addSlot(new MachineSlotItemHandler(inventory, index++, 18 * index, 10));
+            Point location = tile.getMachine().getInputSlotLocations().size() > i ? tile.getMachine().getInputSlotLocations().get(i) :
+                    layout.getInputSlotLocations(tile.getInputSlots() - tile.getMachine().getInputSlotLocations().size()).get(i - tile.getMachine().getInputSlotLocations().size());
+            addInputSlot(new MachineSlotItemHandler(inventory, index++, location.getX(), location.getY()));
         }
         for (int i = 0; i < tile.getOutputSlots(); i++) {
-            addSlot(new MachineSlotItemHandler(inventory, index++, (18 * index) + 10, 10));
+            Point location = tile.getMachine().getOutputSlotLocations().size() > i ? tile.getMachine().getOutputSlotLocations().get(i) :
+                    layout.getOutputSlotLocations(tile.getInputSlots() - tile.getMachine().getOutputSlotLocations().size()).get(i - tile.getMachine().getOutputSlotLocations().size());
+            addOutputSlot(new MachineSlotItemHandler(inventory, index++, location.getX(), location.getY()));
         }
         machineSlots = tile.getInputSlots() + tile.getOutputSlots();
 
-        setupInventory();
+        setupInventory(tile.getMachine().getGuiHeight());
+        trackIntArray(tracked);
+    }
+
+    private void addInputSlot(Slot slot) {
+        inputSlots.add(slot);
+        addSlot(slot);
+    }
+
+    private void addOutputSlot(Slot slot) {
+        outputSlots.add(slot);
+        addSlot(slot);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package co.q64.dynamicalsystems.client;
 
+import co.q64.dynamicalsystems.client.listener.ClientInitializationListener;
 import co.q64.dynamicalsystems.client.listener.ClientRegistryListener;
 import co.q64.dynamicalsystems.listener.Listener;
 import dagger.Binds;
@@ -10,5 +11,6 @@ import dagger.multibindings.IntoSet;
 public interface ClientModule {
     // @formatter:off
     @Binds @IntoSet Listener bindClientRegistryListener(ClientRegistryListener clientRegistryListener);
+    //@Binds @IntoSet Listener bindClientInitializationListener(ClientInitializationListener clientInitializationListener );
     // @formatter:on
 }

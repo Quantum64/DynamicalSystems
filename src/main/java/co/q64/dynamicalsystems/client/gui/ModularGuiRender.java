@@ -3,27 +3,34 @@ package co.q64.dynamicalsystems.client.gui;
 import co.q64.dynamicalsystems.client.gui.panel.Panel;
 import co.q64.dynamicalsystems.client.gui.screen.DynamicScreen;
 import co.q64.dynamicalsystems.gui.DynamicContainer;
-import net.minecraft.inventory.container.Slot;
+import co.q64.dynamicalsystems.resource.Translations;
+import co.q64.dynamicalsystems.util.IdentifierUtil;
+import net.minecraft.util.text.ITextComponent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
 public class ModularGuiRender {
+    public static final int TMP_FONT_COLOR = 4210752;
+
     private static final int PANEL_ICON_WIDTH = 24;
     private static final int PANEL_ICON_HEIGHT = 24;
 
     protected @Inject GuiDynamicRender dynamicRender;
+    protected @Inject IdentifierUtil identifiers;
 
-    protected @Inject ModularGuiRender() {}
+    private ITextComponent playerInventory;
+
+    protected @Inject ModularGuiRender(Translations translations) {
+        this.playerInventory = translations.playerInventory;
+    }
 
     public void render(DynamicScreen<?> screen) {
         int x = screen.getGuiLeft(), y = screen.getGuiTop();
         DynamicContainer<?> container = screen.getContainer();
         dynamicRender.drawGuiPanel(x, y, container.getWidth(), container.getHeight());
-        for (Slot slot : container.inventorySlots) {
-            dynamicRender.drawItemSlot(x + slot.xPos - 1, y + slot.yPos - 1);
-        }
+        screen.getFontRenderer().drawString(playerInventory.getFormattedText(), x + 4, y + container.getPlayerInventoryHeight(), TMP_FONT_COLOR);
         int leftGutterY = y, rightGutterY = y;
         for (Panel panel : screen.getPanels()) {
             int panelX = 0;
@@ -31,6 +38,7 @@ public class ModularGuiRender {
             if (panel.isExpanded()) {
                 panelX = panel.isLeft() ? x - panel.getExpandedWidth() : x + container.getWidth();
                 dynamicRender.drawGuiPanel(panelX, panelY, panel.getExpandedWidth(), panel.getExpandedHeight(), panel.getColor());
+                screen.getFontRenderer().drawString(panel.getTranslatedName().getFormattedText(), panelX + 18, panelY + 10, ModularGuiRender.TMP_FONT_COLOR);
                 panel.render(panelX, panelY + 16);
                 if (panel.isLeft()) {
                     leftGutterY += panel.getExpandedHeight();

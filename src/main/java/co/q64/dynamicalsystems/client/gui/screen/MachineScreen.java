@@ -1,5 +1,6 @@
 package co.q64.dynamicalsystems.client.gui.screen;
 
+import co.q64.dynamicalsystems.client.gui.MachineGuiRender;
 import co.q64.dynamicalsystems.client.gui.ModularGuiRender;
 import co.q64.dynamicalsystems.gui.MachineContainer;
 import com.google.auto.factory.AutoFactory;
@@ -10,9 +11,9 @@ import net.minecraft.util.text.ITextComponent;
 @AutoFactory
 public class MachineScreen extends DynamicScreen<MachineContainer> {
     private MachineContainer container;
-    private ModularGuiRender render;
+    private MachineGuiRender render;
 
-    public MachineScreen(MachineContainer container, PlayerInventory playerInventory, ITextComponent title, @Provided ModularGuiRender render,
+    public MachineScreen(MachineContainer container, PlayerInventory playerInventory, ITextComponent title, @Provided MachineGuiRender render,
                          @Provided co.q64.dynamicalsystems.client.gui.panel.machine.InfoPanelFactory infoPanel,
                          @Provided co.q64.dynamicalsystems.client.gui.panel.machine.SidePanelFactory sidePanel) {
         super(container, playerInventory, title, render);
@@ -21,7 +22,7 @@ public class MachineScreen extends DynamicScreen<MachineContainer> {
         this.xSize = container.getWidth();
         this.ySize = container.getHeight();
 
-        getPanels().add(infoPanel.create());
+        getPanels().add(infoPanel.create(this));
         getPanels().add(sidePanel.create(this));
     }
 
@@ -33,11 +34,14 @@ public class MachineScreen extends DynamicScreen<MachineContainer> {
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
         super.render(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         render.render(this);
+        render.renderSlots(this);
+        render.renderProgress(this);
     }
 
     @Override

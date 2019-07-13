@@ -6,6 +6,7 @@ import co.q64.dynamicalsystems.material.base.Component;
 import co.q64.dynamicalsystems.material.base.ComponentBlock;
 import co.q64.dynamicalsystems.material.base.Material;
 import lombok.Getter;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -31,6 +32,12 @@ public class TranslationService {
         String id = getId(name);
         translations.put("block." + modId + "." + id, name);
         return id;
+    }
+
+    public TranslationTextComponent registerTranslation(String name) {
+        String id = getId(name);
+        translations.put(modId + "." + id, name);
+        return new TranslationTextComponent(modId + "." + id);
     }
 
     public String registerMaterialItem(Component component, Material material) {

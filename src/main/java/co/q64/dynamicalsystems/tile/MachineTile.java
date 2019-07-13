@@ -27,6 +27,7 @@ import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.IIntArray;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.client.model.data.IModelData;
@@ -66,6 +67,27 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
     private EnergyTiers energyTiers;
     private NBTUtil nbtUtil;
     private PacketManager packetManager;
+    private IIntArray tracked = new IIntArray() {
+        public int get(int index) {
+            if (index == 0) {
+                return processingTick;
+            } else {
+                return maxTicks;
+            }
+        }
+
+        public void set(int index, int value) {
+            if (index == 0) {
+                processingTick = value;
+            } else {
+                maxTicks = value;
+            }
+        }
+
+        public int size() {
+            return 2;
+        }
+    };
 
     public MachineTile(@Provided co.q64.dynamicalsystems.gui.MachineContainerFactory containerFactory,
                        @Provided MachineTileType type, @Provided MachineGuiLayoutCache cache, @Provided Recipes recipes, @Provided EnergyTiers energyTiers, @Provided NBTUtil nbtUtil, @Provided PacketManager packetManager) {
@@ -238,6 +260,7 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
                         }
                         currentRecipe = null;
                         running = false;
+                        processingTick = 0;
                         recipes.get(machine.getRecipeType()).parallelStream().filter(recipe -> recipe.canProcess(itemHandler.getStacks(), inputSlots)).findFirst().ifPresent(r -> {
                             currentRecipe = r;
                             running = true;
@@ -259,6 +282,7 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
                     if (!currentRecipe.canProcess(itemHandler.getStacks(), inputSlots)) {
                         currentRecipe = null;
                         running = false;
+                        processingTick = 0;
                         recalculateRecipe = true;
                         updateBlock();
                         return;
@@ -278,7 +302,7 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
 
     @Override
     public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return containerFactory.create(windowId, playerInventory, this);
+        return containerFactory.create(windowId, playerInventory, this, tracked);
     }
 
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction direction) {
