@@ -135,13 +135,32 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
 
     }
 
+    public boolean running() {
+        return currentRecipe != null;
+    }
+
+    public Map<Direction, MachineSideConfiguration> getSideConfigurations() {
+        for (MachineSideConfiguration configuration : sideConfigurations.values()) {
+            if (configuration == MachineSideConfiguration.FRONT) {
+                return sideConfigurations;
+            }
+        }
+        for (Direction direction : DIRECTION_CACHE) {
+            sideConfigurations.putIfAbsent(direction, MachineSideConfiguration.DISABLED);
+        }
+        if (hasWorld()) {
+            sideConfigurations.put(getBlockState().get(MachineProperties.FACING), MachineSideConfiguration.FRONT);
+        }
+        return sideConfigurations;
+    }
+
     @Override
     public IModelData getModelData() {
         return new ModelDataMap.Builder()
                 .withInitial(MachineProperties.get(getBlockState().get(MachineProperties.FACING)), MachineSideConfiguration.FRONT)
                 .withInitial(MachineProperties.UP, MachineSideConfiguration.INPUT)
                 .withInitial(MachineProperties.DOWN, MachineSideConfiguration.OUTPUT)
-                .withInitial(MachineProperties.RUNNING, currentRecipe != null)
+                .withInitial(MachineProperties.RUNNING, running())
                 .build();
     }
 
@@ -161,11 +180,10 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
                         }
                     }
                     currentRecipe = null;
-                    requestModelDataUpdate();
                     recipes.get(machine.getRecipeType()).parallelStream().filter(recipe -> recipe.canProcess(itemHandler.getStacks(), inputSlots)).findFirst().ifPresent(r -> {
                         currentRecipe = r;
-                        requestModelDataUpdate();
                     });
+                    updateModel();
                     maxTicks = energyTiers.getProcessingTicks(voltage); //TODO power multiplier
                 } else {
                     //TODO sequential matcher
@@ -182,7 +200,7 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
                 if (!currentRecipe.canProcess(itemHandler.getStacks(), inputSlots)) {
                     currentRecipe = null;
                     recalculateRecipe = true;
-                    requestModelDataUpdate();
+                    updateModel();
                     return;
                 }
                 currentRecipe.process(itemHandler.getStacks(), inputSlots, (slot, item) -> {
@@ -223,9 +241,7 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
         @Override
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
             ItemStack result = super.extractItem(slot, amount, simulate);
-            if (currentRecipe == null) {
-                recalculateRecipe = true;
-            }
+            recalculateRecipe = true;
             return result;
         }
 
@@ -260,9 +276,7 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
                 }
             }
             ItemStack result = super.insertItem(slot, stack, simulate);
-            if (currentRecipe == null) {
-                recalculateRecipe = true;
-            }
+            recalculateRecipe = true;
             return result;
         }
 
@@ -273,6 +287,13 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
         @Override
         protected void onContentsChanged(int slot) {
             markDirty();
+        }
+    }
+
+    private void updateModel() {
+        if (getWorld() != null) {
+            requestModelDataUpdate();
+            getWorld().markForRerender(getPos());
         }
     }
 

@@ -2,13 +2,15 @@ package co.q64.dynamicalsystems.client.gui.panel.machine;
 
 import co.q64.dynamicalsystems.client.gui.panel.Panel;
 import co.q64.dynamicalsystems.unification.Unification;
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
+import net.minecraft.item.ItemStack;
 
-import javax.inject.Inject;
-
+@AutoFactory
 public class InfoPanel extends Panel {
-    protected @Inject InfoPanel(Unification unification) {
+    protected InfoPanel(@Provided Unification unification) {
         this.color = 0xff00ff00;
-        this.icon = unification.getStack(unification.getComponents().dust, unification.getMaterials().uranium).getItem();
+        this.icon = new ItemStack(unification.getStack(unification.getComponents().dust, unification.getMaterials().uranium).getItem());
     }
 
 }

@@ -49,7 +49,7 @@ public class MachineSideModels {
                 }
                 Map<Voltage, IBakedModel> voltageModels = new HashMap<>();
                 for (Voltage voltage : Voltage.getAll()) {
-                    IUnbakedModel unbaked = loader.getUnbakedModel(textureLoader.getMachineCasingTexture(voltage, type));
+                    IUnbakedModel unbaked = loader.getUnbakedModel(textureLoader.getMachineCasingModel(voltage, type));
                     unbaked.getTextures(loader::getUnbakedModel, errors);
                     IBakedModel model = unbaked.bake(loader, ModelLoader.defaultTextureGetter(), new ISprite() {
                         @Override
@@ -69,8 +69,8 @@ public class MachineSideModels {
                 Map<Voltage, IBakedModel> voltageOff = new HashMap<>();
                 Map<Voltage, IBakedModel> voltageOn = new HashMap<>();
                 for (Voltage voltage : Voltage.getAll()) {
-                    IUnbakedModel unbakedOff = loader.getUnbakedModel(textureLoader.getMachineCasingTexture(machine, voltage, false));
-                    IUnbakedModel unbakedOn = loader.getUnbakedModel(textureLoader.getMachineCasingTexture(machine, voltage, true));
+                    IUnbakedModel unbakedOff = loader.getUnbakedModel(textureLoader.getMachineCasingModel(machine, voltage, false));
+                    IUnbakedModel unbakedOn = loader.getUnbakedModel(textureLoader.getMachineCasingModel(machine, voltage, true));
                     unbakedOff.getTextures(loader::getUnbakedModel, errors);
                     unbakedOn.getTextures(loader::getUnbakedModel, errors);
                     voltageOff.put(voltage, unbakedOff.bake(loader, ModelLoader.defaultTextureGetter(), new ISprite() {

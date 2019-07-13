@@ -99,7 +99,7 @@ public class ClientResourceGenerator {
             }
             registryUtil.registerTexture(identifiers.get(type.getTextureName()));
             for (Voltage voltage : Voltage.getAll()) {
-                generator.writeModel(machineTextureMap.getMachineCasingTexture(voltage, type).getPath(), identifiers.get("block/block_machine"), machineTextureMap.getSideTextures(voltage, type));
+                generator.writeModel(machineTextureMap.getMachineCasingModel(voltage, type).getPath(), identifiers.get("block/block_machine"), machineTextureMap.getSideTextures(voltage, type));
             }
         }
         for (MachineBlockItem machine : itemUtil.getMachineItems()) {
@@ -126,8 +126,8 @@ public class ClientResourceGenerator {
             for (Voltage voltage : Voltage.getAll()) {
                 Map<String, ResourceLocation> offTex = machineTextureMap.getTextures(machine, voltage, false);
                 Map<String, ResourceLocation> onTex = machineTextureMap.getTextures(machine, voltage, true);
-                generator.writeModel(machineTextureMap.getMachineCasingTexture(machine, voltage, false).getPath(), identifiers.get("block/block_machine"), offTex);
-                generator.writeModel(machineTextureMap.getMachineCasingTexture(machine, voltage, true).getPath(), identifiers.get("block/block_machine"), onTex);
+                generator.writeModel(machineTextureMap.getMachineCasingModel(machine, voltage, false).getPath(), identifiers.get("block/block_machine"), offTex);
+                generator.writeModel(machineTextureMap.getMachineCasingModel(machine, voltage, true).getPath(), identifiers.get("block/block_machine"), onTex);
                 offTex.values().forEach(registryUtil::registerTexture);
                 onTex.values().forEach(registryUtil::registerTexture);
             }

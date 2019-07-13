@@ -12,6 +12,7 @@ import net.minecraft.util.ResourceLocation;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.concurrent.atomic.AtomicLong;
 
 @AutoFactory
 public class AlphaMapSprite {
@@ -25,6 +26,7 @@ public class AlphaMapSprite {
         this.identifier = new ResourceLocation(identifier.getNamespace(), "textures/" + identifier.getPath() + ".png");
         this.base = new ResourceLocation(base.getNamespace(), "textures/" + base.getPath() + ".png");
         this.overlay = new ResourceLocation(overlay.getNamespace(), "textures/" + overlay.getPath() + ".png");
+        AtomicLong longd;
     }
 
     public void load(IResourceManager manager) {

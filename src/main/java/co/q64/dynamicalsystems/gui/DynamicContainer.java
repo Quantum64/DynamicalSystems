@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class DynamicContainer<T extends Container> extends Container {
-    private @Getter List<Panel> panels = new ArrayList<>();
     private @Getter int x, y, width, height;
     private int machineSlots;
     private IItemHandler playerInventory;
