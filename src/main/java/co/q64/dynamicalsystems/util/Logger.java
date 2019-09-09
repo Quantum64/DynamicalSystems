@@ -1,6 +1,6 @@
 package co.q64.dynamicalsystems.util;
 
-import co.q64.dynamicalsystems.binders.ConstantBinders.Name;
+import co.q64.dynamicalsystems.qualifier.ConstantQualifiers.Name;
 import org.apache.logging.log4j.LogManager;
 
 import javax.inject.Inject;

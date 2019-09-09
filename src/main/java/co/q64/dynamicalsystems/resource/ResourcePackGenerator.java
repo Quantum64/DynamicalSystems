@@ -1,6 +1,6 @@
 package co.q64.dynamicalsystems.resource;
 
-import co.q64.dynamicalsystems.binders.ConstantBinders.ModId;
+import co.q64.dynamicalsystems.qualifier.ConstantQualifiers.ModId;
 import co.q64.dynamicalsystems.grid.energy.Voltage;
 import co.q64.dynamicalsystems.recipe.Recipe;
 import co.q64.dynamicalsystems.recipe.RecipeInput;

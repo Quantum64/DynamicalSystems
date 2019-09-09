@@ -4,7 +4,6 @@ import co.q64.dynamicalsystems.block.item.MachineBlockItem;
 import co.q64.dynamicalsystems.machine.MachineSideConfiguration;
 import co.q64.dynamicalsystems.state.MachineProperties;
 import co.q64.dynamicalsystems.util.IdentifierUtil;
-import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
@@ -12,7 +11,6 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.MissingTextureSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IEnviromentBlockReader;
@@ -21,25 +19,25 @@ import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-@AutoFactory
 public class MachineModel implements IDynamicBakedModel {
+    protected @Inject MachineSideModels sideModels;
+    protected @Inject IdentifierUtil identifiers;
     private MachineBlockItem machine;
-    private MachineSideModels sideModels;
-    private IdentifierUtil identifiers;
 
-    protected MachineModel(MachineBlockItem machine, @Provided MachineSideModels machineSideModels, @Provided IdentifierUtil identifiers) {
+    protected @Inject MachineModel() {}
+
+    public MachineModel setup(MachineBlockItem machine) {
         this.machine = machine;
-        this.sideModels = machineSideModels;
-        this.identifiers = identifiers;
+        return this;
     }
 
     public void bake(ModelLoader loader) {
-        for (Direction direction : BlockStateProperties.HORIZONTAL_FACING.getAllowedValues()) {
-        }
+        // no-op
     }
 
     @Override

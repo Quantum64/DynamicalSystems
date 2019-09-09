@@ -1,6 +1,6 @@
 package co.q64.dynamicalsystems.client.loader;
 
-import co.q64.dynamicalsystems.binders.ConstantBinders.ModId;
+import co.q64.dynamicalsystems.qualifier.ConstantQualifiers.ModId;
 import co.q64.dynamicalsystems.block.item.ExtraBlockItem;
 import co.q64.dynamicalsystems.block.item.MachineBlockItem;
 import co.q64.dynamicalsystems.client.texture.AlphaMapRequestFactory;

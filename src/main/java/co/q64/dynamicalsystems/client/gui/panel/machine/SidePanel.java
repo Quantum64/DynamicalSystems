@@ -1,39 +1,37 @@
 package co.q64.dynamicalsystems.client.gui.panel.machine;
 
 import co.q64.dynamicalsystems.client.gui.GuiDynamicRender;
-import co.q64.dynamicalsystems.client.gui.panel.Panel;
 import co.q64.dynamicalsystems.client.gui.screen.MachineScreen;
 import co.q64.dynamicalsystems.client.texture.MachineTextureMap;
 import co.q64.dynamicalsystems.grid.energy.Voltage;
 import co.q64.dynamicalsystems.gui.MachineContainer;
 import co.q64.dynamicalsystems.machine.Machine;
 import co.q64.dynamicalsystems.machine.MachineSideConfiguration;
-import co.q64.dynamicalsystems.resource.Translations;
 import co.q64.dynamicalsystems.tile.MachineTile;
-import co.q64.dynamicalsystems.unification.Unification;
 import co.q64.dynamicalsystems.util.Point;
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
+import javafx.geometry.Side;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 
+import javax.inject.Inject;
 import java.util.Map;
 import java.util.Map.Entry;
 
-@AutoFactory
 public class SidePanel extends MachinePanel {
     private static final int PADDING = 4;
     private static final int WIDTH = 16;
 
-    private GuiDynamicRender render;
-    private MachineTextureMap machineTextureMap;
+    protected @Inject GuiDynamicRender render;
+    protected @Inject MachineTextureMap machineTextureMap;
 
-    protected SidePanel(MachineScreen screen, @Provided MachineTextureMap machineTextureMap, @Provided Unification unification, @Provided GuiDynamicRender render, @Provided Translations translations) {
-        super(screen);
+    protected @Inject SidePanel() {}
+
+    @Override
+    public SidePanel setup(MachineScreen screen) {
+        super.setup(screen);
         this.translatedName = translations.configuration;
         this.icon = new ItemStack(unification.getStack(unification.getComponents().gear, unification.getMaterials().iron).getItem());
-        this.render = render;
-        this.machineTextureMap = machineTextureMap;
+        return this;
     }
 
     public void render(int x, int y) {

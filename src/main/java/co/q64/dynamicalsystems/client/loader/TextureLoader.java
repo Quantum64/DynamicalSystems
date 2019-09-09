@@ -1,7 +1,7 @@
 package co.q64.dynamicalsystems.client.loader;
 
 
-import co.q64.dynamicalsystems.binders.ConstantBinders.ModId;
+import co.q64.dynamicalsystems.qualifier.ConstantQualifiers.ModId;
 import co.q64.dynamicalsystems.client.texture.AlphaMapRequest;
 import co.q64.dynamicalsystems.client.texture.AlphaMapRequestRegistry;
 import co.q64.dynamicalsystems.client.texture.AlphaMapSpriteFactory;

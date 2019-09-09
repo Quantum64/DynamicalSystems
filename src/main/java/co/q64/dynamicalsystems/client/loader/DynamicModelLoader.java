@@ -2,9 +2,7 @@ package co.q64.dynamicalsystems.client.loader;
 
 import co.q64.dynamicalsystems.block.item.MachineBlockItem;
 import co.q64.dynamicalsystems.client.model.MachineModel;
-import co.q64.dynamicalsystems.client.model.MachineModelFactory;
 import co.q64.dynamicalsystems.client.model.MachineSideModels;
-import co.q64.dynamicalsystems.client.texture.AlphaMapRequest;
 import co.q64.dynamicalsystems.client.texture.AlphaMapRequestFactory;
 import co.q64.dynamicalsystems.client.texture.AlphaMapRequestRegistry;
 import co.q64.dynamicalsystems.util.IdentifierUtil;
@@ -15,6 +13,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +22,7 @@ import java.util.Map;
 public class DynamicModelLoader {
     protected @Inject AlphaMapRequestFactory alphaMapRequestFactory;
     protected @Inject AlphaMapRequestRegistry alphaMapRequestRegistry;
-    protected @Inject MachineModelFactory machineModelFactory;
+    protected @Inject Provider<MachineModel> machineModelFactory;
     protected @Inject IdentifierUtil identifiers;
     protected @Inject MachineSideModels machineSideOverlays;
     protected @Inject ItemUtil itemUtil;
@@ -35,7 +34,7 @@ public class DynamicModelLoader {
         machineSideOverlays.bake(event.getModelLoader());
         Map<String, MachineModel> machineModelOverloads = new HashMap<>();
         for (MachineBlockItem machine : itemUtil.getMachineItems()) {
-            MachineModel model = machineModelFactory.create(machine);
+            MachineModel model = machineModelFactory.get().setup(machine);
             model.bake(event.getModelLoader());
             machineModelOverloads.put(machine.getId(), model);
         }

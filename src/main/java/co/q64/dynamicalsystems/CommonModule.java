@@ -1,18 +1,6 @@
 package co.q64.dynamicalsystems;
 
-import co.q64.dynamicalsystems.binders.ConstantBinders.Author;
-import co.q64.dynamicalsystems.binders.ConstantBinders.ConfigFolder;
-import co.q64.dynamicalsystems.binders.ConstantBinders.ModId;
-import co.q64.dynamicalsystems.binders.ConstantBinders.Name;
-import co.q64.dynamicalsystems.binders.ConstantBinders.SharedNamespace;
-import co.q64.dynamicalsystems.binders.ConstantBinders.Version;
-import co.q64.dynamicalsystems.binders.PropertyBinders.Down;
-import co.q64.dynamicalsystems.binders.PropertyBinders.East;
-import co.q64.dynamicalsystems.binders.PropertyBinders.North;
-import co.q64.dynamicalsystems.binders.PropertyBinders.Running;
-import co.q64.dynamicalsystems.binders.PropertyBinders.South;
-import co.q64.dynamicalsystems.binders.PropertyBinders.Up;
-import co.q64.dynamicalsystems.binders.PropertyBinders.West;
+import co.q64.dynamicalsystems.block.item.MachineBlockItem;
 import co.q64.dynamicalsystems.gui.type.MachineContainerType;
 import co.q64.dynamicalsystems.link.LinkInfo;
 import co.q64.dynamicalsystems.link.cottonresources.CottonResourcesLinkInfo;
@@ -22,11 +10,27 @@ import co.q64.dynamicalsystems.listener.RegistryListener;
 import co.q64.dynamicalsystems.listener.ServerStartListener;
 import co.q64.dynamicalsystems.loader.component.CraftingComponentLoader;
 import co.q64.dynamicalsystems.material.ComponentLoader;
-import co.q64.dynamicalsystems.tile.type.MachineTileType;
+import co.q64.dynamicalsystems.qualifier.ConstantQualifiers.Author;
+import co.q64.dynamicalsystems.qualifier.ConstantQualifiers.ConfigFolder;
+import co.q64.dynamicalsystems.qualifier.ConstantQualifiers.ModId;
+import co.q64.dynamicalsystems.qualifier.ConstantQualifiers.Name;
+import co.q64.dynamicalsystems.qualifier.ConstantQualifiers.SharedNamespace;
+import co.q64.dynamicalsystems.qualifier.ConstantQualifiers.Version;
+import co.q64.dynamicalsystems.qualifier.PropertyQualifiers.Down;
+import co.q64.dynamicalsystems.qualifier.PropertyQualifiers.East;
+import co.q64.dynamicalsystems.qualifier.PropertyQualifiers.North;
+import co.q64.dynamicalsystems.qualifier.PropertyQualifiers.Running;
+import co.q64.dynamicalsystems.qualifier.PropertyQualifiers.South;
+import co.q64.dynamicalsystems.qualifier.PropertyQualifiers.Up;
+import co.q64.dynamicalsystems.qualifier.PropertyQualifiers.West;
+import co.q64.dynamicalsystems.tile.MachineTile;
+import co.q64.dynamicalsystems.util.IdentifierUtil;
+import co.q64.dynamicalsystems.util.ItemUtil;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoSet;
+import net.minecraft.block.Block;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.tileentity.TileEntityType;
@@ -35,9 +39,9 @@ import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.File;
-import java.util.List;
 
 @Module
 public interface CommonModule {
@@ -51,7 +55,7 @@ public interface CommonModule {
 
     @Binds @IntoSet ContainerType<?> bindMachineContainerType(MachineContainerType type);
 
-    @Binds @IntoSet TileEntityType<?> bindMachineTileType(MachineTileType type);
+    @Binds @IntoSet TileEntityType<?> bindMachineTileType(TileEntityType<MachineTile> type);
 
     static @Provides @Singleton FMLJavaModLoadingContext provideFMLModLoadingContext() { return FMLJavaModLoadingContext.get(); }
     static @Provides @ConfigFolder @Singleton File provideConfigFolder(@ModId String modId) { return new File(FMLPaths.CONFIGDIR.get().toFile(), modId); }
@@ -71,5 +75,11 @@ public interface CommonModule {
     static @Provides @Singleton @West BooleanProperty provideWest() { return BooleanProperty.create("west"); }
 
     static @Provides @Singleton @Running BooleanProperty provideRunning() { return BooleanProperty.create("running"); }
+
+    static @Provides @Singleton TileEntityType<MachineTile> provideMachineTileType(Provider<MachineTile> tileProvider, ItemUtil itemUtil, IdentifierUtil identifiers) {
+        TileEntityType<MachineTile> type = TileEntityType.Builder.create(tileProvider::get, itemUtil.getMachineItems().stream().map(MachineBlockItem::getBlock).toArray(Block[]::new)).build(null);
+        type.setRegistryName(identifiers.get("machine"));
+        return type;
+    }
     // @formatter:on
 }

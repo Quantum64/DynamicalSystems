@@ -1,6 +1,6 @@
 package co.q64.dynamicalsystems.util.identifier;
 
-import co.q64.dynamicalsystems.binders.ConstantBinders.ModId;
+import co.q64.dynamicalsystems.qualifier.ConstantQualifiers.ModId;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import net.minecraft.util.ResourceLocation;

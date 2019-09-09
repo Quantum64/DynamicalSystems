@@ -1,6 +1,6 @@
 package co.q64.dynamicalsystems.util;
 
-import co.q64.dynamicalsystems.binders.ConstantBinders.SharedNamespace;
+import co.q64.dynamicalsystems.qualifier.ConstantQualifiers.SharedNamespace;
 import co.q64.dynamicalsystems.item.BaseItem;
 import co.q64.dynamicalsystems.item.MaterialItem;
 import co.q64.dynamicalsystems.material.MaterialItemNameGenerator;

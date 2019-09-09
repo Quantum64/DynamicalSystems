@@ -11,10 +11,7 @@ import co.q64.dynamicalsystems.net.PacketManager;
 import co.q64.dynamicalsystems.recipe.Recipe;
 import co.q64.dynamicalsystems.recipe.Recipes;
 import co.q64.dynamicalsystems.state.MachineProperties;
-import co.q64.dynamicalsystems.tile.type.MachineTileType;
 import co.q64.dynamicalsystems.util.NBTUtil;
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
@@ -27,6 +24,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.text.ITextComponent;
@@ -39,18 +37,25 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-@AutoFactory
 public class MachineTile extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
     private static final boolean USE_THREADED_MATCHER = true;
     private static final boolean USE_THREADED_CALCULATOR = true;
 
     private static final Direction[] DIRECTION_CACHE = Direction.values();
+
+    protected @Inject MachineContainerFactory containerFactory;
+    protected @Inject MachineGuiLayoutCache cache;
+    protected @Inject Recipes recipes;
+    protected @Inject EnergyTiers energyTiers;
+    protected @Inject NBTUtil nbtUtil;
+    protected @Inject PacketManager packetManager;
 
     private @Getter int inputSlots, outputSlots;
     private @Getter LazyOptional<MachineItemHandler> itemHandler = LazyOptional.of(this::createItemHandler);
@@ -58,16 +63,10 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
     private @Getter Voltage voltage;
     private Map<Direction, MachineSideConfiguration> sideConfigurations = new HashMap<>();
     private Map<Direction, LazyOptional<SidedMachineItemHandler>> delegateItemHandlers = new HashMap<>();
-    private MachineContainerFactory containerFactory;
-    private MachineGuiLayoutCache cache;
-    private Recipes recipes;
     private boolean recalculateRecipe = false;
     private boolean running = false;
     private Recipe currentRecipe = null;
     private int processingTick, maxTicks;
-    private EnergyTiers energyTiers;
-    private NBTUtil nbtUtil;
-    private PacketManager packetManager;
     private IIntArray tracked = new IIntArray() {
         public int get(int index) {
             if (index == 0) {
@@ -90,21 +89,12 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
         }
     };
 
-    public MachineTile(@Provided co.q64.dynamicalsystems.gui.MachineContainerFactory containerFactory,
-                       @Provided MachineTileType type, @Provided MachineGuiLayoutCache cache, @Provided Recipes recipes, @Provided EnergyTiers energyTiers, @Provided NBTUtil nbtUtil, @Provided PacketManager packetManager) {
+    @Inject
+    protected MachineTile(TileEntityType<MachineTile> type) {
         super(type);
-        this.cache = cache;
-        this.containerFactory = containerFactory;
-        this.recipes = recipes;
-        this.energyTiers = energyTiers;
-        this.nbtUtil = nbtUtil;
-        this.packetManager = packetManager;
     }
 
-    public MachineTile(@Provided co.q64.dynamicalsystems.gui.MachineContainerFactory containerFactory,
-                       @Provided MachineTileType type, @Provided MachineGuiLayoutCache cache, @Provided Recipes recipes, @Provided EnergyTiers energyTiers, @Provided NBTUtil nbtUtil, @Provided PacketManager packetManager,
-                       MachineBlock block) {
-        this(containerFactory, type, cache, recipes, energyTiers, nbtUtil, packetManager);
+    public MachineTile setup(MachineBlock block) {
         this.machine = block.getMachine();
         this.voltage = block.getVoltage();
         this.inputSlots = cache.get(machine.getRecipeType()).getInputSlots();
@@ -112,6 +102,7 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
         sideConfigurations.put(Direction.UP, MachineSideConfiguration.INPUT);
         sideConfigurations.put(Direction.DOWN, MachineSideConfiguration.OUTPUT);
         markDirty();
+        return this;
     }
 
     private MachineItemHandler createItemHandler() {

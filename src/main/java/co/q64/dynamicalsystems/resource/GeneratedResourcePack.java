@@ -1,7 +1,7 @@
 package co.q64.dynamicalsystems.resource;
 
-import co.q64.dynamicalsystems.binders.ConstantBinders.ModId;
-import co.q64.dynamicalsystems.binders.ConstantBinders.Name;
+import co.q64.dynamicalsystems.qualifier.ConstantQualifiers.ModId;
+import co.q64.dynamicalsystems.qualifier.ConstantQualifiers.Name;
 import co.q64.dynamicalsystems.util.IdentifierUtil;
 import net.minecraft.resources.ResourcePack;
 import net.minecraft.resources.ResourcePackFileNotFoundException;

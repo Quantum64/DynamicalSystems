@@ -1,11 +1,11 @@
 package co.q64.dynamicalsystems.util.state;
 
-import co.q64.dynamicalsystems.binders.PropertyBinders.Down;
-import co.q64.dynamicalsystems.binders.PropertyBinders.East;
-import co.q64.dynamicalsystems.binders.PropertyBinders.North;
-import co.q64.dynamicalsystems.binders.PropertyBinders.South;
-import co.q64.dynamicalsystems.binders.PropertyBinders.Up;
-import co.q64.dynamicalsystems.binders.PropertyBinders.West;
+import co.q64.dynamicalsystems.qualifier.PropertyQualifiers.Down;
+import co.q64.dynamicalsystems.qualifier.PropertyQualifiers.East;
+import co.q64.dynamicalsystems.qualifier.PropertyQualifiers.North;
+import co.q64.dynamicalsystems.qualifier.PropertyQualifiers.South;
+import co.q64.dynamicalsystems.qualifier.PropertyQualifiers.Up;
+import co.q64.dynamicalsystems.qualifier.PropertyQualifiers.West;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.util.Direction;
 

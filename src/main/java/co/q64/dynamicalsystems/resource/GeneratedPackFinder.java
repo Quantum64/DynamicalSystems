@@ -1,6 +1,6 @@
 package co.q64.dynamicalsystems.resource;
 
-import co.q64.dynamicalsystems.binders.ConstantBinders.Name;
+import co.q64.dynamicalsystems.qualifier.ConstantQualifiers.Name;
 import net.minecraft.resources.IPackFinder;
 import net.minecraft.resources.ResourcePackInfo;
 import net.minecraft.resources.ResourcePackInfo.IFactory;

@@ -1,8 +1,8 @@
-package co.q64.dynamicalsystems.binders;
+package co.q64.dynamicalsystems.qualifier;
 
 import javax.inject.Qualifier;
 
-public interface PropertyBinders {
+public interface PropertyQualifiers {
     // @formatter:off
     public static @Qualifier @interface Up {}
     public static @Qualifier @interface Down {}

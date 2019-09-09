@@ -4,7 +4,6 @@ import co.q64.dynamicalsystems.grid.energy.Voltage;
 import co.q64.dynamicalsystems.machine.Machine;
 import co.q64.dynamicalsystems.state.MachineProperties;
 import co.q64.dynamicalsystems.tile.MachineTile;
-import co.q64.dynamicalsystems.tile.MachineTileFactory;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import lombok.Getter;
@@ -27,14 +26,16 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
 
+import javax.inject.Provider;
+
 @Getter
 @AutoFactory
 public class MachineBlock extends BaseBlock {
-    private MachineTileFactory tileFactory;
+    private Provider<MachineTile> tileFactory;
     private Machine machine;
     private Voltage voltage;
 
-    public MachineBlock(String id, @Provided co.q64.dynamicalsystems.tile.MachineTileFactory tileFactory) {
+    public MachineBlock(String id, @Provided Provider<MachineTile> tileFactory) {
         super(id, Properties.create(Material.IRON));
         this.tileFactory = tileFactory;
         setDefaultState(getStateContainer().getBaseState().with(MachineProperties.FACING, Direction.NORTH));
@@ -73,7 +74,7 @@ public class MachineBlock extends BaseBlock {
 
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return tileFactory.create(this);
+        return tileFactory.get().setup(this);
     }
 
     @OnlyIn(Dist.CLIENT)

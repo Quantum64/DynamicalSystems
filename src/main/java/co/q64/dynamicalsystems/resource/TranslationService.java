@@ -1,6 +1,6 @@
 package co.q64.dynamicalsystems.resource;
 
-import co.q64.dynamicalsystems.binders.ConstantBinders.ModId;
+import co.q64.dynamicalsystems.qualifier.ConstantQualifiers.ModId;
 import co.q64.dynamicalsystems.material.MaterialItemNameGenerator;
 import co.q64.dynamicalsystems.material.base.Component;
 import co.q64.dynamicalsystems.material.base.ComponentBlock;
