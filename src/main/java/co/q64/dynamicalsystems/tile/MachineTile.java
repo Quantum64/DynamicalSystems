@@ -16,6 +16,7 @@ import co.q64.dynamicalsystems.util.NBTUtil;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import lombok.Getter;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -378,7 +379,7 @@ public class MachineTile extends TileEntity implements ITickableTileEntity, INam
     private void updateModel() {
         if (getWorld() != null) {
             requestModelDataUpdate();
-            getWorld().markForRerender(getPos());
+            Minecraft.getInstance().worldRenderer.markBlockRangeForRenderUpdate(pos.getX(), pos.getY(), pos.getZ(), pos.getX(), pos.getY(), pos.getZ());
         }
     }
 

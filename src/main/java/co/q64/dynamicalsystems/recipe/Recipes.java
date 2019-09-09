@@ -44,6 +44,14 @@ public class Recipes {
     }
 
     private List<List<Recipe>> getTypes(Set<RecipeType> types) {
+        for (RecipeType type : types.stream().collect(Collectors.toList())) {
+            explodeType(types, type);
+        }
         return types.stream().map(this::get).collect(Collectors.toList());
+    }
+
+    private void explodeType(Set<RecipeType> types, RecipeType type) {
+        types.add(type);
+        type.getExtensions().forEach(t -> explodeType(types, t));
     }
 }
